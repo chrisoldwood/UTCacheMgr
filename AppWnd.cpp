@@ -115,6 +115,9 @@ bool CAppWnd::OnQueryClose()
 	// Fetch windows final placement.
 	App.m_rcLastPos = Placement();
 
+	// Close help file.
+	App.m_oHelpFile.Close();
+
 	return true;
 }
 
