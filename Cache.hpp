@@ -29,6 +29,7 @@ const char MUSIC_FILE   = 'M';
 // File status.
 const char NEW_FILE = 'N';
 const char OLD_FILE = 'O';
+const char PIN_FILE = 'P';
 
 /******************************************************************************
 ** 
