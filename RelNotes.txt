@@ -1,13 +1,15 @@
-Version 1.1
+Version 2.0
 ===========
 
-- Caches can be marked as "Read Only".
-- Context menu added to file list.
-- Column header sorting added to file list.
-- Cache files with no file extension now treated as system files.
+- Added UT2003 support (tested to v2199).
+- Caches can now be marked as "Read Only".
+- Context menu added to main view.
+- Added properties dialog for the selected cache file.
+- Column header sorting added to main view and Restore dialog.
+- Added icons for the various file types.
 - Better reporting of cache scanning/editing errors.
-- Menu/Toolbar "Edit" commands now enabled/disabled properly.
-- Some other minor UI tweaks.
+- Added status bar message to show cache summary.
+- Various other minor UI tweaks and fixes.
 
 Version 1.0
 ===========
@@ -18,4 +20,4 @@ Version 1.0
 Chris Oldwood 
 (gort@cix.co.uk)
 
-1st October 2002
+9th April 2003

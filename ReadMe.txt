@@ -1,4 +1,4 @@
-UT Cache Manager v1.0
+UT Cache Manager v2.0
 =====================
 
 1) Installation.
@@ -19,4 +19,4 @@ Its all in the HelpFile - UTCacheMgr.hlp.
 Chris Oldwood 
 (gort@cix.co.uk)
 
-1st August 2002
+9th April 2003
