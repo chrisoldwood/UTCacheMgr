@@ -98,7 +98,8 @@ protected:
 	//
 	// Constants.
 	//
-	static const char* INI_FILE_VER;
+	static const char* INI_FILE_VER_10;
+	static const char* INI_FILE_VER_20;
 };
 
 /******************************************************************************

@@ -10,6 +10,11 @@
 
 #include "AppHeaders.hpp"
 
+#ifdef _DEBUG
+// For memory leak detection.
+#define new DBGCRT_NEW
+#endif
+
 /******************************************************************************
 **
 ** Global variables.
@@ -28,11 +33,12 @@ CUTCMGRApp App;
 */
 
 #ifdef _DEBUG
-const char* CUTCMGRApp::VERSION      = "v1.1 Beta [Debug]";
+const char* CUTCMGRApp::VERSION      = "v2.0 Beta [Debug]";
 #else
-const char* CUTCMGRApp::VERSION      = "v1.1 Beta";
+const char* CUTCMGRApp::VERSION      = "v2.0 Beta";
 #endif
-const char* CUTCMGRApp::INI_FILE_VER = "1.1";
+const char* CUTCMGRApp::INI_FILE_VER_10 = "1.0";
+const char* CUTCMGRApp::INI_FILE_VER_20 = "2.0";
 
 /******************************************************************************
 ** Method:		Constructor
@@ -160,7 +166,7 @@ bool CUTCMGRApp::OnClose()
 void CUTCMGRApp::LoadConfig()
 {
 	// Read the file version.
-	CString strVer = m_oIniFile.ReadString("Version", "Version", INI_FILE_VER);
+	CString strVer = m_oIniFile.ReadString("Version", "Version", "");
 
 	// Read the cache general settings.
 	m_strCacheIndex = m_oIniFile.ReadString("Cache", "Index",        CProfile::DEF_CACHE_IDX_FILE);
@@ -187,6 +193,7 @@ void CUTCMGRApp::LoadConfig()
 
 		// Read profile details.
 		oProfile.m_strName       = m_oIniFile.ReadString(strSection, "Name",       "");
+		oProfile.m_nFormat       = m_oIniFile.ReadInt   (strSection, "Format",     CProfile::UT_FORMAT);
 		oProfile.m_strCacheDir   = m_oIniFile.ReadString(strSection, "CacheDir",   "");
 		oProfile.m_bReadOnly     = m_oIniFile.ReadBool  (strSection, "ReadOnly",   false);
 		oProfile.m_strSystemDir  = m_oIniFile.ReadString(strSection, "SystemDir",  "");
@@ -194,6 +201,8 @@ void CUTCMGRApp::LoadConfig()
 		oProfile.m_strTextureDir = m_oIniFile.ReadString(strSection, "TextureDir", "");
 		oProfile.m_strSoundDir   = m_oIniFile.ReadString(strSection, "SoundDir",   "");
 		oProfile.m_strMusicDir   = m_oIniFile.ReadString(strSection, "MusicDir",   "");
+		oProfile.m_strMeshDir    = m_oIniFile.ReadString(strSection, "MeshDir",    "");
+		oProfile.m_strAnimDir    = m_oIniFile.ReadString(strSection, "AnimDir",    "");
 		oProfile.m_strConfigFile = m_oIniFile.ReadString(strSection, "ConfigFile", "");
 
 		// If valid, add to collection.
@@ -202,31 +211,15 @@ void CUTCMGRApp::LoadConfig()
 	}
 
 	// Read the default profile.
-	m_strDefProfile = m_oIniFile.ReadString("Profiles", "Default", "Default");
+	m_strDefProfile = m_oIniFile.ReadString("Profiles", "Default", "");
 
 	// Find the default profile.
-	if (m_pProfile == NULL)
+	if (m_strDefProfile != "")
 		m_pProfile = FindProfile(m_strDefProfile);
 
-	if (m_pProfile == NULL)
-		m_pProfile = FindProfile(CProfile::DEF_PROFILE_NAME);
-
-	// Create a default one.
+	// New installation?.
 	if (m_pProfile == NULL)
 	{
-		m_pProfile = new CProfile();
-
-		// Initialise profile with sensible defaults.
-		m_pProfile->m_strName       = CProfile::DEF_PROFILE_NAME;
-		m_pProfile->m_strCacheDir   = CPath(CProfile::DEF_ROOT_DIR,     CProfile::DEF_CACHE_DIR   );
-		m_pProfile->m_bReadOnly     = false;
-		m_pProfile->m_strSystemDir  = CPath(CProfile::DEF_ROOT_DIR,     CProfile::DEF_SYSTEM_DIR  );
-		m_pProfile->m_strMapDir     = CPath(CProfile::DEF_ROOT_DIR,     CProfile::DEF_MAPS_DIR    );
-		m_pProfile->m_strTextureDir = CPath(CProfile::DEF_ROOT_DIR,     CProfile::DEF_TEXTURES_DIR);
-		m_pProfile->m_strSoundDir   = CPath(CProfile::DEF_ROOT_DIR,     CProfile::DEF_SOUNDS_DIR  );
-		m_pProfile->m_strMusicDir   = CPath(CProfile::DEF_ROOT_DIR,     CProfile::DEF_MUSIC_DIR   );
-		m_pProfile->m_strConfigFile = CPath(m_pProfile->m_strSystemDir, CProfile::DEF_CONFIG_FILE );
-
 		CRegKey oUTKey;
 
 		// Try and find the regkey that contains the UT base path.
@@ -237,25 +230,79 @@ void CUTCMGRApp::LoadConfig()
 
 			if (strBaseDir != "")
 			{
-				// Re-initialise profile with correct paths.
+				m_pProfile = new CProfile();
+
+				// Create a profile for UT.
+				m_pProfile->m_strName       = CProfile::DEF_UT_PROFILE_NAME;
+				m_pProfile->m_nFormat       = CProfile::UT_FORMAT;
 				m_pProfile->m_strCacheDir   = CPath(strBaseDir, CProfile::DEF_CACHE_DIR   );
+				m_pProfile->m_bReadOnly     = false;
 				m_pProfile->m_strSystemDir  = CPath(strBaseDir, CProfile::DEF_SYSTEM_DIR  );
 				m_pProfile->m_strMapDir     = CPath(strBaseDir, CProfile::DEF_MAPS_DIR    );
 				m_pProfile->m_strTextureDir = CPath(strBaseDir, CProfile::DEF_TEXTURES_DIR);
 				m_pProfile->m_strSoundDir   = CPath(strBaseDir, CProfile::DEF_SOUNDS_DIR  );
 				m_pProfile->m_strMusicDir   = CPath(strBaseDir, CProfile::DEF_MUSIC_DIR   );
 				m_pProfile->m_strConfigFile = CPath(m_pProfile->m_strSystemDir, CProfile::DEF_CONFIG_FILE);
+
+				m_aoProfiles.Add(m_pProfile);
 			}
 		}
 
-		// Add to the profiles collection.
-		m_aoProfiles.Add(m_pProfile);
+		CRegKey oUT2003Key;
+
+		// Try and find the regkey that contains the UT2003 base path.
+		if (oUT2003Key.Open(HKEY_LOCAL_MACHINE, "SOFTWARE\\Unreal Technology\\Installed Apps\\UT2003"))
+		{
+			// Get the UT2003 base path.
+			CPath strBaseDir = oUT2003Key.QueryString("Folder", "");
+
+			if (strBaseDir != "")
+			{
+				m_pProfile = new CProfile();
+
+				// Create a profile for UT2003.
+				m_pProfile->m_strName       = CProfile::DEF_UT2003_PROFILE_NAME;
+				m_pProfile->m_nFormat       = CProfile::UT2003_FORMAT;
+				m_pProfile->m_strCacheDir   = CPath(strBaseDir, CProfile::DEF_CACHE_DIR   );
+				m_pProfile->m_bReadOnly     = false;
+				m_pProfile->m_strSystemDir  = CPath(strBaseDir, CProfile::DEF_SYSTEM_DIR  );
+				m_pProfile->m_strMapDir     = CPath(strBaseDir, CProfile::DEF_MAPS_DIR    );
+				m_pProfile->m_strTextureDir = CPath(strBaseDir, CProfile::DEF_TEXTURES_DIR);
+				m_pProfile->m_strSoundDir   = CPath(strBaseDir, CProfile::DEF_SOUNDS_DIR  );
+				m_pProfile->m_strMusicDir   = CPath(strBaseDir, CProfile::DEF_MUSIC_DIR   );
+				m_pProfile->m_strMeshDir    = CPath(strBaseDir, CProfile::DEF_MESH_DIR    );
+				m_pProfile->m_strAnimDir    = CPath(strBaseDir, CProfile::DEF_ANIM_DIR    );
+				m_pProfile->m_strConfigFile = CPath(m_pProfile->m_strSystemDir, CProfile::DEF_2003_CONFIG_FILE);
+
+				m_aoProfiles.Add(m_pProfile);
+			}
+		}
+
+		// Create a default UT one, if nothing detected.
+		if (m_pProfile == NULL)
+		{
+			m_pProfile = new CProfile();
+
+			// Initialise profile with sensible defaults.
+			m_pProfile->m_strName       = CProfile::DEF_UT_PROFILE_NAME;
+			m_pProfile->m_nFormat       = CProfile::UT_FORMAT;
+			m_pProfile->m_strCacheDir   = CPath(CProfile::DEF_ROOT_DIR,     CProfile::DEF_CACHE_DIR   );
+			m_pProfile->m_bReadOnly     = false;
+			m_pProfile->m_strSystemDir  = CPath(CProfile::DEF_ROOT_DIR,     CProfile::DEF_SYSTEM_DIR  );
+			m_pProfile->m_strMapDir     = CPath(CProfile::DEF_ROOT_DIR,     CProfile::DEF_MAPS_DIR    );
+			m_pProfile->m_strTextureDir = CPath(CProfile::DEF_ROOT_DIR,     CProfile::DEF_TEXTURES_DIR);
+			m_pProfile->m_strSoundDir   = CPath(CProfile::DEF_ROOT_DIR,     CProfile::DEF_SOUNDS_DIR  );
+			m_pProfile->m_strMusicDir   = CPath(CProfile::DEF_ROOT_DIR,     CProfile::DEF_MUSIC_DIR   );
+			m_pProfile->m_strConfigFile = CPath(m_pProfile->m_strSystemDir, CProfile::DEF_CONFIG_FILE );
+
+			m_aoProfiles.Add(m_pProfile);
+		}
+
+		// Set the default profile.
+		m_strDefProfile = m_pProfile->m_strName;
 	}
 
 	ASSERT(m_pProfile != NULL);
-
-	// Update the default profile.
-	m_strDefProfile = m_pProfile->m_strName;
 
 	// Read the number of pinned files.
 	uint nPinned = m_oIniFile.ReadInt("Pinned", "Count",   0);
@@ -298,7 +345,7 @@ void CUTCMGRApp::LoadConfig()
 void CUTCMGRApp::SaveConfig()
 {
 	// Write the file version.
-	m_oIniFile.WriteString("Version", "Version", INI_FILE_VER);
+	m_oIniFile.WriteString("Version", "Version", INI_FILE_VER_20);
 
 	// Write the cache general settings.
 	m_oIniFile.WriteString("Cache", "Index",        m_strCacheIndex);
@@ -325,6 +372,7 @@ void CUTCMGRApp::SaveConfig()
 
 		// Write profile details.
 		m_oIniFile.WriteString(strSection, "Name",       pProfile->m_strName      );
+		m_oIniFile.WriteInt   (strSection, "Format",     pProfile->m_nFormat      );
 		m_oIniFile.WriteString(strSection, "CacheDir",   pProfile->m_strCacheDir  );
 		m_oIniFile.WriteBool  (strSection, "ReadOnly",   pProfile->m_bReadOnly    );
 		m_oIniFile.WriteString(strSection, "SystemDir",  pProfile->m_strSystemDir );
@@ -332,6 +380,8 @@ void CUTCMGRApp::SaveConfig()
 		m_oIniFile.WriteString(strSection, "TextureDir", pProfile->m_strTextureDir);
 		m_oIniFile.WriteString(strSection, "SoundDir",   pProfile->m_strSoundDir  );
 		m_oIniFile.WriteString(strSection, "MusicDir",   pProfile->m_strMusicDir  );
+		m_oIniFile.WriteString(strSection, "MeshDir",    pProfile->m_strMeshDir   );
+		m_oIniFile.WriteString(strSection, "AnimDir",    pProfile->m_strAnimDir   );
 		m_oIniFile.WriteString(strSection, "ConfigFile", pProfile->m_strConfigFile);
 	}
 
