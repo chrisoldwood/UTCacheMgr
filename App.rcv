@@ -18,8 +18,8 @@
 */
 
 VS_VERSION_INFO VERSIONINFO
-FILEVERSION		2,0,0,0
-PRODUCTVERSION	2,0,0,0
+FILEVERSION		2,5,0,0
+PRODUCTVERSION	2,5,0,0
 FILEFLAGSMASK	VS_FFI_FILEFLAGSMASK
 #ifdef _DEBUG
 FILEFLAGS		VS_FF_DEBUG | VS_FF_PRERELEASE
@@ -35,12 +35,12 @@ BEGIN
 		BLOCK "040904E4"
 		BEGIN
 			VALUE "FileDescription",  "UT Cache Manager\0"
-			VALUE "FileVersion",      "2.0\0"
+			VALUE "FileVersion",      "2.5\0"
 			VALUE "InternalName",     "UTCacheMgr.exe\0"
-			VALUE "LegalCopyright",   "(C) Chris Oldwood 2001-2003\0"
+			VALUE "LegalCopyright",   "(C) Chris Oldwood 2001-2004\0"
 			VALUE "OriginalFilename", "UTCacheMgr.exe\0"
 			VALUE "ProductName",      "UT Cache Manager\0"
-			VALUE "ProductVersion",   "2.0\0"
+			VALUE "ProductVersion",   "2.5\0"
 #ifdef _DEBUG
 			VALUE "Comments",         "Debug Build\0"
 #endif
