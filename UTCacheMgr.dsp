@@ -326,7 +326,15 @@ SOURCE=.\HelpFile\CacheMenu.bmp
 # End Source File
 # Begin Source File
 
+SOURCE=.\HelpFile\ConflictDlg.bmp
+# End Source File
+# Begin Source File
+
 SOURCE=.\HelpFile\ContextMenu.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\HelpFile\DetectDlg.bmp
 # End Source File
 # Begin Source File
 
@@ -342,6 +350,10 @@ SOURCE=.\HelpFile\EditProfDlg.bmp
 # End Source File
 # Begin Source File
 
+SOURCE=.\HelpFile\ErrorsDlg.bmp
+# End Source File
+# Begin Source File
+
 SOURCE=.\HelpFile\FailedMsg.bmp
 # End Source File
 # Begin Source File
@@ -351,6 +363,14 @@ SOURCE=.\HelpFile\HelpMenu.bmp
 # Begin Source File
 
 SOURCE=.\HelpFile\HelpTopics.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\HelpFile\ImportDlg.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\HelpFile\InstallDlg.bmp
 # End Source File
 # Begin Source File
 
@@ -370,6 +390,10 @@ SOURCE=.\HelpFile\ProfDlg.bmp
 # End Source File
 # Begin Source File
 
+SOURCE=.\HelpFile\ProfsMenu.bmp
+# End Source File
+# Begin Source File
+
 SOURCE=.\HelpFile\PropsDlg.bmp
 # End Source File
 # Begin Source File
@@ -383,6 +407,10 @@ SOURCE=.\HelpFile\SelFolder.bmp
 # Begin Source File
 
 SOURCE=.\HelpFile\SelProfDlg.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\HelpFile\ToolsMenu.bmp
 # End Source File
 # Begin Source File
 
@@ -408,6 +436,10 @@ SOURCE=.\ReadMe.txt
 # Begin Source File
 
 SOURCE=.\RelNotes.txt
+# End Source File
+# Begin Source File
+
+SOURCE=.\Setup.ini
 # End Source File
 # Begin Source File
 
