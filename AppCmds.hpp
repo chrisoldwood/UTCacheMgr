@@ -41,7 +41,6 @@ public:
 	void OnEditMove();
 	void OnEditCopy();
 	void OnEditDelete();
-	void OnEditMoveTo();
 	void OnEditCopyTo();
 
 	// View menu.
@@ -50,7 +49,8 @@ public:
 	void OnViewSortByType();
 	void OnViewSortByDate();
 	void OnViewSortBySize();
-	void OnViewSortByColumn(uint nColumn);
+	void OnViewSortByColumn(uint nColumn, CSortColumns::Dir eDefDir);
+	void OnViewShowAll();
 
 	// Options menu.
 	void OnOptionsProfiles();

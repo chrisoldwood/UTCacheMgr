@@ -42,7 +42,6 @@ CAppCmds::CAppCmds()
 		CMD_ENTRY(ID_EDIT_MOVE,			OnEditMove,			NULL,	 5)
 		CMD_ENTRY(ID_EDIT_COPY,			OnEditCopy,			NULL,	 6)
 		CMD_ENTRY(ID_EDIT_DELETE,		OnEditDelete,		NULL,	 7)
-		CMD_ENTRY(ID_EDIT_MOVE_TO,		OnEditMoveTo,		NULL,	 8)
 		CMD_ENTRY(ID_EDIT_COPY_TO,		OnEditCopyTo,		NULL,	 9)
 		// View menu.
 		CMD_ENTRY(ID_VIEW_SELECT_ALL,	OnViewSelectAll,	NULL,	-1)
@@ -50,6 +49,7 @@ CAppCmds::CAppCmds()
 		CMD_ENTRY(ID_VIEW_SORT_TYPE,	OnViewSortByType,	NULL,	-1)
 		CMD_ENTRY(ID_VIEW_SORT_DATE,	OnViewSortByDate,	NULL,	-1)
 		CMD_ENTRY(ID_VIEW_SORT_SIZE,	OnViewSortBySize,	NULL,	-1)
+		CMD_ENTRY(ID_VIEW_SHOW_ALL,		OnViewShowAll,		NULL,	-1)
 		// Options menu.
 		CMD_ENTRY(ID_OPTIONS_PROFILES,	OnOptionsProfiles,	NULL,	-1)
 		CMD_ENTRY(ID_OPTIONS_PREFS,		OnOptionsPrefs,		NULL,	-1)
@@ -241,8 +241,7 @@ void CAppCmds::OnCacheRescan()
 		CPath strUTFile = strUTDir + strRealName;
 
 		// File already in relevant UT folder?
-		if (strUTFile.Exists())
-			continue;
+		bool bExists  = strUTFile.Exists();
 
 		CPath strFile = strCacheDir + strCacheName;
 		struct _stat oInfo;
@@ -263,6 +262,7 @@ void CAppCmds::OnCacheRescan()
 		oRow[CCache::FILE_TYPE]      = cType;
 		oRow[CCache::FILE_DATE]      = oInfo.st_ctime;
 		oRow[CCache::FILE_SIZE]      = (int)oInfo.st_size;
+		oRow[CCache::STATUS]         = (bExists) ? OLD_FILE : NEW_FILE;
 
 		App.m_oCache.InsertRow(oRow);
 	}
@@ -281,6 +281,67 @@ void CAppCmds::OnCacheRescan()
 		App.AlertMsg("Encountered %d error(s) during the scan.\n\n"
 					 "%d Index Lookup Error(s)\n%d Status Query Error(s)\n%d File Extension Error(s)\n",
 					nErrors, nIndexErrs, nInfoErrs, nTypeErrs);
+	}
+
+	// Search for old .tmp files?
+	if (App.m_bScanForTmp)
+	{
+		CPath     strTmpDir = strCacheDir + CProfile::DEF_CACHE_TMP_DIR;
+		CFileTree oTmpFiles;
+
+		// Do search...
+		oFinder.Find(strTmpDir, CProfile::DEF_CACHE_TMP_MASK, false, oTmpFiles);
+
+		int nTmpFiles = oTmpFiles.Root()->m_oData.m_astrFiles.Size();
+
+		// Found any AND user wants to delete them?
+		if ( (nTmpFiles > 0) && (App.QueryMsg("Found %d .tmp cache file(s)?\n\nDo you want to delete them?", nTmpFiles) == IDYES) )
+		{
+			CStrArray& astrFiles = oTmpFiles.Root()->m_oData.m_astrFiles;
+			int        nErrors   = 0;
+
+			// Delete all files found...
+			for (int i = 0; i < astrFiles.Size(); ++i)
+			{
+				CPath strTmpFile = strTmpDir + astrFiles[i];
+
+				if (!CFile::Delete(strTmpFile))
+					nErrors++;
+			}
+
+			// Report any errors.
+			if (nErrors > 0)
+				App.AlertMsg("Failed to delete %d file(s).", nErrors);
+		}
+	}
+
+	// Search index old entries?
+	if (App.m_bScanIndex)
+	{
+		CStrArray astrKeys, astrValues;
+		CStrArray astrInvalid;
+
+		// Read all cache index entries.
+		oIdxFile.ReadSection("Cache", astrKeys, astrValues);
+
+		// Find invalid entries.
+		for (int i = 0; i < astrKeys.Size(); ++i)
+		{
+			CPath strFile = strCacheDir + (astrKeys[i] + "." + CProfile::DEF_CACHE_FILE_EXT);
+
+			if (!strFile.Exists())
+				astrInvalid.Add(astrKeys[i]);
+		}
+
+		int nEntries = astrInvalid.Size();
+
+		// Found any AND user wants to delete them?
+		if ( (nEntries > 0) && (App.QueryMsg("Found %d invalid cache index entries?\n\nDo you want to delete them?", nEntries) == IDYES) )
+		{
+			// Delete the invalid entries...
+			for (int i = 0; i < astrInvalid.Size(); ++i)
+				oIdxFile.DeleteEntry("Cache", astrInvalid[i]);
+		}
 	}
 }
 
@@ -352,6 +413,10 @@ void CAppCmds::OnEditMove()
 
 		Dlg.UpdateLabelAndMeter("Moving file: " + (CString)strRealName, i);
 
+		// Already moved?
+		if (oRow[CCache::STATUS] == OLD_FILE)
+			continue;
+
 		// Get the folder to copy to.
 		switch (oRow[CCache::FILE_TYPE].GetChar())
 		{
@@ -376,7 +441,7 @@ void CAppCmds::OnEditMove()
 		}
 
 		// Delete from index.
-		oIdxFile.DeleteKey("Cache", oRow[CCache::INDEX_KEY]);
+		oIdxFile.DeleteEntry("Cache", oRow[CCache::INDEX_KEY]);
 
 		// Delete from cache table.
 		App.m_oCache.DeleteRow(oRow);
@@ -444,6 +509,10 @@ void CAppCmds::OnEditCopy()
 
 		Dlg.UpdateLabelAndMeter("Copying file: " + (CString)strRealName, i);
 
+		// Already copied?
+		if (oRow[CCache::STATUS] == OLD_FILE)
+			continue;
+
 		// Get the folder to copy to.
 		switch (oRow[CCache::FILE_TYPE].GetChar())
 		{
@@ -467,8 +536,8 @@ void CAppCmds::OnEditCopy()
 			continue;
 		}
 
-		// Delete from cache table.
-		App.m_oCache.DeleteRow(oRow);
+		// Update cache table status.
+		oRow[CCache::STATUS] = OLD_FILE;
 	}
 
 	// Remove progress dialog.
@@ -532,7 +601,7 @@ void CAppCmds::OnEditDelete()
 		}
 
 		// Delete from index.
-		oIdxFile.DeleteKey("Cache", oRow[CCache::INDEX_KEY]);
+		oIdxFile.DeleteEntry("Cache", oRow[CCache::INDEX_KEY]);
 
 		// Delete from cache table.
 		App.m_oCache.DeleteRow(oRow);
@@ -544,23 +613,6 @@ void CAppCmds::OnEditDelete()
 
 	// Update UI.
 	App.m_AppWnd.m_AppDlg.RefreshView();
-}
-
-/******************************************************************************
-** Method:		OnEditMoveTo()
-**
-** Description:	Move the selected files to different folder.
-**
-** Parameters:	None.
-**
-** Returns:		Nothing.
-**
-*******************************************************************************
-*/
-
-void CAppCmds::OnEditMoveTo()
-{
-	App.AlertMsg("Not implemented.");
 }
 
 /******************************************************************************
@@ -577,7 +629,68 @@ void CAppCmds::OnEditMoveTo()
 
 void CAppCmds::OnEditCopyTo()
 {
-	App.AlertMsg("Not implemented.");
+	CResultSet oRS(App.m_oCache);
+
+	// Get the current selection.
+	App.m_AppWnd.m_AppDlg.GetSelectedFiles(oRS);
+
+	int   nFiles      = oRS.Count();
+	int   nErrors     = 0;
+	DWORD dwLastError = 0;
+
+	// Ignore if nothing to copy.
+	if (nFiles == 0)
+		return;
+
+	CPath strDstDir = App.m_strLastCopyTo;
+
+	// Get the directory to copy to.
+	if (!strDstDir.SelectDir(App.m_AppWnd, "Select Folder To Copy To", strDstDir))
+		return;
+
+	// Get cache + index file full paths.
+	CPath    strCacheDir  = App.m_pProfile->m_strCacheDir;
+	CPath    strCacheFile = strCacheDir + App.m_strCacheIndex;
+	CIniFile oIdxFile(strCacheFile);
+
+	// Show the progress dialog.
+	CProgressDlg Dlg;
+
+	Dlg.RunModeless(App.m_AppWnd);
+	Dlg.Title("Copying Files");
+	Dlg.InitMeter(nFiles);
+
+	// For all rows...
+	for (int i = 0; i < nFiles; ++i)
+	{
+		CRow&	oRow        = oRS[i];
+		CPath	strSrcDir   = App.m_pProfile->m_strCacheDir;
+		CPath   strRealName = oRow[CCache::REAL_FILENAME];
+
+		Dlg.UpdateLabelAndMeter("Copying file: " + (CString)strRealName, i);
+
+		// Create the src and dst full paths.
+		CString	strSrcFile = strSrcDir + oRow[CCache::CACHE_FILENAME];
+		CString	strDstFile = strDstDir + oRow[CCache::REAL_FILENAME];
+
+		// Copy it...
+		if (::CopyFile(strSrcFile, strDstFile, TRUE) == 0)
+		{
+			nErrors++;
+			dwLastError = ::GetLastError();
+			continue;
+		}
+	}
+
+	// Remove progress dialog.
+	Dlg.Destroy();
+
+	// Report any errors.
+	if (nErrors > 0)
+		App.AlertMsg("Failed to copy %d of %d file(s).", nErrors, nFiles);
+
+	// Save folder as default.
+	App.m_strLastCopyTo = strDstDir;
 }
 
 /******************************************************************************
@@ -611,25 +724,25 @@ void CAppCmds::OnViewSelectAll()
 
 void CAppCmds::OnViewSortByName()
 {
-	OnViewSortByColumn(CCache::REAL_FILENAME);
+	OnViewSortByColumn(CCache::REAL_FILENAME, CSortColumns::ASC);
 }
 
 void CAppCmds::OnViewSortByType()
 {
-	OnViewSortByColumn(CCache::FILE_TYPE);
+	OnViewSortByColumn(CCache::FILE_TYPE, CSortColumns::ASC);
 }
 
 void CAppCmds::OnViewSortByDate()
 {
-	OnViewSortByColumn(CCache::FILE_DATE);
+	OnViewSortByColumn(CCache::FILE_DATE, CSortColumns::DESC);
 }
 
 void CAppCmds::OnViewSortBySize()
 {
-	OnViewSortByColumn(CCache::FILE_SIZE);
+	OnViewSortByColumn(CCache::FILE_SIZE, CSortColumns::DESC);
 }
 
-void CAppCmds::OnViewSortByColumn(uint nColumn)
+void CAppCmds::OnViewSortByColumn(uint nColumn, CSortColumns::Dir eDefDir)
 {
 	CAppDlg& oAppDlg = App.m_AppWnd.m_AppDlg;
 
@@ -643,11 +756,34 @@ void CAppCmds::OnViewSortByColumn(uint nColumn)
 	{
 		// Set column and initial sort order.
 		oAppDlg.m_nSortColumn = nColumn;
-		oAppDlg.m_eSortOrder  = CSortColumns::ASC;
+		oAppDlg.m_eSortOrder  = eDefDir;
 	}
 
 	// Refresh grid.
 	oAppDlg.RefreshView();
+}
+
+/******************************************************************************
+** Method:		OnViewShowAll()
+**
+** Description:	Toggles showing of all files in the view.
+**
+** Parameters:	None.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CAppCmds::OnViewShowAll()
+{
+	CAppDlg& oAppDlg = App.m_AppWnd.m_AppDlg;
+
+	// Toggle setting.
+	oAppDlg.m_bShowAllFiles = !oAppDlg.m_bShowAllFiles;
+
+	// Refresh grid.
+	App.m_AppWnd.m_AppDlg.RefreshView();
 }
 
 /******************************************************************************
