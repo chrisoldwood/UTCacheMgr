@@ -355,7 +355,7 @@ void CAppCmds::OnCacheRestore()
 	try
 	{
 		// Get logfile path.
-		CPath   strLogFile(CPath::AppDir(), "UTCacheMgr.log");
+		CPath   strLogFile(CPath::ApplicationDir(), "UTCacheMgr.log");
 		CFile   fLogFile;
 
 		// Logfile not created yet?
@@ -365,7 +365,7 @@ void CAppCmds::OnCacheRestore()
 			return;
 		}
 
-		fLogFile.Open(strLogFile, CFile::ReadOnly);
+		fLogFile.Open(strLogFile, GENERIC_READ);
 
 		// Show the progress dialog.
 		CProgressDlg Dlg;
@@ -394,7 +394,7 @@ void CAppCmds::OnCacheRestore()
 			CPath strCacheName = astrFields[1];
 			int   nFileSize    = atoi(astrFields[2]);
 
-			Dlg.UpdateLabelAndMeter("Checking file: " + (CString)strRealName, fLogFile.CurPos());
+			Dlg.UpdateLabelAndMeter("Checking file: " + (CString)strRealName, fLogFile.Seek(0, FILE_CURRENT));
 
 			// Duplicate entry?
 			if (oRestore.Exists(CWhereEqual(CCache::REAL_FILENAME, strRealName)))
@@ -1349,7 +1349,7 @@ void CAppCmds::LogEdits(CResultSet& oRS)
 	ASSERT(App.m_bLogEdits);
 
 	// Get logfile path.
-	CPath strLogFile(CPath::AppDir(), "UTCacheMgr.log");
+	CPath strLogFile(CPath::ApplicationDir(), "UTCacheMgr.log");
 	CFile fLogFile;
 
 	try
@@ -1358,8 +1358,8 @@ void CAppCmds::LogEdits(CResultSet& oRS)
 		if (strLogFile.Exists())
 		{
 			// Open existing file and seek to end.
-			fLogFile.Open(strLogFile, CFile::WriteOnly);
-			fLogFile.Seek(0, CFile::End);
+			fLogFile.Open(strLogFile, GENERIC_WRITE);
+			fLogFile.Seek(0, FILE_END);
 		}
 		else
 		{

@@ -1,7 +1,7 @@
 /******************************************************************************
 ** (C) Chris Oldwood
 **
-** MODULE:		PQTAPP.CPP
+** MODULE:		UTCMGRAPP.CPP
 ** COMPONENT:	The Application.
 ** DESCRIPTION:	The CUTCMGRApp class definition.
 **
@@ -62,7 +62,7 @@ CUTCMGRApp::CUTCMGRApp()
 	m_oMDB.AddTable(m_oCache);
 
 	// Set the help file path.
-	m_oHelpFile.m_HelpFile  = CPath(CPath::AppDir(), "UTCacheMgr.hlp");
+	m_oHelpFile.m_HelpFile  = CPath(CPath::ApplicationDir(), "UTCacheMgr.hlp");
 }
 
 /******************************************************************************
