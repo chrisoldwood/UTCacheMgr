@@ -65,6 +65,7 @@ CUTCMGRApp::CUTCMGRApp()
 	, m_bScanIndex(true)
 	, m_bShowAllFiles(false)
 	, m_bLogEdits(true)
+	, m_bIgnoreDates(true)
 {
 	// Create the MDB.
 	m_oMDB.AddTable(m_oCache);
@@ -184,6 +185,7 @@ void CUTCMGRApp::LoadConfig()
 	m_bScanIndex    = m_oIniFile.ReadBool  ("Cache", "ScanIndex",    m_bScanIndex);
 	m_bShowAllFiles = m_oIniFile.ReadBool  ("Cache", "ShowAllFiles", m_bShowAllFiles);
 	m_bLogEdits     = m_oIniFile.ReadBool  ("Cache", "LogEdits",     m_bLogEdits);
+	m_bIgnoreDates  = m_oIniFile.ReadBool  ("Cache", "IgnoreDates",  m_bIgnoreDates);
 
 	// Read the number of profiles.
 	uint nProfiles  = m_oIniFile.ReadInt("Profiles", "Count",   0);
@@ -209,6 +211,7 @@ void CUTCMGRApp::LoadConfig()
 		oProfile.m_strMusicDir   = m_oIniFile.ReadString(strSection, "MusicDir",   "");
 		oProfile.m_strMeshDir    = m_oIniFile.ReadString(strSection, "MeshDir",    "");
 		oProfile.m_strAnimDir    = m_oIniFile.ReadString(strSection, "AnimDir",    "");
+		oProfile.m_strKarmaDir   = m_oIniFile.ReadString(strSection, "KarmaDir",   "");
 		oProfile.m_strConfigFile = m_oIniFile.ReadString(strSection, "ConfigFile", "");
 		oProfile.m_strLastCopyTo = m_oIniFile.ReadString(strSection, "LastCopyTo", "");
 		oProfile.m_strLastImport  = m_oIniFile.ReadString(strSection, "LastImport",  "");
@@ -338,6 +341,7 @@ void CUTCMGRApp::SaveConfig()
 		m_oIniFile.WriteBool  ("Cache",    "ScanIndex",    m_bScanIndex);
 		m_oIniFile.WriteBool  ("Cache",    "ShowAllFiles", m_bShowAllFiles);
 		m_oIniFile.WriteBool  ("Cache",    "LogEdits",     m_bLogEdits);
+		m_oIniFile.WriteBool  ("Cache",    "IgnoreDates",  m_bIgnoreDates);
 		m_oIniFile.WriteString("Profiles", "Default",      m_strDefProfile);
 	}
 
@@ -367,6 +371,7 @@ void CUTCMGRApp::SaveConfig()
 			m_oIniFile.WriteString(strSection, "MusicDir",   pProfile->m_strMusicDir  );
 			m_oIniFile.WriteString(strSection, "MeshDir",    pProfile->m_strMeshDir   );
 			m_oIniFile.WriteString(strSection, "AnimDir",    pProfile->m_strAnimDir   );
+			m_oIniFile.WriteString(strSection, "KarmaDir",   pProfile->m_strKarmaDir  );
 			m_oIniFile.WriteString(strSection, "ConfigFile", pProfile->m_strConfigFile);
 			m_oIniFile.WriteString(strSection, "LastCopyTo", pProfile->m_strLastCopyTo);
 			m_oIniFile.WriteString(strSection, "LastImport",  pProfile->m_strLastImport);
@@ -500,6 +505,7 @@ CString CUTCMGRApp::FormatType(char cType) const
 		case MUSIC_FILE:	return "Music";
 		case MESH_FILE:		return "Mesh";
 		case ANIM_FILE:		return "Anim";
+		case KARMA_FILE:	return "Karma";
 	}
 
 	ASSERT_FALSE();
@@ -580,6 +586,7 @@ int CUTCMGRApp::IconIndex(char cType) const
 		case MUSIC_FILE:	return 4;
 		case MESH_FILE:		return 5;
 		case ANIM_FILE:		return 6;
+		case KARMA_FILE:	return 7;
 	}
 
 	ASSERT_FALSE();

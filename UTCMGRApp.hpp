@@ -58,6 +58,7 @@ public:
 	bool		m_bScanIndex;		// Scan index for old entries?
 	bool		m_bShowAllFiles;	// Show all files?
 	bool		m_bLogEdits;		// Log edit operations to a file?
+	bool		m_bIgnoreDates;		// Ignore dates mismatches?
 
 	CRect		m_rcLastWndPos;		// Main window position.
 	CRect		m_rcLastDlgPos;		// Import/Restore dialog position.
