@@ -1,25 +1,27 @@
-UT Cache Manager v2.0
+UT Cache Manager v2.5
 =====================
 
 1) Installation.
 
-Copy the files UTCacheMgr.exe and UTCacheMgr.hlp to a folder.
+Run setup.exe.
 
 
 2) Uninstallation.
 
-Delete the files UTCacheMgr.exe, UTCacheMgr.hlp, UTCacheMgr.log and UTCacheMgr.ini.
+Delete the files UTCacheMgr.*.
 
 
-3) Manual/Help/Contact Info etc.
+3) Manual/Help etc.
 
 Its all in the HelpFile - UTCacheMgr.hlp.
+
+
+4) Contact Details.
 
 EMail: gort@cix.co.uk
 Web:   http://www.cix.co.uk/~gort
 
 
 Chris Oldwood 
-(gort@cix.co.uk)
 
-19th June 2003
+31st March 2004

@@ -1,5 +1,3 @@
-- Update helpfile.
-
 - Detect MOD installations.
 
 - Don't import to cache if file exists in appropariate folders.
