@@ -294,7 +294,19 @@ SOURCE=.\Toolbar.bmp
 # PROP Default_Filter ""
 # Begin Source File
 
+SOURCE=.\HelpFile\AboutDlg.bmp
+# End Source File
+# Begin Source File
+
 SOURCE=.\HelpFile\CacheMenu.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\HelpFile\ContextMenu.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\HelpFile\DetectMsg.bmp
 # End Source File
 # Begin Source File
 
@@ -306,11 +318,19 @@ SOURCE=.\HelpFile\EditProfDlg.bmp
 # End Source File
 # Begin Source File
 
+SOURCE=.\HelpFile\FailedMsg.bmp
+# End Source File
+# Begin Source File
+
 SOURCE=.\HelpFile\HelpMenu.bmp
 # End Source File
 # Begin Source File
 
 SOURCE=.\HelpFile\HelpTopics.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\HelpFile\MainView.bmp
 # End Source File
 # Begin Source File
 
@@ -323,6 +343,10 @@ SOURCE=.\HelpFile\PrefsDlg.bmp
 # Begin Source File
 
 SOURCE=.\HelpFile\ProfDlg.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\HelpFile\PropsDlg.bmp
 # End Source File
 # Begin Source File
 
