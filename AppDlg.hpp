@@ -51,6 +51,9 @@ public:
 		DATE_COLUMN,
 		SIZE_COLUMN,
 		STATUS_COLUMN,
+		CACHE_COLUMN,
+		
+		NUM_COLUMNS,
 	};
 
 protected:
@@ -58,15 +61,15 @@ protected:
 	// Message processors.
 	//
 	virtual void OnInitDialog();
-	LRESULT OnGridSelchange(NMHDR&);
-	LRESULT OnGridRightClick(NMHDR&);
-	LRESULT OnGridClickColumn(NMHDR&);
+	virtual void OnDestroy();
+	LRESULT OnGridSelchange(NMHDR& oHdr);
+	LRESULT OnGridRightClick(NMHDR& oHdr);
+	LRESULT OnGridClickColumn(NMHDR& oHdr);
 
 	//
 	// Internal methods.
 	//
 	CRow& GetRow(int nRow);
-	int   IconIndex(char cType);
 };
 
 /******************************************************************************

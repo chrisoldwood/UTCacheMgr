@@ -65,12 +65,45 @@ void CAppDlg::OnInitDialog()
 	// Set the ListView icons.
 	m_lvGrid.ImageList(LVSIL_SMALL, IDB_LIST_ICONS, 16, RGB(255, 0, 255));
 
+	int anColWidths[NUM_COLUMNS];
+
+	// Load the columns widths config.
+	anColWidths[FILE_COLUMN]   = App.m_oIniFile.ReadInt("UI", "Column0", 200);
+	anColWidths[TYPE_COLUMN]   = App.m_oIniFile.ReadInt("UI", "Column1",  50);
+	anColWidths[DATE_COLUMN]   = App.m_oIniFile.ReadInt("UI", "Column2", 125);
+	anColWidths[SIZE_COLUMN]   = App.m_oIniFile.ReadInt("UI", "Column3",  70);
+	anColWidths[STATUS_COLUMN] = App.m_oIniFile.ReadInt("UI", "Column4",  55);
+	anColWidths[CACHE_COLUMN]  = App.m_oIniFile.ReadInt("UI", "Column5", 275);
+
 	// Create grid columns.
-	m_lvGrid.InsertColumn(FILE_COLUMN,   "File",   200, LVCFMT_LEFT  );
-	m_lvGrid.InsertColumn(TYPE_COLUMN,   "Type",    50, LVCFMT_LEFT  );
-	m_lvGrid.InsertColumn(DATE_COLUMN,   "Date",   125, LVCFMT_LEFT  );
-	m_lvGrid.InsertColumn(SIZE_COLUMN,   "Size",    70, LVCFMT_RIGHT );
-	m_lvGrid.InsertColumn(STATUS_COLUMN, "Status",  55, LVCFMT_CENTER);
+	m_lvGrid.InsertColumn(FILE_COLUMN,   "File",       anColWidths[FILE_COLUMN],   LVCFMT_LEFT  );
+	m_lvGrid.InsertColumn(TYPE_COLUMN,   "Type",       anColWidths[TYPE_COLUMN],   LVCFMT_LEFT  );
+	m_lvGrid.InsertColumn(DATE_COLUMN,   "Date",       anColWidths[DATE_COLUMN],   LVCFMT_LEFT  );
+	m_lvGrid.InsertColumn(SIZE_COLUMN,   "Size",       anColWidths[SIZE_COLUMN],   LVCFMT_RIGHT );
+	m_lvGrid.InsertColumn(STATUS_COLUMN, "Status",     anColWidths[STATUS_COLUMN], LVCFMT_CENTER);
+	m_lvGrid.InsertColumn(CACHE_COLUMN,  "Cache Name", anColWidths[CACHE_COLUMN],  LVCFMT_LEFT  );
+}
+
+/******************************************************************************
+** Method:		OnDestroy()
+**
+** Description:	Dialog being destroyed, save the column widths.
+**
+** Parameters:	None.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CAppDlg::OnDestroy()
+{
+	App.m_oIniFile.WriteInt("UI", "Column0", m_lvGrid.ColumnWidth(FILE_COLUMN));
+	App.m_oIniFile.WriteInt("UI", "Column1", m_lvGrid.ColumnWidth(TYPE_COLUMN));
+	App.m_oIniFile.WriteInt("UI", "Column2", m_lvGrid.ColumnWidth(DATE_COLUMN));
+	App.m_oIniFile.WriteInt("UI", "Column3", m_lvGrid.ColumnWidth(SIZE_COLUMN));
+	App.m_oIniFile.WriteInt("UI", "Column4", m_lvGrid.ColumnWidth(STATUS_COLUMN));
+	App.m_oIniFile.WriteInt("UI", "Column5", m_lvGrid.ColumnWidth(CACHE_COLUMN));
 }
 
 /******************************************************************************
@@ -106,11 +139,12 @@ void CAppDlg::RefreshView()
 			int n = m_lvGrid.ItemCount();
 
 			// Add to the grid.
-			m_lvGrid.InsertItem(n,                oRow[CCache::REAL_FILENAME], IconIndex(oRow[CCache::FILE_TYPE]));
+			m_lvGrid.InsertItem(n,                oRow[CCache::REAL_FILENAME], App.IconIndex(oRow[CCache::FILE_TYPE]));
 			m_lvGrid.ItemText  (n, TYPE_COLUMN,   App.FormatType(oRow[CCache::FILE_TYPE]));
 			m_lvGrid.ItemText  (n, DATE_COLUMN,   oRow[CCache::FILE_DATE].Format());
 			m_lvGrid.ItemText  (n, SIZE_COLUMN,   App.FormatSize(oRow[CCache::FILE_SIZE]));
 			m_lvGrid.ItemText  (n, STATUS_COLUMN, App.FormatStatus(oRow[CCache::STATUS]));
+			m_lvGrid.ItemText  (n, CACHE_COLUMN,  oRow[CCache::CACHE_FILENAME]);
 			m_lvGrid.ItemPtr   (n,                &oRow);
 		}
 	}
@@ -192,9 +226,12 @@ void CAppDlg::GetSelectedFiles(CResultSet& oRS)
 *******************************************************************************
 */
 
-LRESULT CAppDlg::OnGridSelchange(NMHDR&)
+LRESULT CAppDlg::OnGridSelchange(NMHDR& oNMHdr)
 {
-	App.m_AppCmds.UpdateUI();
+	NMLISTVIEW& oMsgHdr = reinterpret_cast<NMLISTVIEW&>(oNMHdr);
+
+	if (oMsgHdr.uChanged & LVIF_STATE)
+		App.m_AppCmds.UpdateUI();
 
 	return 0;
 }
@@ -211,7 +248,7 @@ LRESULT CAppDlg::OnGridSelchange(NMHDR&)
 *******************************************************************************
 */
 
-LRESULT CAppDlg::OnGridRightClick(NMHDR&)
+LRESULT CAppDlg::OnGridRightClick(NMHDR& /*oHdr*/)
 {
 	// Only show menu, if a selection.
 	if (m_lvGrid.IsSelection())
@@ -262,39 +299,10 @@ LRESULT CAppDlg::OnGridClickColumn(NMHDR& oHdr)
 		case TYPE_COLUMN:		App.m_AppCmds.OnViewSortByType();	break;
 		case DATE_COLUMN:		App.m_AppCmds.OnViewSortByDate();	break;
 		case SIZE_COLUMN:		App.m_AppCmds.OnViewSortBySize();	break;
-		case STATUS_COLUMN:											break;
-		default:				ASSERT(false);						break;
+		case STATUS_COLUMN:		App.m_AppCmds.OnViewSortByStatus();	break;
+		case CACHE_COLUMN:		App.m_AppCmds.OnViewSortByCache();	break;
+		default:				ASSERT_FALSE();						break;
 	}
 
 	return 0;
-}
-
-/******************************************************************************
-** Method:		IconIndex()
-**
-** Description:	Gets the index of the icon for the given file type.
-**
-** Parameters:	cType	The file type.
-**
-** Returns:		The icon index.
-**
-*******************************************************************************
-*/
-
-int CAppDlg::IconIndex(char cType)
-{
-	switch (cType)
-	{
-		case SYSTEM_FILE:	return 0;
-		case MAP_FILE:		return 1;
-		case TEXTURE_FILE:	return 2;
-		case SOUND_FILE:	return 3;
-		case MUSIC_FILE:	return 4;
-		case MESH_FILE:		return 5;
-		case ANIM_FILE:		return 6;
-	}
-
-	ASSERT(false);
-
-	return -1;
 }
