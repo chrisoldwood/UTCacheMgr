@@ -1,5 +1,1 @@
-- Static URL control.
-
 - Version number.
-
-- Errors on copying.
