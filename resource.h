@@ -35,7 +35,9 @@
 #define ID_VIEW_SORT_DATE               304
 #define ID_VIEW_SORT_SIZE               305
 #define ID_VIEW_SORT_TYPE               306
-#define ID_VIEW_SHOW_ALL                307
+#define ID_VIEW_SORT_STATUS             307
+#define ID_VIEW_SORT_CACHE              308
+#define ID_VIEW_SHOW_ALL                309
 #define ID_OPTIONS_POPUP                800
 #define ID_OPTIONS_PROFILES             801
 #define ID_OPTIONS_PREFS                802
