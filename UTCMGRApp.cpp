@@ -197,15 +197,38 @@ void CUTCMGRApp::LoadConfig()
 	{
 		m_pProfile = new CProfile();
 
+		// Initialise profile with sensible defaults.
 		m_pProfile->m_strName       = CProfile::DEF_PROFILE_NAME;
-		m_pProfile->m_strCacheDir   = CProfile::DEF_CACHE_DIR;
-		m_pProfile->m_strSystemDir  = CProfile::DEF_SYSTEM_DIR;
-		m_pProfile->m_strMapDir     = CProfile::DEF_MAPS_DIR;
-		m_pProfile->m_strTextureDir = CProfile::DEF_TEXTURES_DIR;
-		m_pProfile->m_strSoundDir   = CProfile::DEF_SOUNDS_DIR;
-		m_pProfile->m_strMusicDir   = CProfile::DEF_MUSIC_DIR;
-		m_pProfile->m_strConfigFile = CProfile::DEF_CONFIG_FILE;
+		m_pProfile->m_strCacheDir   = CPath(CProfile::DEF_ROOT_DIR,     CProfile::DEF_CACHE_DIR   );
+		m_pProfile->m_strSystemDir  = CPath(CProfile::DEF_ROOT_DIR,     CProfile::DEF_SYSTEM_DIR  );
+		m_pProfile->m_strMapDir     = CPath(CProfile::DEF_ROOT_DIR,     CProfile::DEF_MAPS_DIR    );
+		m_pProfile->m_strTextureDir = CPath(CProfile::DEF_ROOT_DIR,     CProfile::DEF_TEXTURES_DIR);
+		m_pProfile->m_strSoundDir   = CPath(CProfile::DEF_ROOT_DIR,     CProfile::DEF_SOUNDS_DIR  );
+		m_pProfile->m_strMusicDir   = CPath(CProfile::DEF_ROOT_DIR,     CProfile::DEF_MUSIC_DIR   );
+		m_pProfile->m_strConfigFile = CPath(m_pProfile->m_strSystemDir, CProfile::DEF_CONFIG_FILE );
 
+		CRegKey oUTKey;
+
+		// Try and find the regkey that contains the UT base path.
+		if (oUTKey.Open(HKEY_LOCAL_MACHINE, "SOFTWARE\\Unreal Technology\\Installed Apps\\UnrealTournament"))
+		{
+			// Get the UT base path.
+			CPath strBaseDir = oUTKey.QueryString("Folder", "");
+
+			if (strBaseDir != "")
+			{
+				// Re-initialise profile with correct paths.
+				m_pProfile->m_strCacheDir   = CPath(strBaseDir, CProfile::DEF_CACHE_DIR   );
+				m_pProfile->m_strSystemDir  = CPath(strBaseDir, CProfile::DEF_SYSTEM_DIR  );
+				m_pProfile->m_strMapDir     = CPath(strBaseDir, CProfile::DEF_MAPS_DIR    );
+				m_pProfile->m_strTextureDir = CPath(strBaseDir, CProfile::DEF_TEXTURES_DIR);
+				m_pProfile->m_strSoundDir   = CPath(strBaseDir, CProfile::DEF_SOUNDS_DIR  );
+				m_pProfile->m_strMusicDir   = CPath(strBaseDir, CProfile::DEF_MUSIC_DIR   );
+				m_pProfile->m_strConfigFile = CPath(m_pProfile->m_strSystemDir, CProfile::DEF_CONFIG_FILE);
+			}
+		}
+
+		// Add to the profiles collection.
 		m_aoProfiles.Add(m_pProfile);
 	}
 
