@@ -242,6 +242,10 @@ void CUTCMGRApp::LoadConfig()
 		if ((pProfile = CProfile::DetectUT2003()) != NULL)
 			m_aoProfiles.Add(pProfile);
 
+		// Look for a UT2004 installation.
+		if ((pProfile = CProfile::DetectUT2004()) != NULL)
+			m_aoProfiles.Add(pProfile);
+
 		// Look for a Tactical Ops installation.
 		if ((pProfile = CProfile::DetectTacOps()) != NULL)
 			m_aoProfiles.Add(pProfile);
@@ -422,6 +426,30 @@ CProfile* CUTCMGRApp::FindProfile(const char* pszName) const
 	for (int i = 0; i < m_aoProfiles.Size(); ++i)
 	{
 		if (m_aoProfiles[i]->m_strName.Compare(pszName, true) == 0)
+			return m_aoProfiles[i];
+	}
+
+	return NULL;
+}
+
+/******************************************************************************
+** Method:		FindProfileByCfgFile()
+**
+** Description:	Finds a profile by its config (.ini) file.
+**
+** Parameters:	strCfgFile.
+**
+** Returns:		The profile or NULL.
+**
+*******************************************************************************
+*/
+
+CProfile* CUTCMGRApp::FindProfileByCfgFile(const CPath& strCfgFile) const
+{
+	// For all profiles...
+	for (int i = 0; i < m_aoProfiles.Size(); ++i)
+	{
+		if (m_aoProfiles[i]->m_strConfigFile.Compare(strCfgFile, true) == 0)
 			return m_aoProfiles[i];
 	}
 
