@@ -28,13 +28,14 @@ CPrefsDlg::CPrefsDlg()
 	: CDialog(IDD_PREFS)
 {
 	DEFINE_CTRL_TABLE
-		CTRL(IDC_DEF_PROFILE,		&m_cbProfiles  )
-		CTRL(IDC_SCAN_ON_START,		&m_ckScanStart )
-		CTRL(IDC_SCAN_ON_SWITCH,	&m_ckScanSwitch)
-		CTRL(IDC_SCAN_TMP_FILES,	&m_ckScanForTmp)
-		CTRL(IDC_SCAN_INDEX,		&m_ckScanIndex )
-		CTRL(IDC_SHOW_ALL,			&m_ckShowAll   )
-		CTRL(IDC_LOG_EDITS,			&m_ckLogEdits  )
+		CTRL(IDC_DEF_PROFILE,		&m_cbProfiles   )
+		CTRL(IDC_SCAN_ON_START,		&m_ckScanStart  )
+		CTRL(IDC_SCAN_ON_SWITCH,	&m_ckScanSwitch )
+		CTRL(IDC_SCAN_TMP_FILES,	&m_ckScanForTmp )
+		CTRL(IDC_SCAN_INDEX,		&m_ckScanIndex  )
+		CTRL(IDC_SHOW_ALL,			&m_ckShowAll    )
+		CTRL(IDC_LOG_EDITS,			&m_ckLogEdits   )
+		CTRL(IDC_IGNORE_DATES,		&m_ckIgnoreDates)
 	END_CTRL_TABLE
 }
 
@@ -75,6 +76,7 @@ void CPrefsDlg::OnInitDialog()
 	m_ckScanIndex.Check(App.m_bScanIndex);
 	m_ckShowAll.Check(App.m_bShowAllFiles);
 	m_ckLogEdits.Check(App.m_bLogEdits);
+	m_ckIgnoreDates.Check(App.m_bIgnoreDates);
 }
 
 /******************************************************************************
@@ -106,6 +108,7 @@ bool CPrefsDlg::OnOk()
 	App.m_bScanIndex    = m_ckScanIndex.IsChecked();
 	App.m_bShowAllFiles = m_ckShowAll.IsChecked();
 	App.m_bLogEdits     = m_ckLogEdits.IsChecked();
+	App.m_bIgnoreDates  = m_ckIgnoreDates.IsChecked();
 
 	// Mark settings as modified.
 	App.m_nModified |= App.SETTINGS;

@@ -38,6 +38,7 @@ protected:
 	CCheckBox	m_ckScanIndex;
 	CCheckBox	m_ckShowAll;
 	CCheckBox	m_ckLogEdits;
+	CCheckBox	m_ckIgnoreDates;
 
 	//
 	// Message processors.
