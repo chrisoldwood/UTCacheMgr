@@ -73,6 +73,7 @@ void CAppWnd::OnCreate(const CRect& rcClient)
 	StatusBar(&m_StatusBar);
 
 	m_AppDlg.RunModeless(*this);
+	m_AppDlg.m_bShowAllFiles = App.m_bShowAllFiles;
 
 	UpdateTitle();
 
