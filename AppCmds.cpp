@@ -20,6 +20,7 @@
 #include "SelFilesDlg.hpp"
 #include "ErrorsDlg.hpp"
 #include "FilePropsDlg.hpp"
+#include "ConflictDlg.hpp"
 #include "HelpTopics.h"
 
 /******************************************************************************
@@ -1542,8 +1543,10 @@ void CAppCmds::OnToolsInstall()
 	Dlg.InitMeter(nFiles);
 
 	CFileTreeIter oInsIter(oFiles);
-	int           nFile    = 0;
-	bool          bAborted = false;
+	int           nFile      = 0;
+	bool          bAborted   = false;
+	bool          bDefYesAll = false;
+	bool          bDefNoAll  = false;
 
 	// For all folders...
 	while (((pNode = oInsIter.Next()) != NULL) && (!bAborted))
@@ -1589,37 +1592,51 @@ void CAppCmds::OnToolsInstall()
 				}
 
 				// The same file?
-				if ( (oSrcInfo.st_size  == oDstInfo.st_size )
-				  && (oSrcInfo.st_mtime == oDstInfo.st_mtime) )
+				if (  (oSrcInfo.st_size  == oDstInfo.st_size )
+				  && ((oSrcInfo.st_mtime == oDstInfo.st_mtime) || (App.m_bIgnoreDates)) )
 				{
 					dlgErrors.m_astrErrors.Add("Already installed.");
 					continue;
 				}
 
-				// Query user for action.
-				int nResult = App.QueryMsg("Installation file conflict.\nDo you want to replace the following file:\n\n"
-											"   %s\n\n   %s - %u Bytes\n\n"
-											"With this one from the install set:\n\n"
-											"   %s\n\n   %s - %u Bytes\n\n"
-											"* Click YES to replace the existing file.\n"
-											"* Click NO to leave the existing file.\n"
-											"* Click CANCEL to abort the installation.\n",
-											strSrcFile, CStrCvt::FormatDateTime(oSrcInfo.st_mtime), oSrcInfo.st_size,
-											strDstFile, CStrCvt::FormatDateTime(oDstInfo.st_mtime), oDstInfo.st_size);
-
-				// Ignore file?
-				if (nResult == IDNO)
+				// Default is don't overwrite?
+				if (bDefNoAll)
 				{
 					dlgErrors.m_astrErrors.Add("Not installed.");
 					continue;
 				}
 
-				// Abort install?
-				if (nResult == IDCANCEL)
+				// Default is to query overwrites?
+				if (!bDefYesAll)
 				{
-					dlgErrors.m_astrErrors.Add("Installed aborted.");
-					bAborted = true;
-					continue;
+					CConflictDlg oQueryDlg;
+
+					oQueryDlg.m_strFileName1.Format("%s", strDstFile);
+					oQueryDlg.m_strFileInfo1.Format("%s - %u Bytes", CStrCvt::FormatDateTime(oDstInfo.st_mtime), oDstInfo.st_size);
+					oQueryDlg.m_strFileName2.Format("%s", strSrcFile);
+					oQueryDlg.m_strFileInfo2.Format("%s - %u Bytes", CStrCvt::FormatDateTime(oSrcInfo.st_mtime), oSrcInfo.st_size);
+
+					// Query user for action.
+					int nResult = oQueryDlg.RunModal(App.m_AppWnd);
+
+					// Default answer returned?
+					if (nResult == IDYESALL)	bDefYesAll = true;
+					if (nResult == IDNOALL)		bDefNoAll  = true;
+
+					// Ignore file?
+					if ((nResult == IDNO) || (nResult == IDNOALL))
+					{
+						dlgErrors.m_astrErrors.Add("Not installed.");
+						continue;
+					}
+
+					// Abort install?
+					if (nResult == IDCANCEL)
+					{
+						dlgErrors.m_astrErrors.Add("Installed aborted.");
+						bAborted = true;
+						continue;
+					}
 				}
 			}
 
