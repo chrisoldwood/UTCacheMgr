@@ -75,10 +75,14 @@ BEGIN
         MENUITEM "&Profile...\tCtrl+P",         ID_CACHE_PROFILE
         MENUITEM "&Rescan\tF5",                 ID_CACHE_RESCAN
         MENUITEM SEPARATOR
+        MENUITEM "Res&tore...",                 ID_CACHE_RESTORE
+        MENUITEM SEPARATOR
         MENUITEM "E&xit\tAlt+F4",               ID_CACHE_EXIT
     END
     POPUP "&Edit"
     BEGIN
+        MENUITEM "&Pin/Unpin",                  ID_EDIT_PIN
+        MENUITEM SEPARATOR
         MENUITEM "&Move",                       ID_EDIT_MOVE
         MENUITEM "&Copy",                       ID_EDIT_COPY
         MENUITEM "&Delete",                     ID_EDIT_DELETE
@@ -87,6 +91,7 @@ BEGIN
     END
     POPUP "&View"
     BEGIN
+        MENUITEM "Select Ne&w\tCtrl+N",         ID_VIEW_SELECT_NEW
         MENUITEM "Select &All\tCtrl+A",         ID_VIEW_SELECT_ALL
         MENUITEM SEPARATOR
         MENUITEM "Sort By &Name",               ID_VIEW_SORT_NAME
@@ -122,8 +127,8 @@ STYLE WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN
 FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     CONTROL         "List1",IDC_GRID,"SysListView32",LVS_REPORT | 
-                    LVS_ALIGNLEFT | LVS_NOSORTHEADER | WS_BORDER | 
-                    WS_TABSTOP,5,5,290,190,WS_EX_CLIENTEDGE
+                    LVS_SHOWSELALWAYS | LVS_ALIGNLEFT | LVS_NOSORTHEADER | 
+                    WS_BORDER | WS_TABSTOP,5,5,290,190,WS_EX_CLIENTEDGE
 END
 
 IDD_ABOUT DIALOG DISCARDABLE  0, 0, 122, 126
@@ -133,7 +138,7 @@ FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDR_APPICON,IDC_STATIC,10,15,20,20
     CTEXT           "UT Cache Manager",IDC_STATIC,40,10,70,10,SS_CENTERIMAGE
-    CTEXT           "v1.0 Beta",IDC_STATIC,40,20,70,8,SS_CENTERIMAGE
+    CTEXT           "v1.0 Beta",IDC_VERSION,40,20,70,8,SS_CENTERIMAGE
     CTEXT           "Freeware",IDC_STATIC,40,30,70,8,SS_CENTERIMAGE
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,50,99,1
     CTEXT           "(C) Chris Oldwood 2002",IDC_STATIC,10,60,100,10,
@@ -177,26 +182,31 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,155,220,50,14
 END
 
-IDD_PREFS DIALOG DISCARDABLE  0, 0, 227, 130
+IDD_PREFS DIALOG DISCARDABLE  0, 0, 237, 191
 STYLE DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Preferences"
 FONT 8, "MS Sans Serif"
 BEGIN
-    LTEXT           "Default &Profile:",IDC_STATIC,55,10,105,8
-    COMBOBOX        IDC_DEF_PROFILE,55,20,105,75,CBS_DROPDOWNLIST | CBS_SORT | 
+    GROUPBOX        "Scan Options",IDC_STATIC,5,5,225,80
+    LTEXT           "Default &Profile:",IDC_STATIC,15,20,95,8
+    COMBOBOX        IDC_DEF_PROFILE,15,30,94,75,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_TABSTOP
     CONTROL         "Scan Default On &Startup?",IDC_SCAN_ON_START,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,45,100,10
-    CONTROL         "Scan On Profile &Change?",IDC_SCAN_ON_SWITCH,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,60,100,10
+                    BS_AUTOCHECKBOX | WS_TABSTOP,15,50,100,10
     CONTROL         "Scan For Old .&tmp Files?",IDC_SCAN_TMP_FILES,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,115,45,100,10
+                    BS_AUTOCHECKBOX | WS_TABSTOP,120,50,100,10
+    CONTROL         "Scan On Profile &Change?",IDC_SCAN_ON_SWITCH,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,15,65,100,10
     CONTROL         "Scan &Index For Old Entries?",IDC_SCAN_INDEX,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,115,60,105,10
+                    BS_AUTOCHECKBOX | WS_TABSTOP,120,65,105,10
+    GROUPBOX        "View Options",IDC_STATIC,5,90,225,30
     CONTROL         "Sho&w All Files?",IDC_SHOW_ALL,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,10,80,100,10
-    DEFPUSHBUTTON   "OK",IDOK,60,105,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,116,105,50,14
+                    WS_TABSTOP,15,105,100,10
+    GROUPBOX        "Edit Options",IDC_STATIC,5,125,225,35
+    CONTROL         "&Log Edit Operations?",IDC_LOG_EDITS,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,15,140,100,10
+    DEFPUSHBUTTON   "OK",IDOK,65,170,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,121,170,50,14
 END
 
 IDD_PROFILES DIALOG DISCARDABLE  0, 0, 186, 121
@@ -274,6 +284,18 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,90,60,50,14
 END
 
+IDD_RESTORE DIALOGEX 0, 0, 262, 241
+STYLE DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Restore Files To Cache"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,80,220,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,135,220,50,14
+    CONTROL         "List1",IDC_GRID,"SysListView32",LVS_REPORT | 
+                    LVS_SHOWSELALWAYS | LVS_ALIGNLEFT | LVS_NOSORTHEADER | 
+                    WS_BORDER | WS_TABSTOP,5,5,250,200,WS_EX_CLIENTEDGE
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -290,6 +312,7 @@ IDR_APPTOOLBAR          BITMAP  DISCARDABLE     "Toolbar.bmp"
 IDR_APPACCEL ACCELERATORS DISCARDABLE 
 BEGIN
     "A",            ID_VIEW_SELECT_ALL,     VIRTKEY, CONTROL, NOINVERT
+    "N",            ID_VIEW_SELECT_NEW,     VIRTKEY, CONTROL, NOINVERT
     "P",            ID_CACHE_PROFILE,       VIRTKEY, CONTROL, NOINVERT
     VK_F1,          ID_HELP_CONTENTS,       VIRTKEY, NOINVERT
     VK_F5,          ID_CACHE_RESCAN,        VIRTKEY, NOINVERT
@@ -320,9 +343,9 @@ BEGIN
     IDD_PREFS, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 220
+        RIGHTMARGIN, 230
         TOPMARGIN, 7
-        BOTTOMMARGIN, 123
+        BOTTOMMARGIN, 184
     END
 
     IDD_PROFILES, DIALOG
@@ -355,6 +378,14 @@ BEGIN
         RIGHTMARGIN, 165
         TOPMARGIN, 7
         BOTTOMMARGIN, 79
+    END
+
+    IDD_RESTORE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 255
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 234
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -405,6 +436,7 @@ BEGIN
     ID_CACHE_POPUP          "Scanning options"
     ID_CACHE_PROFILE        "Select a different cache profile\nSelect Profile (Ctrl+P)"
     ID_CACHE_RESCAN         "Rescan the cache\nRescan Cache (F5)"
+    ID_CACHE_RESTORE        "Restore previously extracted files to the cache\nRestore"
     ID_CACHE_EXIT           "Exit UT Cache Manager\nExit"
 END
 
@@ -426,29 +458,27 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     ID_VIEW_POPUP           "View options"
+    ID_VIEW_SELECT_NEW      "Select all new files\nSelect New"
     ID_VIEW_SELECT_ALL      "Select all files\nSelect All"
     ID_VIEW_SORT_NAME       "Sort the files by name\nSort By Name"
-    ID_VIEW_SORT_DATE       "Sort the files by date\nSort By Date"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
+    ID_VIEW_SORT_DATE       "Sort the files by date\nSort By Date"
     ID_VIEW_SORT_SIZE       "Sort the files by size\nSort By Size"
     ID_VIEW_SORT_TYPE       "Sort the files by type\nSort By Type"
+    ID_VIEW_SHOW_ALL        "Show files which already exist in the UT directories as well\nShow All"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
     ID_EDIT_POPUP           "Editing options"
+    ID_EDIT_PIN             "Pin or Unpin the selected files to the cache\nPin/UnPin"
     ID_EDIT_MOVE            "Move the selected files to the relevant profile folders\nMove Files"
     ID_EDIT_COPY            "Copy the selected files to the relevant profile folders\nCopy Files"
     ID_EDIT_DELETE          "Delete the selected files from the cache\nDelete Files"
     ID_EDIT_COPY_TO         "Copy the selected files to another folder\nCopy Files To"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    ID_VIEW_SHOW_ALL        "Show files which already exist in the UT directories as well\nShow All"
 END
 
 #endif    // English (U.K.) resources

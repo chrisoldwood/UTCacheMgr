@@ -1,0 +1,5 @@
+- Package Mismatch section in helpfile.
+
+- Redo CacheMenu, EditMenu, ViewMenu and Prefs bitmaps.
+
+- Add Restore dialog bitmap.
