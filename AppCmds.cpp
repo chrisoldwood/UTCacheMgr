@@ -277,7 +277,7 @@ void CAppCmds::OnCacheRescan()
 		if (cType == NULL)
 		{
 			dlgErrors.m_astrFiles.Add(strRealName);
-			dlgErrors.m_astrErrors.Add("Unknown file type");
+			dlgErrors.m_astrErrors.Add("Unknown file type.");
 			continue;
 		}
 
@@ -296,7 +296,7 @@ void CAppCmds::OnCacheRescan()
 		if (!CFile::QueryInfo(strFile, oInfo))
 		{
 			dlgErrors.m_astrFiles.Add(strCacheName);
-			dlgErrors.m_astrErrors.Add("Size query failed");
+			dlgErrors.m_astrErrors.Add("Size query failed.");
 			continue;
 		}
 
@@ -1542,13 +1542,14 @@ void CAppCmds::OnToolsInstall()
 	Dlg.InitMeter(nFiles);
 
 	CFileTreeIter oInsIter(oFiles);
-	int           nFile = 0;
+	int           nFile    = 0;
+	bool          bAborted = false;
 
 	// For all folders...
-	while ((pNode = oInsIter.Next()) != NULL)
+	while (((pNode = oInsIter.Next()) != NULL) && (!bAborted))
 	{
 		// For all files in the folder...
-		for (int i = 0; i < pNode->m_oData.m_astrFiles.Size(); ++i, ++nFile)
+		for (int i = 0; ((i < pNode->m_oData.m_astrFiles.Size()) && (!bAborted)); ++i, ++nFile)
 		{
 			CPath   strSrcDir   = pNode->m_oData.m_strPath;
 			CPath   strFileName = pNode->m_oData.m_astrFiles[i];
@@ -1571,17 +1572,65 @@ void CAppCmds::OnToolsInstall()
 			CPath strDstDir = App.m_pProfile->GetTypeDir(cType);
 
 			// Create the src and dst full paths.
-			CString	strSrcFile = strSrcDir + strFileName;
-			CString	strDstFile = strDstDir + strFileName;
+			CPath   strSrcFile = strSrcDir + strFileName;
+			CPath   strDstFile = strDstDir + strFileName;
 
-			// Copy it...
-			if (CFile::Copy(strSrcFile, strDstFile) == 0)
+			// File already installed?
+			if (strDstFile.Exists())
+			{
+				struct _stat oSrcInfo, oDstInfo;
+
+				// Query both files details.
+				if ( (!CFile::QueryInfo(strSrcFile, oSrcInfo))
+				  || (!CFile::QueryInfo(strDstFile, oDstInfo)) )
+				{
+					dlgErrors.m_astrErrors.Add("Size query failed.");
+					continue;
+				}
+
+				// The same file?
+				if ( (oSrcInfo.st_size  == oDstInfo.st_size )
+				  && (oSrcInfo.st_mtime == oDstInfo.st_mtime) )
+				{
+					dlgErrors.m_astrErrors.Add("Already installed.");
+					continue;
+				}
+
+				// Query user for action.
+				int nResult = App.QueryMsg("Installation file conflict.\nDo you want to replace the following file:\n\n"
+											"   %s\n\n   %s - %u Bytes\n\n"
+											"With this one from the install set:\n\n"
+											"   %s\n\n   %s - %u Bytes\n\n"
+											"* Click YES to replace the existing file.\n"
+											"* Click NO to leave the existing file.\n"
+											"* Click CANCEL to abort the installation.\n",
+											strSrcFile, CStrCvt::FormatDateTime(oSrcInfo.st_mtime), oSrcInfo.st_size,
+											strDstFile, CStrCvt::FormatDateTime(oDstInfo.st_mtime), oDstInfo.st_size);
+
+				// Ignore file?
+				if (nResult == IDNO)
+				{
+					dlgErrors.m_astrErrors.Add("Not installed.");
+					continue;
+				}
+
+				// Abort install?
+				if (nResult == IDCANCEL)
+				{
+					dlgErrors.m_astrErrors.Add("Installed aborted.");
+					bAborted = true;
+					continue;
+				}
+			}
+
+			// Install it.
+			if (CFile::Copy(strSrcFile, strDstFile, true) == 0)
 			{
 				dlgErrors.m_astrErrors.Add(App.FormatError());
 				continue;
 			}
 
-			dlgErrors.m_astrErrors.Add("");
+			dlgErrors.m_astrErrors.Add("Installed.");
 		}
 	}
 
