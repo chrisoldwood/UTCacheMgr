@@ -2,9 +2,7 @@
 
 - Don't import to cache if file exists in appropariate folders.
 
-- Allow user to choose which profiles when detecting.
-
-- Prefabs folder.
+- Allow user to choose which profiles when detecting new ones.
 
 - Uninstall for map packs.
 
@@ -17,3 +15,17 @@
 - Separate edit logs for each profile.
 
 - Backing up of cache.
+
+- Registry key checker.
+
+- Auto detection of format from an .ini file.
+
+- Use UT(2004) path in quick setup for browsing.
+
+- Better .ini file detection for quick setup.
+
+- Better handling of folder paths for mod setups.
+
+- Change status field names.
+
+- Separate pin lists (profile)/editing of pin list.
