@@ -33,7 +33,9 @@ CRestoreDlg::CRestoreDlg()
 	END_CTRL_TABLE
 
 	DEFINE_GRAVITY_TABLE
-		CTRLGRAV(IDC_GRID, LEFT_EDGE, TOP_EDGE, RIGHT_EDGE, BOTTOM_EDGE)
+		CTRLGRAV(IDC_GRID, LEFT_EDGE,  TOP_EDGE,    RIGHT_EDGE, BOTTOM_EDGE)
+		CTRLGRAV(IDOK,     RIGHT_EDGE, BOTTOM_EDGE, RIGHT_EDGE, BOTTOM_EDGE)
+		CTRLGRAV(IDCANCEL, RIGHT_EDGE, BOTTOM_EDGE, RIGHT_EDGE, BOTTOM_EDGE)
 	END_GRAVITY_TABLE
 }
 
@@ -76,9 +78,10 @@ void CRestoreDlg::OnInitDialog()
 		int n = m_lvGrid.ItemCount();
 
 		// Add to the grid.
-		m_lvGrid.InsertItem(n,    oRow[CCache::REAL_FILENAME], &oRow);
+		m_lvGrid.InsertItem(n,    oRow[CCache::REAL_FILENAME]);
 		m_lvGrid.ItemText  (n, 1, App.FormatType(oRow[CCache::FILE_TYPE]));
 		m_lvGrid.ItemText  (n, 2, App.FormatSize(oRow[CCache::FILE_SIZE]));
+		m_lvGrid.ItemPtr   (n,    &oRow);
 	}
 }
 
