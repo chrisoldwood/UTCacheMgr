@@ -15,8 +15,11 @@ Delete the files UTCacheMgr.exe, UTCacheMgr.hlp, UTCacheMgr.log and UTCacheMgr.i
 
 Its all in the HelpFile - UTCacheMgr.hlp.
 
+EMail: gort@cix.co.uk
+Web:   http://www.cix.co.uk/~gort
+
 
 Chris Oldwood 
 (gort@cix.co.uk)
 
-9th April 2003
+19th June 2003

@@ -11,6 +11,7 @@ Version 2.0
 - Added status bar message to show cache summary.
 - Various other minor UI tweaks and fixes.
 
+
 Version 1.0
 ===========
 
@@ -20,4 +21,4 @@ Version 1.0
 Chris Oldwood 
 (gort@cix.co.uk)
 
-9th April 2003
+19th June 2003
