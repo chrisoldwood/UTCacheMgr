@@ -31,6 +31,7 @@ CEditProfileDlg::CEditProfileDlg()
 	DEFINE_CTRL_TABLE
 		CTRL(IDC_NAME,			&m_ebName      )
 		CTRL(IDC_CACHE_DIR,		&m_ebCacheDir  )
+		CTRL(IDC_READ_ONLY,		&m_ckReadOnly  )
 		CTRL(IDC_SYSTEM_DIR,	&m_ebSystemDir )
 		CTRL(IDC_MAPS_DIR,		&m_ebMapDir    )
 		CTRL(IDC_TEXTURES_DIR,	&m_ebTextureDir)
@@ -68,6 +69,7 @@ void CEditProfileDlg::OnInitDialog()
 	// Load the current config.
 	m_ebName.Text(m_oProfile.m_strName);
 	m_ebCacheDir.Text(m_oProfile.m_strCacheDir);
+	m_ckReadOnly.Check(m_oProfile.m_bReadOnly);
 	m_ebSystemDir.Text(m_oProfile.m_strSystemDir);
 	m_ebMapDir.Text(m_oProfile.m_strMapDir);
 	m_ebTextureDir.Text(m_oProfile.m_strTextureDir);
@@ -182,6 +184,7 @@ bool CEditProfileDlg::OnOk()
 	// Update profile.
 	m_oProfile.m_strName       = m_strName;
 	m_oProfile.m_strCacheDir   = m_strCacheDir;
+	m_oProfile.m_bReadOnly     = m_ckReadOnly.IsChecked();
 	m_oProfile.m_strSystemDir  = m_strSystemDir;
 	m_oProfile.m_strMapDir     = m_strMapDir;
 	m_oProfile.m_strTextureDir = m_strTextureDir;

@@ -39,6 +39,7 @@ protected:
 	//
 	CComboBox	m_cbProfiles;
 	CEditBox	m_ebCacheDir;
+	CCheckBox	m_ckReadOnly;
 	CEditBox	m_ebSystemDir;
 	CEditBox	m_ebMapDir;
 	CEditBox	m_ebTextureDir;

@@ -32,6 +32,7 @@ CSelProfileDlg::CSelProfileDlg()
 	DEFINE_CTRL_TABLE
 		CTRL(IDC_PROFILES,		&m_cbProfiles  )
 		CTRL(IDC_CACHE_DIR,		&m_ebCacheDir  )
+		CTRL(IDC_READ_ONLY,		&m_ckReadOnly  )
 		CTRL(IDC_SYSTEM_DIR,	&m_ebSystemDir )
 		CTRL(IDC_MAPS_DIR,		&m_ebMapDir    )
 		CTRL(IDC_TEXTURES_DIR,	&m_ebTextureDir)
@@ -124,6 +125,7 @@ void CSelProfileDlg::OnSelectProfile()
 
 	// Load details into controls.
 	m_ebCacheDir.Text(pProfile->m_strCacheDir);
+	m_ckReadOnly.Check(pProfile->m_bReadOnly);
 	m_ebSystemDir.Text(pProfile->m_strSystemDir);
 	m_ebMapDir.Text(pProfile->m_strMapDir);
 	m_ebTextureDir.Text(pProfile->m_strTextureDir);
