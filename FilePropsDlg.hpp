@@ -41,7 +41,7 @@ protected:
 	//
 	// Controls.
 	//
-	CStaticCtrl	m_scIcon;
+	CIconCtrl	m_scIcon;
 	CLabel		m_txtRealName;
 	CLabel		m_txtCacheName;
 	CLabel		m_txtDate;
@@ -52,6 +52,7 @@ protected:
 	// Message handlers.
 	//
 	virtual void OnInitDialog();
+	virtual void OnHelp(HELPINFO& oInfo);
 
 	//
 	// Internal methods.

@@ -10,6 +10,7 @@
 
 #include "AppHeaders.hpp"
 #include "FilePropsDlg.hpp"
+#include "HelpTopics.h"
 
 /******************************************************************************
 ** Method:		Default constructor.
@@ -53,12 +54,8 @@ CFilePropsDlg::CFilePropsDlg()
 
 void CFilePropsDlg::OnInitDialog()
 {
-	CIcon oIcon;
-
-	oIcon.LoadRsc(FileIcon(m_cType));
-
 	// Initialise the controls.
-	m_scIcon.SendMessage(STM_SETICON, (WPARAM)oIcon.Handle());
+	m_scIcon.Icon(FileIcon(m_cType));
 	m_txtRealName.Text(m_strRealName);
 	m_txtCacheName.Text(m_strCacheName);
 	m_txtDate.Text(m_strDate);
@@ -91,7 +88,25 @@ uint CFilePropsDlg::FileIcon(char cType)
 		case ANIM_FILE:		return IDI_ANIM;
 	}
 
-	ASSERT(false);
+	ASSERT_FALSE();
 
 	return IDR_APPICON;
+}
+
+/******************************************************************************
+** Method:		OnHelp()
+**
+** Description:	Help requested for the dialog.
+**
+** Parameters:	See HELPINFO.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CFilePropsDlg::OnHelp(HELPINFO& /*oInfo*/)
+{
+	// Show the dialogs help topic.
+	App.m_oHelpFile.Topic(IDH_PROPSDLG);
 }
