@@ -126,6 +126,10 @@ SOURCE=.\ErrorsDlg.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\FilePropsDlg.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\PrefsDlg.cpp
 # End Source File
 # Begin Source File
@@ -198,6 +202,10 @@ SOURCE=.\ErrorsDlg.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\FilePropsDlg.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\PrefsDlg.hpp
 # End Source File
 # Begin Source File
@@ -238,11 +246,43 @@ SOURCE=.\UTConfigDlg.hpp
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 # Begin Source File
 
+SOURCE=.\Anim.ico
+# End Source File
+# Begin Source File
+
 SOURCE=.\App.ico
 # End Source File
 # Begin Source File
 
 SOURCE=.\App.rcv
+# End Source File
+# Begin Source File
+
+SOURCE=.\ListIcons.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Map.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Mesh.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Music.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Sound.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\System.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Texture.ico
 # End Source File
 # Begin Source File
 
