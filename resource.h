@@ -19,8 +19,9 @@
 #define ID_CACHE_PROFILE                101
 #define ID_CACHE_RESCAN                 102
 #define ID_CACHE_RESTORE                103
-#define ID_CACHE_UT_CONFIG              104
-#define ID_CACHE_PROPERTIES             105
+#define ID_CACHE_IMPORT                 104
+#define ID_CACHE_UT_CONFIG              106
+#define ID_CACHE_PROPERTIES             108
 #define ID_CACHE_EXIT                   109
 #define ID_EDIT_POPUP                   200
 #define ID_EDIT_PIN                     201
@@ -38,12 +39,15 @@
 #define ID_VIEW_SORT_STATUS             307
 #define ID_VIEW_SORT_CACHE              308
 #define ID_VIEW_SHOW_ALL                309
+#define ID_TOOLS_POPUP                  400
+#define ID_TOOLS_INSTALL                401
 #define ID_OPTIONS_POPUP                800
 #define ID_OPTIONS_PROFILES             801
 #define ID_OPTIONS_PREFS                802
 #define ID_HELP_POPUP                   900
 #define ID_HELP_CONTENTS                901
 #define ID_HELP_ABOUT                   902
+#define ID_CACHE_FIRST_PROFILE          1000
 #define IDC_GRID                        1060
 #define IDC_PROFILES                    1071
 #define IDC_CACHE_DIR                   1072
@@ -91,6 +95,7 @@
 #define IDC_FILE_DATE                   1097
 #define IDC_FILE_SIZE                   1098
 #define IDC_FILE_TYPE                   1099
+#define ID_CACHE_LAST_PROFILE           1099
 #define IDD_MAIN                        5000
 #define IDD_ABOUT                       5001
 #define IDD_SEL_PROFILE                 5002
@@ -100,6 +105,7 @@
 #define IDD_PROGRESS                    5007
 #define IDD_UT_CONFIG                   5008
 #define IDD_RESTORE                     5009
+#define IDD_SELFILES                    5009
 #define IDD_ERRORS                      5010
 #define IDD_PROPERTIES                  5011
 #define IDC_STATIC                      -1
@@ -110,7 +116,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        136
-#define _APS_NEXT_COMMAND_VALUE         166
+#define _APS_NEXT_COMMAND_VALUE         168
 #define _APS_NEXT_CONTROL_VALUE         1099
 #define _APS_NEXT_SYMED_VALUE           104
 #endif

@@ -79,9 +79,14 @@ IDR_APPMENU MENU DISCARDABLE
 BEGIN
     POPUP "&Cache"
     BEGIN
-        MENUITEM "&Profile...\tCtrl+P",         ID_CACHE_PROFILE
+        POPUP "&Profile"
+        BEGIN
+            MENUITEM SEPARATOR
+            MENUITEM "&Select...\tCtrl+P",          ID_CACHE_PROFILE
+        END
         MENUITEM "&Rescan\tF5",                 ID_CACHE_RESCAN
         MENUITEM "Res&tore...",                 ID_CACHE_RESTORE
+        MENUITEM "&Import...",                  ID_CACHE_IMPORT
         MENUITEM SEPARATOR
         MENUITEM "UT &Settings...",             ID_CACHE_UT_CONFIG
         MENUITEM SEPARATOR
@@ -112,6 +117,10 @@ BEGIN
         MENUITEM "Sort By &Cache Name",         ID_VIEW_SORT_CACHE
         MENUITEM SEPARATOR
         MENUITEM "Show All &Files",             ID_VIEW_SHOW_ALL
+    END
+    POPUP "&Tools"
+    BEGIN
+        MENUITEM "&Install...",                 ID_TOOLS_INSTALL
     END
     POPUP "&Options"
     BEGIN
@@ -167,7 +176,7 @@ BEGIN
     CTEXT           "v%s",IDC_VERSION,40,20,70,8,SS_CENTERIMAGE
     CTEXT           "Freeware",IDC_STATIC,40,30,70,8,SS_CENTERIMAGE
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,50,99,1
-    CTEXT           "(C) Chris Oldwood 2001-2003",IDC_STATIC,10,60,100,10,
+    CTEXT           "(C) Chris Oldwood 2001-2004",IDC_STATIC,10,60,100,10,
                     SS_CENTERIMAGE
     CTEXT           "gort@cix.co.uk",IDC_EMAIL,10,70,100,10,SS_NOTIFY | 
                     SS_CENTERIMAGE
@@ -331,10 +340,10 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,90,60,50,14
 END
 
-IDD_RESTORE DIALOGEX 0, 0, 411, 233
+IDD_SELFILES DIALOGEX 0, 0, 411, 233
 STYLE DS_CONTEXTHELP | WS_POPUP | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | 
     WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
-CAPTION "Restore Files To Cache"
+CAPTION "%s"
 FONT 8, "MS Sans Serif"
 BEGIN
     CONTROL         "List1",IDC_GRID,"SysListView32",LVS_REPORT | 
@@ -460,7 +469,7 @@ BEGIN
         BOTTOMMARGIN, 79
     END
 
-    IDD_RESTORE, DIALOG
+    IDD_SELFILES, DIALOG
     BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 404
@@ -533,6 +542,7 @@ BEGIN
     ID_CACHE_PROFILE        "Select a different cache profile\nSelect Profile (Ctrl+P)"
     ID_CACHE_RESCAN         "Rescan the cache\nRescan Cache (F5)"
     ID_CACHE_RESTORE        "Restore previously extracted files to the cache\nRestore"
+    ID_CACHE_IMPORT         "Import files from another cache folder\nImport Files"
     ID_CACHE_UT_CONFIG      "Configure the UT cache settings\nEdit UT Settings"
     ID_CACHE_PROPERTIES     "Displays the selected files' properties\nProperties"
     ID_CACHE_EXIT           "Close UT Cache Manager\nClose"
@@ -578,6 +588,22 @@ BEGIN
     ID_EDIT_COPY            "Copy the selected files to the relevant profile folders\nCopy Files"
     ID_EDIT_DELETE          "Delete the selected files from the cache\nDelete Files"
     ID_EDIT_COPY_TO         "Copy the selected files to another folder\nCopy Files To"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_TOOLS_POPUP          "Tools"
+    ID_TOOLS_INSTALL        "Install map, texture, sound etc files\nInstall"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_CACHE_FIRST_PROFILE  "Select this cache profile"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_CACHE_LAST_PROFILE   "Select this cache profile"
 END
 
 #endif    // English (U.K.) resources
