@@ -48,19 +48,34 @@ public:
 	CString		m_strCacheIndex;	// Cache index file name.
 	CString		m_strCacheExt;		// Cache file extensions.
 
+	CStrArray	m_astrPinned;		// The list of pinned files.
+
 	bool		m_bScanOnStart;		// Scan on startup?
 	bool		m_bScanOnSwitch;	// Scan when switching profiles?
 	bool		m_bScanForTmp;		// Scan for old .tmp files?
 	bool		m_bScanIndex;		// Scan index for old entries?
 	bool		m_bShowAllFiles;	// Show all files?
+	bool		m_bLogEdits;		// Log edit operations to a file?
 	CPath		m_strLastCopyTo;	// Last "Copy To..." path.
 
 	CRect		m_rcLastPos;		// Main window position.
 
 	//
-	// Methods.
+	// Profile methods.
 	//
 	CProfile* FindProfile(const char* pszName) const;
+
+	//
+	// Formatting methods.
+	//
+	CString FormatType(char cType) const;
+	CString FormatSize(int nSize) const;
+	CString FormatStatus(char cStatus) const;
+
+	//
+	// Constants.
+	//
+	static const char* VERSION;
 
 protected:
 	//

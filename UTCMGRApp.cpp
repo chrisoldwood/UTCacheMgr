@@ -27,6 +27,11 @@ CUTCMGRApp App;
 *******************************************************************************
 */
 
+#ifdef _DEBUG
+const char* CUTCMGRApp::VERSION      = "v1.0 Beta [Debug]";
+#else
+const char* CUTCMGRApp::VERSION      = "v1.0 Beta";
+#endif
 const char* CUTCMGRApp::INI_FILE_VER = "1.0";
 
 /******************************************************************************
@@ -51,6 +56,7 @@ CUTCMGRApp::CUTCMGRApp()
 	, m_bScanForTmp(true)
 	, m_bScanIndex(true)
 	, m_bShowAllFiles(false)
+	, m_bLogEdits(true)
 {
 	// Create the MDB.
 	m_oMDB.AddTable(m_oCache);
@@ -164,6 +170,7 @@ void CUTCMGRApp::LoadConfig()
 	m_bScanForTmp   = m_oIniFile.ReadBool  ("Cache", "ScanForTmp",   m_bScanForTmp);
 	m_bScanIndex    = m_oIniFile.ReadBool  ("Cache", "ScanIndex",    m_bScanIndex);
 	m_bShowAllFiles = m_oIniFile.ReadBool  ("Cache", "ShowAllFiles", m_bShowAllFiles);
+	m_bLogEdits     = m_oIniFile.ReadBool  ("Cache", "LogEdits",     m_bLogEdits);
 	m_strLastCopyTo = m_oIniFile.ReadString("Cache", "LastCopyTo",   "");
 
 	// Read the number of profiles.
@@ -248,6 +255,25 @@ void CUTCMGRApp::LoadConfig()
 	// Update the default profile.
 	m_strDefProfile = m_pProfile->m_strName;
 
+	// Read the number of pinned files.
+	uint nPinned = m_oIniFile.ReadInt("Pinned", "Count",   0);
+
+	// Read the pinned files.
+	for (i = 0; i < nPinned; ++i)
+	{
+		CString strEntry;
+		CString strName;
+
+		// Create entry name.
+		strEntry.Format("File%d", i);
+
+		strName = m_oIniFile.ReadString("Pinned", strEntry, "");
+
+		// Add if valid and not already listed.
+		if ((strName.Length() > 0) && (m_astrPinned.Find(strName, false) == -1))
+			m_astrPinned.Add(strName);
+	}
+
 	// Read the window pos and size.
 	m_rcLastPos.left   = m_oIniFile.ReadInt("UI", "Left",   0);
 	m_rcLastPos.top    = m_oIniFile.ReadInt("UI", "Top",    0);
@@ -280,6 +306,7 @@ void CUTCMGRApp::SaveConfig()
 	m_oIniFile.WriteBool  ("Cache", "ScanForTmp",   m_bScanForTmp);
 	m_oIniFile.WriteBool  ("Cache", "ScanIndex",    m_bScanIndex);
 	m_oIniFile.WriteBool  ("Cache", "ShowAllFiles", m_bShowAllFiles);
+	m_oIniFile.WriteBool  ("Cache", "LogEdits",     m_bLogEdits);
 	m_oIniFile.WriteString("Cache", "LastCopyTo",   m_strLastCopyTo);
 
 	// Write the profiles.
@@ -303,6 +330,20 @@ void CUTCMGRApp::SaveConfig()
 		m_oIniFile.WriteString(strSection, "SoundDir",   pProfile->m_strSoundDir  );
 		m_oIniFile.WriteString(strSection, "MusicDir",   pProfile->m_strMusicDir  );
 		m_oIniFile.WriteString(strSection, "ConfigFile", pProfile->m_strConfigFile);
+	}
+
+	// Write the list of pinned files.
+	m_oIniFile.DeleteSection("Pinned");
+	m_oIniFile.WriteInt ("Pinned", "Count", m_astrPinned.Size());
+
+	for (i = 0; i < m_astrPinned.Size(); ++i)
+	{
+		CString strEntry;
+
+		// Create entry name.
+		strEntry.Format("File%d", i);
+
+		m_oIniFile.WriteString("Pinned", strEntry, m_astrPinned[i]);
 	}
 
 	// Write the window pos and size.
@@ -336,4 +377,82 @@ CProfile* CUTCMGRApp::FindProfile(const char* pszName) const
 	}
 
 	return NULL;
+}
+
+/******************************************************************************
+** Method:		FormatType()
+**
+** Description:	Convert the file type to a string.
+**
+** Parameters:	cType	The file type.
+**
+** Returns:		The type as a string.
+**
+*******************************************************************************
+*/
+
+CString CUTCMGRApp::FormatType(char cType) const
+{
+	switch (cType)
+	{
+		case SYSTEM_FILE :	return "System";
+		case MAP_FILE    :	return "Map";
+		case TEXTURE_FILE:	return "Texture";
+		case SOUND_FILE  :	return "Sound";
+		case MUSIC_FILE  :	return "Music";
+	}
+
+	ASSERT(false);
+
+	return "";
+}
+
+/******************************************************************************
+** Method:		FormatSize()
+**
+** Description:	Convert the file size to a string.
+**
+** Parameters:	nSize	The file size.
+**
+** Returns:		The size as a string.
+**
+*******************************************************************************
+*/
+
+CString CUTCMGRApp::FormatSize(int nSize) const
+{
+	CString str;
+
+	// Ensure we report at least 1K.
+	nSize = max(1024, nSize);
+
+	str.Format("%d K", nSize/1024);
+
+	return str;
+}
+
+/******************************************************************************
+** Method:		FormatStatus()
+**
+** Description:	Convert the file status to a string.
+**
+** Parameters:	cStatus		The file status.
+**
+** Returns:		The status as a string.
+**
+*******************************************************************************
+*/
+
+CString CUTCMGRApp::FormatStatus(char cStatus) const
+{
+	switch (cStatus)
+	{
+		case NEW_FILE :	return "New";
+		case OLD_FILE :	return "Old";
+		case PIN_FILE :	return "Pinned";
+	}
+
+	ASSERT(false);
+
+	return "";
 }
