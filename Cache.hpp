@@ -20,11 +20,13 @@
 */
 
 // File types.
-const char SYSTEM_FILE  = 'Y';
+const char SYSTEM_FILE  = 'U';
 const char MAP_FILE     = 'P';
 const char TEXTURE_FILE = 'T';
-const char SOUND_FILE   = 'S';
+const char SOUND_FILE   = 'A';
 const char MUSIC_FILE   = 'M';
+const char MESH_FILE    = 'S';
+const char ANIM_FILE    = 'K';
 
 // File status.
 const char NEW_FILE = 'N';
