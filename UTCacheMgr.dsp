@@ -254,6 +254,10 @@ SOURCE=.\HelpFile\HelpMenu.bmp
 # End Source File
 # Begin Source File
 
+SOURCE=.\HelpFile\HelpTopics.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\HelpFile\OptionsMenu.bmp
 # End Source File
 # Begin Source File
@@ -263,6 +267,10 @@ SOURCE=.\HelpFile\PrefsDlg.bmp
 # Begin Source File
 
 SOURCE=.\HelpFile\ProfDlg.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\HelpFile\SelFolder.bmp
 # End Source File
 # Begin Source File
 
