@@ -352,27 +352,27 @@ void CAppCmds::OnCacheRestore()
 	// Tmp table to store files we can restore.
 	CCache oRestore(App.m_oMDB);
 
+	// Get logfile path.
+	CPath   strLogFile(CPath::ApplicationDir(), "UTCacheMgr.log");
+	CFile   fLogFile;
+
+	// Logfile not created yet?
+	if (!strLogFile.Exists())
+	{
+		App.NotifyMsg("There are no files that can be restored.");
+		return;
+	}
+
+	// Show the progress dialog.
+	CProgressDlg Dlg;
+
+	Dlg.RunModeless(App.m_AppWnd);
+	Dlg.Title("Loading Restore Log");
+	Dlg.InitMeter(CFile::Size(strLogFile));
+
 	try
 	{
-		// Get logfile path.
-		CPath   strLogFile(CPath::ApplicationDir(), "UTCacheMgr.log");
-		CFile   fLogFile;
-
-		// Logfile not created yet?
-		if (!strLogFile.Exists())
-		{
-			App.NotifyMsg("There are no files that can be restored.");
-			return;
-		}
-
 		fLogFile.Open(strLogFile, GENERIC_READ);
-
-		// Show the progress dialog.
-		CProgressDlg Dlg;
-
-		Dlg.RunModeless(App.m_AppWnd);
-		Dlg.Title("Loading Restore Log");
-		Dlg.InitMeter(CFile::Size(strLogFile));
 
 		// For all lines.
 		while (!fLogFile.IsEOF())
@@ -436,17 +436,21 @@ void CAppCmds::OnCacheRestore()
 			oRestore.InsertRow(oRow);
 		}
 
-		// Remove progress dialog.
-		Dlg.Destroy();
-
 		fLogFile.Close();
 	}
 	catch (CStreamException& e)
 	{
 		// Report error.
 		App.AlertMsg(e.ErrorText());
+
+		// Remove progress dialog.
+		Dlg.Destroy();
+
 		return;
 	}
+
+	// Remove progress dialog.
+	Dlg.Destroy();
 
 	// Nothing to restore?
 	if (oRestore.RowCount() == 0)
@@ -475,8 +479,6 @@ void CAppCmds::OnCacheRestore()
 	CIniFile oIdxFile(strCacheFile);
 
 	// Show the progress dialog.
-	CProgressDlg Dlg;
-
 	Dlg.RunModeless(App.m_AppWnd);
 	Dlg.Title("Restoring Files");
 	Dlg.InitMeter(nFiles);
