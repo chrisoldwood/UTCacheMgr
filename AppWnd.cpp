@@ -112,8 +112,8 @@ void CAppWnd::OnFocus()
 
 bool CAppWnd::OnQueryClose()
 {
-	// Fetch windows final placement.
-	App.m_rcLastPos = Placement();
+	// Save windows final position.
+	App.m_rcLastWndPos = Placement();
 
 	// Close help file.
 	App.m_oHelpFile.Close();
