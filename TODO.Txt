@@ -1,13 +1,13 @@
-Version 1.0
-===========
+- Make class for pinned files.
 
-- Package Mismatch section in helpfile.
+- ReadOnly cache types.
 
-Next Version
-============
+- Handle files with no extensions (eg [VSK] Patch)
 
-- Encapsulate pinning files code.
+- Better Move toolbar button.
 
-- Read Only flag for cache in profile.
+- Show filenames when errors occur.
 
-- Restore should notify user, if there is nothing to do.
+- Properties dialog for exact file sizes etc.
+
+- Right click menu.
