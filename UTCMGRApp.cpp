@@ -229,66 +229,22 @@ void CUTCMGRApp::LoadConfig()
 	// New installation?.
 	if (m_pProfile == NULL)
 	{
-		CRegKey oUTKey;
+		CProfile* pProfile = NULL;
 
-		// Try and find the regkey that contains the UT base path.
-		if (oUTKey.Open(HKEY_LOCAL_MACHINE, "SOFTWARE\\Unreal Technology\\Installed Apps\\UnrealTournament"))
-		{
-			// Get the UT base path.
-			CPath strBaseDir = oUTKey.QueryString("Folder", "");
+		// Look for a UT installation.
+		if ((pProfile = CProfile::DetectUT()) != NULL)
+			m_aoProfiles.Add(pProfile);
 
-			if (strBaseDir != "")
-			{
-				m_pProfile = new CProfile();
+		// Look for a UT2003 installation.
+		if ((pProfile = CProfile::DetectUT2003()) != NULL)
+			m_aoProfiles.Add(pProfile);
 
-				// Create a profile for UT.
-				m_pProfile->m_strName       = CProfile::DEF_UT_PROFILE_NAME;
-				m_pProfile->m_nFormat       = CProfile::UT_FORMAT;
-				m_pProfile->m_strCacheDir   = CPath(strBaseDir, CProfile::DEF_CACHE_DIR   );
-				m_pProfile->m_bReadOnly     = false;
-				m_pProfile->m_strSystemDir  = CPath(strBaseDir, CProfile::DEF_SYSTEM_DIR  );
-				m_pProfile->m_strMapDir     = CPath(strBaseDir, CProfile::DEF_MAPS_DIR    );
-				m_pProfile->m_strTextureDir = CPath(strBaseDir, CProfile::DEF_TEXTURES_DIR);
-				m_pProfile->m_strSoundDir   = CPath(strBaseDir, CProfile::DEF_SOUNDS_DIR  );
-				m_pProfile->m_strMusicDir   = CPath(strBaseDir, CProfile::DEF_MUSIC_DIR   );
-				m_pProfile->m_strConfigFile = CPath(m_pProfile->m_strSystemDir, CProfile::DEF_CONFIG_FILE);
+		// Look for a Tactical Ops installation.
+		if ((pProfile = CProfile::DetectTacOps()) != NULL)
+			m_aoProfiles.Add(pProfile);
 
-				m_aoProfiles.Add(m_pProfile);
-			}
-		}
-
-		CRegKey oUT2003Key;
-
-		// Try and find the regkey that contains the UT2003 base path.
-		if (oUT2003Key.Open(HKEY_LOCAL_MACHINE, "SOFTWARE\\Unreal Technology\\Installed Apps\\UT2003"))
-		{
-			// Get the UT2003 base path.
-			CPath strBaseDir = oUT2003Key.QueryString("Folder", "");
-
-			if (strBaseDir != "")
-			{
-				m_pProfile = new CProfile();
-
-				// Create a profile for UT2003.
-				m_pProfile->m_strName       = CProfile::DEF_UT2003_PROFILE_NAME;
-				m_pProfile->m_nFormat       = CProfile::UT2003_FORMAT;
-				m_pProfile->m_strCacheDir   = CPath(strBaseDir, CProfile::DEF_CACHE_DIR   );
-				m_pProfile->m_bReadOnly     = false;
-				m_pProfile->m_strSystemDir  = CPath(strBaseDir, CProfile::DEF_SYSTEM_DIR  );
-				m_pProfile->m_strMapDir     = CPath(strBaseDir, CProfile::DEF_MAPS_DIR    );
-				m_pProfile->m_strTextureDir = CPath(strBaseDir, CProfile::DEF_TEXTURES_DIR);
-				m_pProfile->m_strSoundDir   = CPath(strBaseDir, CProfile::DEF_SOUNDS_DIR  );
-				m_pProfile->m_strMusicDir   = CPath(strBaseDir, CProfile::DEF_MUSIC_DIR   );
-				m_pProfile->m_strMeshDir    = CPath(strBaseDir, CProfile::DEF_MESH_DIR    );
-				m_pProfile->m_strAnimDir    = CPath(strBaseDir, CProfile::DEF_ANIM_DIR    );
-				m_pProfile->m_strConfigFile = CPath(m_pProfile->m_strSystemDir, CProfile::DEF_2003_CONFIG_FILE);
-
-				m_aoProfiles.Add(m_pProfile);
-			}
-		}
-
-		// Create a default UT one, if nothing detected.
-		if (m_pProfile == NULL)
+		// If nothing detected, create a default UT one.
+		if (m_aoProfiles.Size() == 0)
 		{
 			// Warn user.
 			AlertMsg("Your UT/UT2003 installation could not be detected.\n\n"
@@ -312,7 +268,10 @@ void CUTCMGRApp::LoadConfig()
 			m_aoProfiles.Add(m_pProfile);
 		}
 
+		ASSERT(m_aoProfiles.Size() > 0);
+
 		// Set the default profile.
+		m_pProfile      = m_aoProfiles[0];
 		m_strDefProfile = m_pProfile->m_strName;
 	}
 
@@ -465,6 +424,34 @@ CProfile* CUTCMGRApp::FindProfile(const char* pszName) const
 }
 
 /******************************************************************************
+** Method:		BuildProfileMenu()
+**
+** Description:	Builds the Cache | Profile sub-menu.
+**
+** Parameters:	None.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CUTCMGRApp::BuildProfileMenu()
+{
+	// Ensure profile list is sorted.
+	m_aoProfiles.Sort((TPtrArray<CProfile>::PFNCOMPARE)CProfile::Compare);
+
+	// Delete old menu.
+	for (int i = ID_CACHE_FIRST_PROFILE; i <= ID_CACHE_LAST_PROFILE; ++i)
+		App.m_AppWnd.m_Menu.RemoveCmd(i);
+
+	CPopupMenu oCacheMenu = App.m_AppWnd.m_Menu.GetItemPopup(0).GetItemPopup(0);
+
+	// Build new menu.
+	for (i = 0; i < m_aoProfiles.Size(); ++i)
+		oCacheMenu.InsertCmd(i, ID_CACHE_FIRST_PROFILE + i, m_aoProfiles[i]->m_strName);
+}
+
+/******************************************************************************
 ** Method:		FormatType()
 **
 ** Description:	Convert the file type to a string.
@@ -572,31 +559,6 @@ int CUTCMGRApp::IconIndex(char cType) const
 	ASSERT_FALSE();
 
 	return -1;
-}
-
-/******************************************************************************
-** Method:		BuildProfileMenu()
-**
-** Description:	Builds the Cache | Profile sub-menu.
-**
-** Parameters:	None.
-**
-** Returns:		Nothing.
-**
-*******************************************************************************
-*/
-
-void CUTCMGRApp::BuildProfileMenu()
-{
-	// Delete old menu.
-	for (int i = ID_CACHE_FIRST_PROFILE; i <= ID_CACHE_LAST_PROFILE; ++i)
-		App.m_AppWnd.m_Menu.RemoveCmd(i);
-
-	CPopupMenu oCacheMenu = App.m_AppWnd.m_Menu.GetItemPopup(0).GetItemPopup(0);
-
-	// Build new menu.
-	for (i = 0; i < m_aoProfiles.Size(); ++i)
-		oCacheMenu.InsertCmd(i, ID_CACHE_FIRST_PROFILE + i, m_aoProfiles[i]->m_strName);
 }
 
 /******************************************************************************

@@ -68,6 +68,7 @@ public:
 	// Profile methods.
 	//
 	CProfile* FindProfile(const char* pszName) const;
+	void      BuildProfileMenu();
 
 	//
 	// Formatting methods.
@@ -80,7 +81,6 @@ public:
 	//
 	// Utility methods.
 	//
-	void BuildProfileMenu();
 	void UpdateCacheStatus();
 
 	//
