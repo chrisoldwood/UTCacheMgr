@@ -24,8 +24,8 @@
 
 CAppDlg::CAppDlg()
 	: CMainDlg(IDD_MAIN)
-	, m_nSortColumn(CCache::REAL_FILENAME)
-	, m_eSortOrder(CSortColumns::ASC)
+	, m_nSortColumn(CCache::FILE_DATE)
+	, m_eSortOrder(CSortColumns::DESC)
 	, m_bShowAllFiles(false)
 {
 	DEFINE_CTRL_TABLE
@@ -60,8 +60,8 @@ void CAppDlg::OnInitDialog()
 	m_lvGrid.InsertColumn(0, "File",   200, LVCFMT_LEFT  );
 	m_lvGrid.InsertColumn(1, "Type",    50, LVCFMT_LEFT  );
 	m_lvGrid.InsertColumn(2, "Date",   125, LVCFMT_LEFT  );
-	m_lvGrid.InsertColumn(3, "Size",    75, LVCFMT_RIGHT );
-	m_lvGrid.InsertColumn(4, "Status",  50, LVCFMT_CENTER);
+	m_lvGrid.InsertColumn(3, "Size",    70, LVCFMT_RIGHT );
+	m_lvGrid.InsertColumn(4, "Status",  55, LVCFMT_CENTER);
 }
 
 /******************************************************************************
@@ -98,89 +98,32 @@ void CAppDlg::RefreshView()
 
 			// Add to the grid.
 			m_lvGrid.InsertItem(n,    oRow[CCache::REAL_FILENAME], &oRow);
-			m_lvGrid.ItemText  (n, 1, FormatType(oRow[CCache::FILE_TYPE]));
+			m_lvGrid.ItemText  (n, 1, App.FormatType(oRow[CCache::FILE_TYPE]));
 			m_lvGrid.ItemText  (n, 2, oRow[CCache::FILE_DATE].Format());
-			m_lvGrid.ItemText  (n, 3, FormatSize(oRow[CCache::FILE_SIZE]));
-			m_lvGrid.ItemText  (n, 4, FormatStatus(oRow[CCache::STATUS]));
+			m_lvGrid.ItemText  (n, 3, App.FormatSize(oRow[CCache::FILE_SIZE]));
+			m_lvGrid.ItemText  (n, 4, App.FormatStatus(oRow[CCache::STATUS]));
 		}
 	}
 }
 
 /******************************************************************************
-** Method:		FormatType()
+** Method:		SelectNew()
 **
-** Description:	Convert the file type to a string.
+** Description:	Select all new files in the grid.
 **
-** Parameters:	cType	The file type.
+** Parameters:	None.
 **
-** Returns:		The type as a string.
-**
-*******************************************************************************
-*/
-
-CString CAppDlg::FormatType(char cType) const
-{
-	switch (cType)
-	{
-		case SYSTEM_FILE :	return "System";
-		case MAP_FILE    :	return "Map";
-		case TEXTURE_FILE:	return "Texture";
-		case SOUND_FILE  :	return "Sound";
-		case MUSIC_FILE  :	return "Music";
-	}
-
-	ASSERT(false);
-
-	return "";
-}
-
-/******************************************************************************
-** Method:		FormatSize()
-**
-** Description:	Convert the file size to a string.
-**
-** Parameters:	nSize	The file size.
-**
-** Returns:		The size as a string.
+** Returns:		Nothing.
 **
 *******************************************************************************
 */
 
-CString CAppDlg::FormatSize(int nSize) const
+void CAppDlg::SelectNew()
 {
-	CString str;
+	int nFiles = m_lvGrid.ItemCount();
 
-	// Ensure we report at least 1K.
-	nSize = max(1024, nSize);
-
-	str.Format("%d K", nSize/1024);
-
-	return str;
-}
-
-/******************************************************************************
-** Method:		FormatStatus()
-**
-** Description:	Convert the file status to a string.
-**
-** Parameters:	cStatus		The file status.
-**
-** Returns:		The status as a string.
-**
-*******************************************************************************
-*/
-
-CString CAppDlg::FormatStatus(char cStatus) const
-{
-	switch (cStatus)
-	{
-		case NEW_FILE :	return "New";
-		case OLD_FILE :	return "Old";
-	}
-
-	ASSERT(false);
-
-	return "";
+	for (int i = 0; i < nFiles; ++i)
+		m_lvGrid.Select(i, (GetRow(i)[CCache::STATUS] == NEW_FILE));
 }
 
 /******************************************************************************
@@ -222,7 +165,7 @@ void CAppDlg::GetSelectedFiles(CResultSet& oRS)
 	// For all rows.
 	for (int i = 0; i < nFiles; ++i)
 	{
-		if (m_lvGrid.ItemState(i) & LVIS_SELECTED)
-			oRS.Add(*((CRow*) m_lvGrid.ItemPtr(i)));
+		if (m_lvGrid.IsSelected(i))
+			oRS.Add(GetRow(i));
 	}
 }

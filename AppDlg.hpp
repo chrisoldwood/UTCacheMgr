@@ -31,6 +31,7 @@ public:
 	// Methods.
 	//
 	void RefreshView();
+	void SelectNew();
 	void SelectAll();
 	void GetSelectedFiles(CResultSet& oRS);
 
@@ -51,9 +52,7 @@ protected:
 	//
 	// Internal methods.
 	//
-	CString FormatType(char cType) const;
-	CString FormatSize(int nSize) const;
-	CString FormatStatus(char cStatus) const;
+	CRow& GetRow(int nRow);
 };
 
 /******************************************************************************
@@ -62,5 +61,12 @@ protected:
 **
 *******************************************************************************
 */
+
+inline CRow& CAppDlg::GetRow(int nRow)
+{
+	ASSERT((nRow >= 0) && (nRow < m_lvGrid.ItemCount()));
+
+	return *((CRow*) m_lvGrid.ItemPtr(nRow));
+}
 
 #endif //APPDLG_HPP
