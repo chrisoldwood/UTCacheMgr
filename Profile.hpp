@@ -43,6 +43,7 @@ public:
 
 	static CProfile* DetectUT();
 	static CProfile* DetectUT2003();
+	static CProfile* DetectUT2004();
 	static CProfile* DetectTacOps();
 
 	//
@@ -76,6 +77,7 @@ public:
 	// Default profiles.
 	static const char* DEF_UT_PROFILE_NAME;
 	static const char* DEF_UT2003_PROFILE_NAME;
+	static const char* DEF_UT2004_PROFILE_NAME;
 	static const char* DEF_TO_PROFILE_NAME;
 
 	static const char* DEF_ROOT_DIR;
@@ -104,12 +106,23 @@ public:
 	static const char* DEF_KARMA_DIR;
 	static const char* DEF_2003_CONFIG_FILE;
 
+	// UT2004 specific settings.
+	static const char* DEF_2004_CONFIG_FILE;
+
 	// Tactical Ops specific settings.
 	static const char* DEF_TO_CONFIG_FILE;
 
 	// Cache formats.
-	static const int UT_FORMAT;
-	static const int UT2003_FORMAT;
+	enum Format
+	{
+		UT_FORMAT     = 0,
+		UT2003_FORMAT = 1,
+		UT2004_FORMAT = 2,
+
+		NUM_FORMATS	  = 3,
+	};
+
+	static const char* s_pszFormats[3];
 };
 
 /******************************************************************************

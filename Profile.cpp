@@ -19,6 +19,7 @@
 
 const char* CProfile::DEF_UT_PROFILE_NAME     = "UT";
 const char* CProfile::DEF_UT2003_PROFILE_NAME = "UT2003";
+const char* CProfile::DEF_UT2004_PROFILE_NAME = "UT2004";
 const char* CProfile::DEF_TO_PROFILE_NAME     = "Tactical Ops";
 
 const char* CProfile::DEF_ROOT_DIR       = "C:\\UnrealTournament";
@@ -39,10 +40,11 @@ const char* CProfile::DEF_ANIM_DIR         = "Animations";
 const char* CProfile::DEF_KARMA_DIR        = "KarmaData";
 const char* CProfile::DEF_2003_CONFIG_FILE = "UT2003.ini";
 
+const char* CProfile::DEF_2004_CONFIG_FILE = "UT2004.ini";
+
 const char* CProfile::DEF_TO_CONFIG_FILE   = "TacticalOps.ini";
 
-const int CProfile::UT_FORMAT     = 0;
-const int CProfile::UT2003_FORMAT = 1;
+const char* CProfile::s_pszFormats[3] = { "UT", "UT2003", "UT2004" };
 
 /******************************************************************************
 ** Method:		Constructor.
@@ -288,6 +290,52 @@ CProfile* CProfile::DetectUT2003()
 	pProfile->m_strAnimDir    = CPath(strBaseDir, DEF_ANIM_DIR    );
 	pProfile->m_strKarmaDir   = CPath(strBaseDir, DEF_KARMA_DIR   );
 	pProfile->m_strConfigFile = CPath(pProfile->m_strSystemDir, DEF_2003_CONFIG_FILE);
+
+	return pProfile;
+}
+
+/******************************************************************************
+** Method:		DetectUT2004()
+**
+** Description:	Attempt to detect a UT2004 installation.
+**
+** Parameters:	None.
+**
+** Returns:		A profile or NULL, if none found.
+**
+*******************************************************************************
+*/
+
+CProfile* CProfile::DetectUT2004()
+{
+	CRegKey oKey;
+
+	// Try and find the regkey that contains the UT2004 base path.
+	if (!oKey.Open(HKEY_LOCAL_MACHINE, "SOFTWARE\\Unreal Technology\\Installed Apps\\UT2004"))
+		return NULL;
+
+	// Get the UT2004 base path.
+	CPath strBaseDir = oKey.QueryString("Folder", "");
+
+	if (strBaseDir == "")
+		return NULL;
+
+	CProfile* pProfile = new CProfile();
+
+	// Create a profile for UT2004.
+	pProfile->m_strName       = DEF_UT2004_PROFILE_NAME;
+	pProfile->m_nFormat       = UT2004_FORMAT;
+	pProfile->m_strCacheDir   = CPath(strBaseDir, DEF_CACHE_DIR   );
+	pProfile->m_bReadOnly     = false;
+	pProfile->m_strSystemDir  = CPath(strBaseDir, DEF_SYSTEM_DIR  );
+	pProfile->m_strMapDir     = CPath(strBaseDir, DEF_MAPS_DIR    );
+	pProfile->m_strTextureDir = CPath(strBaseDir, DEF_TEXTURES_DIR);
+	pProfile->m_strSoundDir   = CPath(strBaseDir, DEF_SOUNDS_DIR  );
+	pProfile->m_strMusicDir   = CPath(strBaseDir, DEF_MUSIC_DIR   );
+	pProfile->m_strMeshDir    = CPath(strBaseDir, DEF_MESH_DIR    );
+	pProfile->m_strAnimDir    = CPath(strBaseDir, DEF_ANIM_DIR    );
+	pProfile->m_strKarmaDir   = CPath(strBaseDir, DEF_KARMA_DIR   );
+	pProfile->m_strConfigFile = CPath(pProfile->m_strSystemDir, DEF_2004_CONFIG_FILE);
 
 	return pProfile;
 }
