@@ -60,6 +60,7 @@ protected:
 	virtual void OnCreate(const CRect& rcClient);
 	virtual void OnFocus();
 	virtual bool OnQueryClose();
+	virtual bool ProcessMsg(MSG& rMsg);
 };
 
 /******************************************************************************

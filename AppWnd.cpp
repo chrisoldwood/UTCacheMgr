@@ -122,6 +122,34 @@ bool CAppWnd::OnQueryClose()
 }
 
 /******************************************************************************
+** Method:		ProcessMsg()
+**
+** Description:	Show default status bar text if moving over main window/dialog
+**				or its children.
+**
+** Parameters:	rMsg	The message.
+**
+** Returns:		true or false.
+**
+*******************************************************************************
+*/
+
+bool CAppWnd::ProcessMsg(MSG& rMsg)
+{
+	// Only interested in mouse moves over the main window/dialog
+	if ( (rMsg.message == WM_MOUSEMOVE)
+	  && ((rMsg.hwnd == Handle()) || (rMsg.hwnd == m_AppDlg.Handle())
+	   || (::GetParent(rMsg.hwnd) == m_AppDlg.Handle())) )
+	{
+		// Show default status message.
+		m_StatusBar.Hint(App.m_strDefStatus);
+	}
+
+	// Forward to base class.
+	return CDlgFrame::ProcessMsg(rMsg);
+}
+
+/******************************************************************************
 ** Method:		UpdateTitle()
 **
 ** Description:	Updates the title bar by using the connection and query file
