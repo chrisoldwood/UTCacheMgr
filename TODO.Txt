@@ -1,3 +1,13 @@
+Version 1.0
+===========
+
 - Package Mismatch section in helpfile.
 
-- Make class for pinned files.
+Next Version
+============
+
+- Encapsulate pinning files code.
+
+- Read Only flag for cache in profile.
+
+- Restore should notify user, if there is nothing to do.
