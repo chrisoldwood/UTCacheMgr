@@ -48,6 +48,7 @@ protected:
 	void OnEdit();
 	void OnRemove();
 	void OnDblClkProfile();
+	void OnDetect();
 };
 
 /******************************************************************************
