@@ -17,8 +17,9 @@
 *******************************************************************************
 */
 
-// Defaults for UT.
-const char* CProfile::DEF_PROFILE_NAME   = "Default";
+const char* CProfile::DEF_UT_PROFILE_NAME     = "UT";
+const char* CProfile::DEF_UT2003_PROFILE_NAME = "UT2003";
+
 const char* CProfile::DEF_ROOT_DIR       = "C:\\UnrealTournament";
 const char* CProfile::DEF_CACHE_DIR      = "Cache";
 const char* CProfile::DEF_CACHE_IDX_FILE = "cache.ini";
@@ -32,9 +33,12 @@ const char* CProfile::DEF_CONFIG_FILE    = "UnrealTournament.ini";
 const char* CProfile::DEF_CACHE_TMP_DIR  = "..\\.";
 const char* CProfile::DEF_CACHE_TMP_MASK = "Cache????.tmp";
 
-// Additional defaults for UT2003.
+const char* CProfile::DEF_MESH_DIR         = "StaticMeshes";
+const char* CProfile::DEF_ANIM_DIR         = "Animations";
 const char* CProfile::DEF_2003_CONFIG_FILE = "UT2003.ini";
 
+const int CProfile::UT_FORMAT     = 0;
+const int CProfile::UT2003_FORMAT = 1;
 
 /******************************************************************************
 ** Method:		Constructor.
@@ -49,7 +53,8 @@ const char* CProfile::DEF_2003_CONFIG_FILE = "UT2003.ini";
 */
 
 CProfile::CProfile()
-	: m_bReadOnly(false)
+	: m_nFormat(UT_FORMAT)
+	, m_bReadOnly(false)
 {
 }
 

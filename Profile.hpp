@@ -38,6 +38,7 @@ public:
 	// Members.
 	//
 	CString	m_strName;			// The profile name.
+	int		m_nFormat;			// Cache format.
 
 	CPath	m_strCacheDir;		// The cache directory.
 	bool	m_bReadOnly;
@@ -55,10 +56,14 @@ public:
 	//
 	// Constants.
 	//
-	static const char* DEF_PROFILE_NAME;
+
+	// Default profiles.
+	static const char* DEF_UT_PROFILE_NAME;
+	static const char* DEF_UT2003_PROFILE_NAME;
 
 	static const char* DEF_ROOT_DIR;
 
+	// Cache folder settings.
 	static const char* DEF_CACHE_DIR;
 
 	static const char* DEF_CACHE_IDX_FILE;
@@ -67,6 +72,7 @@ public:
 	static const char* DEF_CACHE_TMP_DIR;
 	static const char* DEF_CACHE_TMP_MASK;
 
+	// Main folder settings.
 	static const char* DEF_SYSTEM_DIR;
 	static const char* DEF_MAPS_DIR;
 	static const char* DEF_TEXTURES_DIR;
@@ -75,7 +81,14 @@ public:
 
 	static const char* DEF_CONFIG_FILE;
 
+	// UT2003 specific settings.
+	static const char* DEF_MESH_DIR;
+	static const char* DEF_ANIM_DIR;
 	static const char* DEF_2003_CONFIG_FILE;
+
+	// Cache formats.
+	static const int UT_FORMAT;
+	static const int UT2003_FORMAT;
 };
 
 /******************************************************************************
