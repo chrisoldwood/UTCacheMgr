@@ -59,7 +59,8 @@ public:
 	bool		m_bShowAllFiles;	// Show all files?
 	bool		m_bLogEdits;		// Log edit operations to a file?
 
-	CRect		m_rcLastPos;		// Main window position.
+	CRect		m_rcLastWndPos;		// Main window position.
+	CRect		m_rcLastDlgPos;		// Import/Restore dialog position.
 
 	CString		m_strDefStatus;		// The default status bar text.
 
@@ -75,6 +76,12 @@ public:
 	CString FormatSize(int nSize) const;
 	CString FormatStatus(char cStatus) const;
 	int     IconIndex(char cType) const;
+
+	//
+	// Utility methods.
+	//
+	void BuildProfileMenu();
+	void UpdateCacheStatus();
 
 	//
 	// Constants.
@@ -110,6 +117,7 @@ protected:
 	//
 	static const char* INI_FILE_VER_10;
 	static const char* INI_FILE_VER_20;
+	static const char* INI_FILE_VER_25;
 };
 
 /******************************************************************************

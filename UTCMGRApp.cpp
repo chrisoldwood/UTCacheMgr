@@ -33,12 +33,13 @@ CUTCMGRApp App;
 */
 
 #ifdef _DEBUG
-const char* CUTCMGRApp::VERSION      = "v2.0 [Debug]";
+const char* CUTCMGRApp::VERSION      = "v2.5 [Debug]";
 #else
-const char* CUTCMGRApp::VERSION      = "v2.0";
+const char* CUTCMGRApp::VERSION      = "v2.5";
 #endif
 const char* CUTCMGRApp::INI_FILE_VER_10 = "1.0";
 const char* CUTCMGRApp::INI_FILE_VER_20 = "2.0";
+const char* CUTCMGRApp::INI_FILE_VER_25 = "2.5";
 
 /******************************************************************************
 ** Method:		Constructor
@@ -117,12 +118,13 @@ bool CUTCMGRApp::OnOpen()
 		return false;
 
 	// Show it.
-	if ( (m_iCmdShow == SW_SHOWNORMAL) && (m_rcLastPos.Empty() == false) )
-		m_AppWnd.Move(m_rcLastPos);
+	if ( (m_iCmdShow == SW_SHOWNORMAL) && (m_rcLastWndPos.Empty() == false) )
+		m_AppWnd.Move(m_rcLastWndPos);
 
 	m_AppWnd.Show(m_iCmdShow);
 
-	// Update UI.
+	// Initialise UI.
+	BuildProfileMenu();
 	m_AppCmds.UpdateUI();
 
 	// Scan on startup?
@@ -209,6 +211,8 @@ void CUTCMGRApp::LoadConfig()
 		oProfile.m_strAnimDir    = m_oIniFile.ReadString(strSection, "AnimDir",    "");
 		oProfile.m_strConfigFile = m_oIniFile.ReadString(strSection, "ConfigFile", "");
 		oProfile.m_strLastCopyTo = m_oIniFile.ReadString(strSection, "LastCopyTo", "");
+		oProfile.m_strLastImport  = m_oIniFile.ReadString(strSection, "LastImport",  "");
+		oProfile.m_strLastInstall = m_oIniFile.ReadString(strSection, "LastInstall", "");
 
 		// If valid, add to collection.
 		if (oProfile.m_strName.Length() > 0)
@@ -333,11 +337,17 @@ void CUTCMGRApp::LoadConfig()
 			m_astrPinned.Add(strName);
 	}
 
-	// Read the window pos and size.
-	m_rcLastPos.left   = m_oIniFile.ReadInt("UI", "Left",   0);
-	m_rcLastPos.top    = m_oIniFile.ReadInt("UI", "Top",    0);
-	m_rcLastPos.right  = m_oIniFile.ReadInt("UI", "Right",  0);
-	m_rcLastPos.bottom = m_oIniFile.ReadInt("UI", "Bottom", 0);
+	// Read the previous UI settings.
+	m_rcLastWndPos = m_oIniFile.ReadRect("UI", "MainWindow",  CRect());
+	m_rcLastDlgPos = m_oIniFile.ReadRect("UI", "SelFilesDlg", CRect());
+
+	if ( (strVer == INI_FILE_VER_10) || (strVer == INI_FILE_VER_20) )
+	{
+		m_rcLastWndPos.left   = m_oIniFile.ReadInt("UI", "Left",   0);
+		m_rcLastWndPos.top    = m_oIniFile.ReadInt("UI", "Top",    0);
+		m_rcLastWndPos.right  = m_oIniFile.ReadInt("UI", "Right",  0);
+		m_rcLastWndPos.bottom = m_oIniFile.ReadInt("UI", "Bottom", 0);
+	}
 }
 
 /******************************************************************************
@@ -355,7 +365,7 @@ void CUTCMGRApp::LoadConfig()
 void CUTCMGRApp::SaveConfig()
 {
 	// Write the file version.
-	m_oIniFile.WriteString("Version", "Version", INI_FILE_VER_20);
+	m_oIniFile.WriteString("Version", "Version", INI_FILE_VER_25);
 
 	// Application settings changed?
 	if (m_nModified & SETTINGS)
@@ -400,6 +410,8 @@ void CUTCMGRApp::SaveConfig()
 			m_oIniFile.WriteString(strSection, "AnimDir",    pProfile->m_strAnimDir   );
 			m_oIniFile.WriteString(strSection, "ConfigFile", pProfile->m_strConfigFile);
 			m_oIniFile.WriteString(strSection, "LastCopyTo", pProfile->m_strLastCopyTo);
+			m_oIniFile.WriteString(strSection, "LastImport",  pProfile->m_strLastImport);
+			m_oIniFile.WriteString(strSection, "LastInstall", pProfile->m_strLastInstall);
 		}
 	}
 
@@ -421,11 +433,9 @@ void CUTCMGRApp::SaveConfig()
 		}
 	}
 
-	// Write the window pos and size.
-	m_oIniFile.WriteInt("UI", "Left",   m_rcLastPos.left  );
-	m_oIniFile.WriteInt("UI", "Top",    m_rcLastPos.top   );
-	m_oIniFile.WriteInt("UI", "Right",  m_rcLastPos.right );
-	m_oIniFile.WriteInt("UI", "Bottom", m_rcLastPos.bottom);
+	// Save the current UI settings.
+	m_oIniFile.WriteRect("UI", "MainWindow",  m_rcLastWndPos);
+	m_oIniFile.WriteRect("UI", "SelFilesDlg", m_rcLastDlgPos);
 }
 
 /******************************************************************************
@@ -562,4 +572,56 @@ int CUTCMGRApp::IconIndex(char cType) const
 	ASSERT_FALSE();
 
 	return -1;
+}
+
+/******************************************************************************
+** Method:		BuildProfileMenu()
+**
+** Description:	Builds the Cache | Profile sub-menu.
+**
+** Parameters:	None.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CUTCMGRApp::BuildProfileMenu()
+{
+	// Delete old menu.
+	for (int i = ID_CACHE_FIRST_PROFILE; i <= ID_CACHE_LAST_PROFILE; ++i)
+		App.m_AppWnd.m_Menu.RemoveCmd(i);
+
+	CPopupMenu oCacheMenu = App.m_AppWnd.m_Menu.GetItemPopup(0).GetItemPopup(0);
+
+	// Build new menu.
+	for (i = 0; i < m_aoProfiles.Size(); ++i)
+		oCacheMenu.InsertCmd(i, ID_CACHE_FIRST_PROFILE + i, m_aoProfiles[i]->m_strName);
+}
+
+/******************************************************************************
+** Method:		UpdateCacheStatus()
+**
+** Description:	Updates the cache status bar message.
+**
+** Parameters:	None.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CUTCMGRApp::UpdateCacheStatus()
+{
+	int    nFiles = m_oCache.RowCount();
+	double dSize  = 0.0;
+
+	// Sum file sizes...
+	for (int i = 0; i < nFiles; ++i)
+		dSize += m_oCache[i][CCache::FILE_SIZE].GetInt();
+
+	// Format and display it.
+	App.m_strDefStatus.Format("Total: %d Files - %.2f MB", nFiles, dSize / (1024.0*1024.0));
+
+	App.m_AppWnd.m_StatusBar.Hint(App.m_strDefStatus);
 }
