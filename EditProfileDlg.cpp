@@ -13,6 +13,16 @@
 #include "HelpTopics.h"
 
 /******************************************************************************
+**
+** Local variables.
+**
+*******************************************************************************
+*/
+
+static const char* SEL_FOLDER_MSG = "Select The UT/UT2003/Mod Base Folder\n"
+									"e.g. C:\\UnrealTournament";
+
+/******************************************************************************
 ** Method:		Default constructor.
 **
 ** Description:	.
@@ -371,7 +381,7 @@ void CEditProfileDlg::OnQuickSetup()
 	CPath strBaseDir;
 
 	// Select the base directory.
-	if (!strBaseDir.SelectDir(*this, "Select The UT Or UT2003 Base Folder\ne.g. C:\\UnrealTournament"))
+	if (!strBaseDir.SelectDir(*this, SEL_FOLDER_MSG))
 		return;
 
 	// Create the full path to the System folder.
