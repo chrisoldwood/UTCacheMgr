@@ -36,18 +36,34 @@ protected:
 	//
 	// Members.
 	//
-	CListView	m_lvGrid;
+	CListView			m_lvGrid;
+	uint				m_nSortColumn;
+	CSortColumns::Dir	m_eSortOrder;
 	
+	// Column indices.
+	enum Column
+	{
+		FILE_COLUMN,
+		TYPE_COLUMN,
+		DATE_COLUMN,
+		SIZE_COLUMN,
+		CACHE_COLUMN,
+		
+		NUM_COLUMNS,
+	};
+
 	//
 	// Message processors.
 	//
 	virtual void OnInitDialog();
 	virtual bool OnOk();
 	virtual void OnHelp(HELPINFO& oInfo);
+	LRESULT OnGridClickColumn(NMHDR& oHdr);
 
 	//
 	// Internal methods.
 	//
+	void  RefreshView();
 	CRow& GetRow(int nRow);
 };
 

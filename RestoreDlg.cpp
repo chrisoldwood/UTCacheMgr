@@ -27,6 +27,8 @@
 CRestoreDlg::CRestoreDlg()
 	: CDialog(IDD_RESTORE)
 	, m_pTable(NULL)
+	, m_nSortColumn(CCache::REAL_FILENAME)
+	, m_eSortOrder(CSortColumns::ASC)
 {
 	DEFINE_CTRL_TABLE
 		CTRL(IDC_GRID,	&m_lvGrid)
@@ -37,6 +39,10 @@ CRestoreDlg::CRestoreDlg()
 		CTRLGRAV(IDOK,     RIGHT_EDGE, BOTTOM_EDGE, RIGHT_EDGE, BOTTOM_EDGE)
 		CTRLGRAV(IDCANCEL, RIGHT_EDGE, BOTTOM_EDGE, RIGHT_EDGE, BOTTOM_EDGE)
 	END_GRAVITY_TABLE
+
+	DEFINE_CTRLMSG_TABLE
+		NFY_CTRLMSG(IDC_GRID, LVN_COLUMNCLICK, OnGridClickColumn)
+	END_CTRLMSG_TABLE
 }
 
 /******************************************************************************
@@ -60,29 +66,18 @@ void CRestoreDlg::OnInitDialog()
 	m_lvGrid.FullRowSelect(true);
 //	m_lvGrid.GridLines(true);
 
+	// Set the ListView icons.
+	m_lvGrid.ImageList(LVSIL_SMALL, IDB_LIST_ICONS, 16, RGB(255, 0, 255));
+
 	// Create grid columns.
-	m_lvGrid.InsertColumn(0, "File",   200, LVCFMT_LEFT  );
-	m_lvGrid.InsertColumn(1, "Type",    50, LVCFMT_LEFT  );
-	m_lvGrid.InsertColumn(3, "Size",    70, LVCFMT_RIGHT );
+	m_lvGrid.InsertColumn(FILE_COLUMN,  "File",       175, LVCFMT_LEFT );
+	m_lvGrid.InsertColumn(TYPE_COLUMN,  "Type",        50, LVCFMT_LEFT );
+	m_lvGrid.InsertColumn(DATE_COLUMN,  "Date",       115, LVCFMT_LEFT );
+	m_lvGrid.InsertColumn(SIZE_COLUMN,  "Size",        70, LVCFMT_RIGHT);
+	m_lvGrid.InsertColumn(CACHE_COLUMN, "Cache Name", 170, LVCFMT_LEFT );
 
-	// Get the file details and sort.
-	CResultSet oRS = m_pTable->SelectAll();
-
-	oRS.OrderBy(CSortColumns(CCache::REAL_FILENAME, CSortColumns::ASC));
-
-	// For all rows.
-	for (int i = 0; i < oRS.Count(); ++i)
-	{
-		CRow& oRow = oRS[i];
-
-		int n = m_lvGrid.ItemCount();
-
-		// Add to the grid.
-		m_lvGrid.InsertItem(n,    oRow[CCache::REAL_FILENAME]);
-		m_lvGrid.ItemText  (n, 1, App.FormatType(oRow[CCache::FILE_TYPE]));
-		m_lvGrid.ItemText  (n, 2, App.FormatSize(oRow[CCache::FILE_SIZE]));
-		m_lvGrid.ItemPtr   (n,    &oRow);
-	}
+	// Load grid.
+	RefreshView();
 }
 
 /******************************************************************************
@@ -104,12 +99,51 @@ bool CRestoreDlg::OnOk()
 	// For all rows...
 	for (int i = 0; i < nFiles; ++i)
 	{
-		// Remove unselected one from table.
+		// Remove unselected rows from table.
 		if (!m_lvGrid.IsSelected(i))
 			m_pTable->DeleteRow(GetRow(i));
 	}
 
 	return true;
+}
+
+/******************************************************************************
+** Method:		RefreshView()
+**
+** Description:	Reload the grid with the new sort order.
+**
+** Parameters:	None.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CRestoreDlg::RefreshView()
+{
+	// Trash old grid.
+	m_lvGrid.DeleteAllItems();
+
+	// Get the file details and sort.
+	CResultSet oRS = m_pTable->SelectAll();
+
+	oRS.OrderBy(CSortColumns(m_nSortColumn, m_eSortOrder));
+
+	// For all rows.
+	for (int i = 0; i < oRS.Count(); ++i)
+	{
+		CRow& oRow = oRS[i];
+
+		int n = m_lvGrid.ItemCount();
+
+		// Add to the grid.
+		m_lvGrid.InsertItem(n,                oRow[CCache::REAL_FILENAME], App.IconIndex(oRow[CCache::FILE_TYPE]));
+		m_lvGrid.ItemText  (n, TYPE_COLUMN,   App.FormatType(oRow[CCache::FILE_TYPE]));
+		m_lvGrid.ItemText  (n, DATE_COLUMN,   oRow[CCache::FILE_DATE].Format());
+		m_lvGrid.ItemText  (n, SIZE_COLUMN,   App.FormatSize(oRow[CCache::FILE_SIZE]));
+		m_lvGrid.ItemText  (n, CACHE_COLUMN,  oRow[CCache::CACHE_FILENAME]);
+		m_lvGrid.ItemPtr   (n,                &oRow);
+	}
 }
 
 /******************************************************************************
@@ -128,4 +162,77 @@ void CRestoreDlg::OnHelp(HELPINFO& /*oInfo*/)
 {
 	// Show the dialogs help topic.
 	App.m_oHelpFile.Topic(IDH_RESTOREDLG);
+}
+
+
+/******************************************************************************
+** Method:		OnGridClickColumn()
+**
+** Description:	Grid column clicked, resort the grid.
+**
+** Parameters:	None.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+LRESULT CRestoreDlg::OnGridClickColumn(NMHDR& oHdr)
+{
+	NMLISTVIEW& oParam = (NMLISTVIEW&) oHdr;
+
+	// Default to first column.
+	uint nColumn = FILE_COLUMN;
+	int  eOrder  = CSortColumns::ASC;
+
+	// Decode column.
+	switch (oParam.iSubItem)
+	{
+		case FILE_COLUMN:
+			nColumn = CCache::REAL_FILENAME;
+			eOrder  = CSortColumns::ASC;
+			break;
+
+		case TYPE_COLUMN:		
+			nColumn = CCache::FILE_TYPE;
+			eOrder  = CSortColumns::ASC;
+			break;
+
+		case DATE_COLUMN:		
+			nColumn = CCache::FILE_DATE;
+			eOrder  = CSortColumns::DESC;
+			break;
+
+		case SIZE_COLUMN:		
+			nColumn = CCache::FILE_SIZE;
+			eOrder  = CSortColumns::DESC;
+			break;
+
+		case CACHE_COLUMN:		
+			nColumn = CCache::CACHE_FILENAME;
+			eOrder  = CSortColumns::ASC;
+			break;
+
+		default:
+			ASSERT_FALSE();
+			break;
+	}
+
+	// Different column?
+	if (nColumn != m_nSortColumn)
+	{
+		m_nSortColumn = nColumn;
+		m_eSortOrder  = (CSortColumns::Dir) eOrder;
+	}
+	// Same column.
+	else
+	{
+		// Reverse sort.
+		m_eSortOrder = (CSortColumns::Dir) -m_eSortOrder;
+	}
+
+	// Reload grid.
+	RefreshView();
+
+	return 0;
 }
