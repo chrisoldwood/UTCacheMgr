@@ -1,36 +1,38 @@
 /******************************************************************************
 ** (C) Chris Oldwood
 **
-** MODULE:		RESTOREDLG.HPP
+** MODULE:		SELFILESDLG.HPP
 ** COMPONENT:	The Application.
-** DESCRIPTION:	The CRestoreDlg class declaration.
+** DESCRIPTION:	The CSelFilesDlg class declaration.
 **
 *******************************************************************************
 */
 
 // Check for previous inclusion
-#ifndef RESTOREDLG_HPP
-#define RESTOREDLG_HPP
+#ifndef SELFILESDLG_HPP
+#define SELFILESDLG_HPP
 
 /******************************************************************************
 ** 
-** The dialog used to select which files should be restored to the cache.
+** Dialog used to select which files should be imported/restored into the cache.
 **
 *******************************************************************************
 */
 
-class CRestoreDlg : public CDialog
+class CSelFilesDlg : public CDialog
 {
 public:
 	//
 	// Constructors/Destructor.
 	//
-	CRestoreDlg();
+	CSelFilesDlg();
 	
 	//
 	// Members.
 	//
 	CTable*	m_pTable;
+	CString	m_strTitle;
+	DWORD	m_dwHelpID;
 
 protected:
 	//
@@ -56,6 +58,7 @@ protected:
 	// Message processors.
 	//
 	virtual void OnInitDialog();
+	virtual void OnDestroy();
 	virtual bool OnOk();
 	virtual void OnHelp(HELPINFO& oInfo);
 	LRESULT OnGridClickColumn(NMHDR& oHdr);
@@ -74,11 +77,11 @@ protected:
 *******************************************************************************
 */
 
-inline CRow& CRestoreDlg::GetRow(int nRow)
+inline CRow& CSelFilesDlg::GetRow(int nRow)
 {
 	ASSERT((nRow >= 0) && (nRow < m_lvGrid.ItemCount()));
 
 	return *((CRow*) m_lvGrid.ItemPtr(nRow));
 }
 
-#endif //RESTOREDLG_HPP
+#endif //SELFILESDLG_HPP

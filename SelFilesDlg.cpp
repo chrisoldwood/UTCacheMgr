@@ -1,16 +1,15 @@
 /******************************************************************************
 ** (C) Chris Oldwood
 **
-** MODULE:		RESTOREDLG.CPP
+** MODULE:		SELFILESDLG.CPP
 ** COMPONENT:	The Application.
-** DESCRIPTION:	CRestoreDlg class definition.
+** DESCRIPTION:	CSelFilesDlg class definition.
 **
 *******************************************************************************
 */
 
 #include "AppHeaders.hpp"
-#include "RestoreDlg.hpp"
-#include "HelpTopics.h"
+#include "SelFilesDlg.hpp"
 
 /******************************************************************************
 ** Method:		Default constructor.
@@ -24,9 +23,10 @@
 *******************************************************************************
 */
 
-CRestoreDlg::CRestoreDlg()
-	: CDialog(IDD_RESTORE)
+CSelFilesDlg::CSelFilesDlg()
+	: CDialog(IDD_SELFILES)
 	, m_pTable(NULL)
+	, m_dwHelpID(NULL)
 	, m_nSortColumn(CCache::REAL_FILENAME)
 	, m_eSortOrder(CSortColumns::ASC)
 {
@@ -57,9 +57,18 @@ CRestoreDlg::CRestoreDlg()
 *******************************************************************************
 */
 
-void CRestoreDlg::OnInitDialog()
+void CSelFilesDlg::OnInitDialog()
 {
-	ASSERT(m_pTable != NULL);
+	ASSERT(m_pTable   != NULL);
+	ASSERT(m_strTitle != "");
+	ASSERT(m_dwHelpID != NULL);
+
+	// Restore dialog size to last time.
+	if (!App.m_rcLastDlgPos.Empty())
+		Move(App.m_rcLastDlgPos);
+
+	// Set dialog title.
+	Title(m_strTitle);
 
 	// Set grid style.
 //	m_lvGrid.Font(CFont(ANSI_FIXED_FONT));
@@ -81,6 +90,24 @@ void CRestoreDlg::OnInitDialog()
 }
 
 /******************************************************************************
+** Method:		OnDestroy()
+**
+** Description:	Dialog closing.
+**
+** Parameters:	None.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CSelFilesDlg::OnDestroy()
+{
+	// Save windows final position.
+	App.m_rcLastDlgPos = Placement();
+}
+
+/******************************************************************************
 ** Method:		OnOk()
 **
 ** Description:	User pressed OK.
@@ -92,7 +119,7 @@ void CRestoreDlg::OnInitDialog()
 *******************************************************************************
 */
 
-bool CRestoreDlg::OnOk()
+bool CSelFilesDlg::OnOk()
 {
 	int nFiles = m_lvGrid.ItemCount();
 
@@ -119,7 +146,7 @@ bool CRestoreDlg::OnOk()
 *******************************************************************************
 */
 
-void CRestoreDlg::RefreshView()
+void CSelFilesDlg::RefreshView()
 {
 	// Trash old grid.
 	m_lvGrid.DeleteAllItems();
@@ -158,10 +185,10 @@ void CRestoreDlg::RefreshView()
 *******************************************************************************
 */
 
-void CRestoreDlg::OnHelp(HELPINFO& /*oInfo*/)
+void CSelFilesDlg::OnHelp(HELPINFO& /*oInfo*/)
 {
 	// Show the dialogs help topic.
-	App.m_oHelpFile.Topic(IDH_RESTOREDLG);
+	App.m_oHelpFile.Topic(m_dwHelpID);
 }
 
 
@@ -177,7 +204,7 @@ void CRestoreDlg::OnHelp(HELPINFO& /*oInfo*/)
 *******************************************************************************
 */
 
-LRESULT CRestoreDlg::OnGridClickColumn(NMHDR& oHdr)
+LRESULT CSelFilesDlg::OnGridClickColumn(NMHDR& oHdr)
 {
 	NMLISTVIEW& oParam = (NMLISTVIEW&) oHdr;
 
