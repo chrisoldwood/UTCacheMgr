@@ -49,7 +49,9 @@
 #define IDC_BROWSE_MAPS                 1081
 #define IDC_OPERATION                   1081
 #define IDC_BROWSE_TEXTURES             1082
+#define IDC_FOLDER                      1082
 #define IDC_BROWSE_SOUNDS               1083
+#define IDC_EXPIRY                      1083
 #define IDC_BROWSE_MUSIC                1084
 #define IDC_CONFIG_FILE                 1085
 #define IDC_BROWSE_CONFIG               1086
@@ -70,7 +72,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        130
 #define _APS_NEXT_COMMAND_VALUE         158
-#define _APS_NEXT_CONTROL_VALUE         1082
+#define _APS_NEXT_CONTROL_VALUE         1083
 #define _APS_NEXT_SYMED_VALUE           104
 #endif
 #endif

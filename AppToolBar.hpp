@@ -31,7 +31,13 @@ public:
 	//
 	// Members.
 	//
+	CCmdButton	m_btnSelProf;
 	CCmdButton	m_btnRescan;
+	CCmdButton	m_btnMove;
+	CCmdButton	m_btnCopy;
+	CCmdButton	m_btnDelete;
+	CCmdButton	m_btnMoveTo;
+	CCmdButton	m_btnCopyTo;
 	CCmdButton	m_btnHelp;
 };
 
