@@ -194,10 +194,17 @@ void CAppCmds::OnCacheRescan()
 	// For all files found...
 	for (int i = 0; i < astrFiles.Size(); ++i)
 	{
-		// Get file name, index key and real name.
+		// Get file name and index key.
 		CPath   strCacheName = astrFiles[i];
 		CString strIndexName = strCacheName.FileTitle();
-		CPath   strRealName  = oIdxFile.ReadString("Cache", strIndexName, "");
+
+		// Workaround for UT2003 v2166 patch bug which
+		// appends a "-1" after the 32 char file name.
+		if (strIndexName.Length() > 32)
+			strIndexName = strIndexName.Left(32);
+
+		// Get real file name from index.
+		CPath strRealName = oIdxFile.ReadString("Cache", strIndexName, "");
 
 		// File not in index?
 		if (strRealName.Length() == 0)
@@ -313,7 +320,11 @@ void CAppCmds::OnCacheRescan()
 		{
 			CPath strFile = strCacheDir + (astrKeys[i] + "." + CProfile::DEF_CACHE_FILE_EXT);
 
-			if (!strFile.Exists())
+			// Workaround for UT2003 v2166 patch bug which
+			// appends a "-1" after the 32 char file name.
+			CPath strAltFile = strCacheDir + (astrKeys[i] +"-1" + "." + CProfile::DEF_CACHE_FILE_EXT);
+
+			if ( (!strFile.Exists()) && (!strAltFile.Exists()) )
 				astrInvalid.Add(astrKeys[i]);
 		}
 
