@@ -398,11 +398,13 @@ CString CUTCMGRApp::FormatType(char cType) const
 {
 	switch (cType)
 	{
-		case SYSTEM_FILE :	return "System";
-		case MAP_FILE    :	return "Map";
+		case SYSTEM_FILE:	return "System";
+		case MAP_FILE:		return "Map";
 		case TEXTURE_FILE:	return "Texture";
-		case SOUND_FILE  :	return "Sound";
-		case MUSIC_FILE  :	return "Music";
+		case SOUND_FILE:	return "Sound";
+		case MUSIC_FILE:	return "Music";
+		case MESH_FILE:		return "Mesh";
+		case ANIM_FILE:		return "Anim";
 	}
 
 	ASSERT(false);

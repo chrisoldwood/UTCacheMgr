@@ -47,6 +47,8 @@ public:
 	CPath	m_strTextureDir;	// Textures directory.
 	CPath	m_strSoundDir;		// Sounds directory.
 	CPath	m_strMusicDir;		// Music directory.
+	CPath	m_strMeshDir;		// StaticMeshes directory.
+	CPath	m_strAnimDir;		// Animations directory.
 
 	CPath	m_strConfigFile;	// UT Config file.
 
@@ -72,6 +74,8 @@ public:
 	static const char* DEF_MUSIC_DIR;
 
 	static const char* DEF_CONFIG_FILE;
+
+	static const char* DEF_2003_CONFIG_FILE;
 };
 
 /******************************************************************************

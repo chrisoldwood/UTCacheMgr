@@ -17,6 +17,7 @@
 *******************************************************************************
 */
 
+// Defaults for UT.
 const char* CProfile::DEF_PROFILE_NAME   = "Default";
 const char* CProfile::DEF_ROOT_DIR       = "C:\\UnrealTournament";
 const char* CProfile::DEF_CACHE_DIR      = "Cache";
@@ -30,6 +31,10 @@ const char* CProfile::DEF_MUSIC_DIR      = "Music";
 const char* CProfile::DEF_CONFIG_FILE    = "UnrealTournament.ini";
 const char* CProfile::DEF_CACHE_TMP_DIR  = "..\\.";
 const char* CProfile::DEF_CACHE_TMP_MASK = "Cache????.tmp";
+
+// Additional defaults for UT2003.
+const char* CProfile::DEF_2003_CONFIG_FILE = "UT2003.ini";
+
 
 /******************************************************************************
 ** Method:		Constructor.
@@ -98,6 +103,14 @@ char CProfile::GetFileType(const CString& strExt)
 	{
 		return MUSIC_FILE;
 	}
+	else if (strExt == ".usx")
+	{
+		return MESH_FILE;
+	}
+	else if (strExt == ".ukx")
+	{
+		return ANIM_FILE;
+	}
 
 	ASSERT(false);
 
@@ -120,11 +133,13 @@ CPath CProfile::GetTypeDir(char cType)
 {
 	switch (cType)
 	{
-		case SYSTEM_FILE :	return m_strSystemDir;
-		case MAP_FILE    :	return m_strMapDir;
+		case SYSTEM_FILE:	return m_strSystemDir;
+		case MAP_FILE:		return m_strMapDir;
 		case TEXTURE_FILE:	return m_strTextureDir;
-		case SOUND_FILE  :	return m_strSoundDir;
-		case MUSIC_FILE  :	return m_strMusicDir;
+		case SOUND_FILE:	return m_strSoundDir;
+		case MUSIC_FILE:	return m_strMusicDir;
+		case MESH_FILE:		return m_strMeshDir;
+		case ANIM_FILE:		return m_strAnimDir;
 	}
 
 	ASSERT(false);
