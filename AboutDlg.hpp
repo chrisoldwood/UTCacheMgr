@@ -31,6 +31,8 @@ protected:
 	//
 	// Members.
 	//
+	CURLLabel	m_txtEmail;
+	CURLLabel	m_txtWebSite;
 	
 	//
 	// Message processors.

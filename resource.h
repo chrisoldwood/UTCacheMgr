@@ -55,7 +55,9 @@
 #define IDC_FOLDER                      1082
 #define IDC_BROWSE_SOUNDS               1083
 #define IDC_EXPIRY                      1083
+#define IDC_WEBSITE                     1083
 #define IDC_BROWSE_MUSIC                1084
+#define IDC_EMAIL                       1084
 #define IDC_CONFIG_FILE                 1085
 #define IDC_BROWSE_CONFIG               1086
 #define IDC_QUICK_SETUP                 1087
@@ -76,7 +78,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        130
 #define _APS_NEXT_COMMAND_VALUE         159
-#define _APS_NEXT_CONTROL_VALUE         1083
+#define _APS_NEXT_CONTROL_VALUE         1085
 #define _APS_NEXT_SYMED_VALUE           104
 #endif
 #endif
