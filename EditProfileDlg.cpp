@@ -46,6 +46,7 @@ CEditProfileDlg::CEditProfileDlg()
 		CMD_CTRLMSG(IDC_BROWSE_SOUNDS,		BN_CLICKED,	OnBrowseSounds  )
 		CMD_CTRLMSG(IDC_BROWSE_MUSIC,		BN_CLICKED,	OnBrowseMusic   )
 		CMD_CTRLMSG(IDC_BROWSE_CONFIG,		BN_CLICKED,	OnBrowseCfgFile )
+		CMD_CTRLMSG(IDC_QUICK_SETUP,		BN_CLICKED,	OnQuickSetup    )
 	END_CTRLMSG_TABLE
 }
 
@@ -241,7 +242,7 @@ void CEditProfileDlg::OnBrowseDir(CEditBox& ebPath)
 		strDir = m_strLastPath;
 
 	// Show Select Directory common dialog.
-	if (strDir.SelectDir(*this, "Select Directory", strDir))
+	if (strDir.SelectDir(*this, "Select Folder", strDir))
 	{
 		// Display path.
 		ebPath.Text(strDir);
@@ -266,4 +267,34 @@ void CEditProfileDlg::OnBrowseCfgFile()
 		// Display path.
 		m_ebConfigFile.Text(strFile);
 	}
+}
+
+/******************************************************************************
+** Method:		OnQuickSetup()
+**
+** Description:	Fills in all paths based on an inital base directory.
+**
+** Parameters:	None.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CEditProfileDlg::OnQuickSetup()
+{
+	CPath strBaseDir;
+
+	// Select the base directory.
+	if (!strBaseDir.SelectDir(*this, "Select The UT Base Folder"))
+		return;
+
+	// Create paths.
+	m_ebCacheDir.Text  (CPath(strBaseDir, CProfile::DEF_CACHE_DIR   ));
+	m_ebSystemDir.Text (CPath(strBaseDir, CProfile::DEF_SYSTEM_DIR  ));
+	m_ebMapDir.Text    (CPath(strBaseDir, CProfile::DEF_MAPS_DIR    ));
+	m_ebTextureDir.Text(CPath(strBaseDir, CProfile::DEF_TEXTURES_DIR));
+	m_ebSoundDir.Text  (CPath(strBaseDir, CProfile::DEF_SOUNDS_DIR  ));
+	m_ebMusicDir.Text  (CPath(strBaseDir, CProfile::DEF_MUSIC_DIR   ));
+	m_ebConfigFile.Text(CPath(m_ebSystemDir.Text(), CProfile::DEF_CONFIG_FILE));
 }

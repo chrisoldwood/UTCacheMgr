@@ -64,6 +64,7 @@ protected:
 	void OnBrowseMusic();
 	void OnBrowseDir(CEditBox& ebPath);
 	void OnBrowseCfgFile();
+	void OnQuickSetup();
 };
 
 /******************************************************************************
