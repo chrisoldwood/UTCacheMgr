@@ -57,6 +57,8 @@ CAppCmds::CAppCmds()
 		CMD_ENTRY(ID_VIEW_SORT_TYPE,	OnViewSortByType,	OnUIViewSortByType,		-1)
 		CMD_ENTRY(ID_VIEW_SORT_DATE,	OnViewSortByDate,	OnUIViewSortByDate,		-1)
 		CMD_ENTRY(ID_VIEW_SORT_SIZE,	OnViewSortBySize,	OnUIViewSortBySize,		-1)
+		CMD_ENTRY(ID_VIEW_SORT_STATUS,	OnViewSortByStatus,	OnUIViewSortByStatus,	-1)
+		CMD_ENTRY(ID_VIEW_SORT_CACHE,	OnViewSortByCache,	OnUIViewSortByCache,	-1)
 		CMD_ENTRY(ID_VIEW_SHOW_ALL,		OnViewShowAll,		OnUIViewShowAll,		-1)
 		// Options menu.
 		CMD_ENTRY(ID_OPTIONS_PROFILES,	OnOptionsProfiles,	NULL,					-1)
@@ -167,12 +169,17 @@ void CAppCmds::OnCacheRescan()
 	// Reset the scan details.
 	App.m_oCache.Truncate();
 
+	// Reset cache size counters.
+	uint   nCacheFiles = 0;
+	double dCacheSize  = 0.0;
+
 	// Show the progress dialog.
 	CProgressDlg Dlg;
 
 	Dlg.RunModeless(App.m_AppWnd);
 	Dlg.Title("Scanning Cache");
 	Dlg.UpdateLabel("Searching cache for files...");
+	App.m_AppWnd.Enable(false);
 
 	// Create errors dialog.
 	CErrorsDlg dlgErrors;
@@ -262,12 +269,17 @@ void CAppCmds::OnCacheRescan()
 		oRow[CCache::STATUS]         = (bPinned) ? PIN_FILE : (bExists) ? OLD_FILE : NEW_FILE;
 
 		App.m_oCache.InsertRow(oRow);
+
+		// Update cache size counters.
+		nCacheFiles++;
+		dCacheSize += oInfo.st_size;
 	}
 
 	// Update UI.
 	App.m_AppWnd.m_AppDlg.RefreshView();
 
 	// Remove progress dialog.
+	App.m_AppWnd.Enable(true);
 	Dlg.Destroy();
 
 	// Report any errors.
@@ -281,10 +293,11 @@ void CAppCmds::OnCacheRescan()
 	if (App.m_bScanForTmp)
 	{
 		CPath     strTmpDir = strCacheDir + CProfile::DEF_CACHE_TMP_DIR;
+		CString   strMask   = strCacheDir.FileTitle() + CProfile::DEF_CACHE_TMP_MASK;
 		CFileTree oTmpFiles;
 
 		// Do search...
-		oFinder.Find(strTmpDir, CProfile::DEF_CACHE_TMP_MASK, false, oTmpFiles);
+		oFinder.Find(strTmpDir, strMask, false, oTmpFiles);
 
 		int nTmpFiles = oTmpFiles.Root()->m_oData.m_astrFiles.Size();
 
@@ -342,7 +355,12 @@ void CAppCmds::OnCacheRescan()
 		}
 	}
 
+	// Format default status bar message.
+	App.m_strDefStatus.Format("Total: %d Files - %.2f MB", nCacheFiles, dCacheSize / (1024.0*1024.0));
+
+	// Update UI.
 	UpdateUI();
+	App.m_AppWnd.m_StatusBar.Hint(App.m_strDefStatus);
 }
 
 /******************************************************************************
@@ -383,6 +401,7 @@ void CAppCmds::OnCacheRestore()
 	Dlg.RunModeless(App.m_AppWnd);
 	Dlg.Title("Loading Restore Log");
 	Dlg.InitMeter(CFile::Size(strLogFile));
+	App.m_AppWnd.Enable(false);
 
 	try
 	{
@@ -401,7 +420,7 @@ void CAppCmds::OnCacheRestore()
 
 			// Split line into separate fields.
 			// NB: Fields are RealFileName, CacheFileName, Size.
-			if (strLine.Split(",", astrFields) != 3)
+			if (CStrTok::Split(strLine, ',', astrFields) != 3)
 				continue;
 
 			CPath strRealName  = astrFields[0];
@@ -411,7 +430,7 @@ void CAppCmds::OnCacheRestore()
 			Dlg.UpdateLabelAndMeter("Checking file: " + (CString)strRealName, fLogFile.Seek(0, FILE_CURRENT));
 
 			// Duplicate entry?
-			if (oRestore.Exists(CWhereEqual(CCache::REAL_FILENAME, strRealName)))
+			if (oRestore.Exists(CWhereCmp(CCache::REAL_FILENAME, CWhereCmp::EQUALS, strRealName)))
 				continue;
 
 			// Get file type from extension.
@@ -458,12 +477,14 @@ void CAppCmds::OnCacheRestore()
 		App.AlertMsg(e.ErrorText());
 
 		// Remove progress dialog.
+		App.m_AppWnd.Enable(true);
 		Dlg.Destroy();
 
 		return;
 	}
 
 	// Remove progress dialog.
+	App.m_AppWnd.Enable(true);
 	Dlg.Destroy();
 
 	// Nothing to restore?
@@ -529,6 +550,7 @@ void CAppCmds::OnCacheRestore()
 	}
 
 	// Remove progress dialog.
+	App.m_AppWnd.Enable(true);
 	Dlg.Destroy();
 
 	// Report any errors.
@@ -655,8 +677,6 @@ void CAppCmds::OnEditPin()
 	if (nFiles == 0)
 		return;
 
-	CStrArray& astrPinned = App.m_astrPinned;
-
 	// For all selected rows...
 	for (int i = 0; i < nFiles; ++i)
 	{
@@ -667,15 +687,15 @@ void CAppCmds::OnEditPin()
 		// Add to pinned list?
 		if (cStatus == NEW_FILE)
 		{
-			if (astrPinned.Find(pszName, true) == -1)
-				astrPinned.Add(pszName);
+			if (App.m_astrPinned.Find(pszName, true) == -1)
+				App.m_astrPinned.Add(pszName);
 		}
 
 		// Remove from pinned list?
 		if (cStatus == PIN_FILE)
 		{
-			if (astrPinned.Find(pszName, true) != -1)
-				astrPinned.Delete(astrPinned.Find(pszName, true));
+			if (App.m_astrPinned.Find(pszName, true) != -1)
+				App.m_astrPinned.Delete(App.m_astrPinned.Find(pszName, true));
 		}
 	}
 
@@ -685,7 +705,7 @@ void CAppCmds::OnEditPin()
 		CRow&       oRow     = App.m_oCache[i];
 		char        cStatus  = oRow[CCache::STATUS];
 		const char* pszName  = oRow[CCache::REAL_FILENAME];
-		int         nListIdx = astrPinned.Find(pszName, true);
+		int         nListIdx = App.m_astrPinned.Find(pszName, true);
 
 		// Pin, if in pinned list AND not already pinned.
 		if ( (nListIdx != -1) && (cStatus != PIN_FILE) )
@@ -698,6 +718,9 @@ void CAppCmds::OnEditPin()
 			oRow[CCache::STATUS] = NEW_FILE;
 		}
 	}
+
+	// Mark pinned list as modified.
+	App.m_nModified |= App.PIN_LIST;
 
 	// Update UI.
 	App.m_AppWnd.m_AppDlg.RefreshView();
@@ -743,6 +766,7 @@ void CAppCmds::OnEditMove()
 	Dlg.RunModeless(App.m_AppWnd);
 	Dlg.Title("Moving Files");
 	Dlg.InitMeter(nFiles);
+	App.m_AppWnd.Enable(false);
 
 	// Create errors dialog.
 	CErrorsDlg dlgErrors;
@@ -783,6 +807,7 @@ void CAppCmds::OnEditMove()
 	}
 
 	// Remove progress dialog.
+	App.m_AppWnd.Enable(true);
 	Dlg.Destroy();
 
 	// Log cache changes.
@@ -843,6 +868,7 @@ void CAppCmds::OnEditCopy()
 	Dlg.RunModeless(App.m_AppWnd);
 	Dlg.Title("Copying Files");
 	Dlg.InitMeter(nFiles);
+	App.m_AppWnd.Enable(false);
 
 	// Create errors dialog.
 	CErrorsDlg dlgErrors;
@@ -883,6 +909,7 @@ void CAppCmds::OnEditCopy()
 	}
 
 	// Remove progress dialog.
+	App.m_AppWnd.Enable(true);
 	Dlg.Destroy();
 
 	// Log cache changes.
@@ -988,6 +1015,8 @@ void CAppCmds::OnEditDelete()
 
 void CAppCmds::OnEditCopyTo()
 {
+	ASSERT(App.m_pProfile != NULL);
+
 	CResultSet oRS(App.m_oCache);
 
 	// Get the current selection.
@@ -999,7 +1028,7 @@ void CAppCmds::OnEditCopyTo()
 	if (nFiles == 0)
 		return;
 
-	CPath strDstDir = App.m_strLastCopyTo;
+	CPath strDstDir = App.m_pProfile->m_strLastCopyTo;
 
 	// Get the directory to copy to.
 	if (!strDstDir.SelectDir(App.m_AppWnd, "Select Folder To Copy To", strDstDir))
@@ -1016,6 +1045,7 @@ void CAppCmds::OnEditCopyTo()
 	Dlg.RunModeless(App.m_AppWnd);
 	Dlg.Title("Copying Files");
 	Dlg.InitMeter(nFiles);
+	App.m_AppWnd.Enable(false);
 
 	// Create errors dialog.
 	CErrorsDlg dlgErrors;
@@ -1047,6 +1077,7 @@ void CAppCmds::OnEditCopyTo()
 	}
 
 	// Remove progress dialog.
+	App.m_AppWnd.Enable(true);
 	Dlg.Destroy();
 
 	// Report any errors.
@@ -1057,7 +1088,7 @@ void CAppCmds::OnEditCopyTo()
 	}
 
 	// Save folder as default.
-	App.m_strLastCopyTo = strDstDir;
+	App.m_pProfile->m_strLastCopyTo = strDstDir;
 
 	UpdateUI();
 }
@@ -1128,6 +1159,16 @@ void CAppCmds::OnViewSortByDate()
 void CAppCmds::OnViewSortBySize()
 {
 	OnViewSortByColumn(CCache::FILE_SIZE, CSortColumns::DESC);
+}
+
+void CAppCmds::OnViewSortByStatus()
+{
+	OnViewSortByColumn(CCache::STATUS, CSortColumns::ASC);
+}
+
+void CAppCmds::OnViewSortByCache()
+{
+	OnViewSortByColumn(CCache::CACHE_FILENAME, CSortColumns::ASC);
 }
 
 void CAppCmds::OnViewSortByColumn(uint nColumn, CSortColumns::Dir eDefDir)
@@ -1404,6 +1445,22 @@ void CAppCmds::OnUIViewSortBySize()
 	CAppDlg& oAppDlg = App.m_AppWnd.m_AppDlg;
 
 	oMenu.CheckCmd(ID_VIEW_SORT_SIZE, (oAppDlg.m_nSortColumn == CCache::FILE_SIZE));
+}
+
+void CAppCmds::OnUIViewSortByStatus()
+{
+	CMenu&   oMenu   = App.m_AppWnd.m_Menu;
+	CAppDlg& oAppDlg = App.m_AppWnd.m_AppDlg;
+
+	oMenu.CheckCmd(ID_VIEW_SORT_STATUS, (oAppDlg.m_nSortColumn == CCache::STATUS));
+}
+
+void CAppCmds::OnUIViewSortByCache()
+{
+	CMenu&   oMenu   = App.m_AppWnd.m_Menu;
+	CAppDlg& oAppDlg = App.m_AppWnd.m_AppDlg;
+
+	oMenu.CheckCmd(ID_VIEW_SORT_CACHE, (oAppDlg.m_nSortColumn == CCache::CACHE_FILENAME));
 }
 
 /******************************************************************************

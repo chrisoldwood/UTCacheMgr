@@ -54,6 +54,8 @@ public:
 	void OnViewSortByType();
 	void OnViewSortByDate();
 	void OnViewSortBySize();
+	void OnViewSortByStatus();
+	void OnViewSortByCache();
 	void OnViewSortByColumn(uint nColumn, CSortColumns::Dir eDefDir);
 	void OnViewShowAll();
 
@@ -80,6 +82,8 @@ public:
 	void OnUIViewSortByType();
 	void OnUIViewSortByDate();
 	void OnUIViewSortBySize();
+	void OnUIViewSortByStatus();
+	void OnUIViewSortByCache();
 
 protected:
 	//
