@@ -37,6 +37,7 @@ protected:
 	// Controls.
 	//
 	CEditBox	m_ebName;
+	CComboBox	m_cbFormat;
 	CEditBox	m_ebCacheDir;
 	CCheckBox	m_ckReadOnly;
 	CEditBox	m_ebSystemDir;
@@ -44,6 +45,8 @@ protected:
 	CEditBox	m_ebTextureDir;
 	CEditBox	m_ebSoundDir;
 	CEditBox	m_ebMusicDir;
+	CEditBox	m_ebMeshDir;
+	CEditBox	m_ebAnimDir;
 	CEditBox	m_ebConfigFile;
 
 	//
@@ -58,12 +61,15 @@ protected:
 	virtual bool OnOk();
 	virtual void OnHelp(HELPINFO& oInfo);
 
+	void OnSelectFormat();
 	void OnBrowseCache();
 	void OnBrowseSystem();
 	void OnBrowseMaps();
 	void OnBrowseTextures();
 	void OnBrowseSounds();
 	void OnBrowseMusic();
+	void OnBrowseMeshes();
+	void OnBrowseAnims();
 	void OnBrowseDir(CEditBox& ebPath);
 	void OnBrowseCfgFile();
 	void OnQuickSetup();

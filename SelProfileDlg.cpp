@@ -31,6 +31,7 @@ CSelProfileDlg::CSelProfileDlg()
 {
 	DEFINE_CTRL_TABLE
 		CTRL(IDC_PROFILES,		&m_cbProfiles  )
+		CTRL(IDC_FORMAT,		&m_cbFormat    )
 		CTRL(IDC_CACHE_DIR,		&m_ebCacheDir  )
 		CTRL(IDC_READ_ONLY,		&m_ckReadOnly  )
 		CTRL(IDC_SYSTEM_DIR,	&m_ebSystemDir )
@@ -38,6 +39,8 @@ CSelProfileDlg::CSelProfileDlg()
 		CTRL(IDC_TEXTURES_DIR,	&m_ebTextureDir)
 		CTRL(IDC_SOUNDS_DIR,	&m_ebSoundDir  )
 		CTRL(IDC_MUSIC_DIR,		&m_ebMusicDir  )
+		CTRL(IDC_MESH_DIR,		&m_ebMeshDir   )
+		CTRL(IDC_ANIM_DIR,		&m_ebAnimDir   )
 		CTRL(IDC_CONFIG_FILE,	&m_ebConfigFile)
 	END_CTRL_TABLE
 
@@ -71,6 +74,10 @@ void CSelProfileDlg::OnInitDialog()
 		int n = m_cbProfiles.Add(pProfile->m_strName);
 		m_cbProfiles.ItemPtr(n, pProfile);
 	}
+
+	// Load formats combo.
+	m_cbFormat.Add("UT");
+	m_cbFormat.Add("UT2003");
 
 	// Select the default.
 	m_cbProfiles.CurSel(m_cbProfiles.FindExact(m_pChoice->m_strName, -1));
@@ -124,6 +131,7 @@ void CSelProfileDlg::OnSelectProfile()
 	ASSERT((nSel != CB_ERR) && (pProfile != NULL));
 
 	// Load details into controls.
+	m_cbFormat.CurSel(pProfile->m_nFormat);
 	m_ebCacheDir.Text(pProfile->m_strCacheDir);
 	m_ckReadOnly.Check(pProfile->m_bReadOnly);
 	m_ebSystemDir.Text(pProfile->m_strSystemDir);
@@ -131,6 +139,8 @@ void CSelProfileDlg::OnSelectProfile()
 	m_ebTextureDir.Text(pProfile->m_strTextureDir);
 	m_ebSoundDir.Text(pProfile->m_strSoundDir);
 	m_ebMusicDir.Text(pProfile->m_strMusicDir);
+	m_ebMeshDir.Text(pProfile->m_strMeshDir);
+	m_ebAnimDir.Text(pProfile->m_strAnimDir);
 	m_ebConfigFile.Text(pProfile->m_strConfigFile);
 }
 

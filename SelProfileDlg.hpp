@@ -38,6 +38,7 @@ protected:
 	// Controls.
 	//
 	CComboBox	m_cbProfiles;
+	CComboBox	m_cbFormat;
 	CEditBox	m_ebCacheDir;
 	CCheckBox	m_ckReadOnly;
 	CEditBox	m_ebSystemDir;
@@ -45,6 +46,8 @@ protected:
 	CEditBox	m_ebTextureDir;
 	CEditBox	m_ebSoundDir;
 	CEditBox	m_ebMusicDir;
+	CEditBox	m_ebMeshDir;
+	CEditBox	m_ebAnimDir;
 	CEditBox	m_ebConfigFile;
 
 	//
