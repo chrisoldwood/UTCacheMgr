@@ -33,6 +33,7 @@ CCache::CCache(CMDB& oDB)
 	AddColumn("FileType",      MDCT_CHAR,     0,                  CColumn::DEFAULTS);
 	AddColumn("FileDate",      MDCT_DATETIME, 0,                  CColumn::DEFAULTS);
 	AddColumn("FileSize",      MDCT_INT,      0,                  CColumn::DEFAULTS);
+	AddColumn("Status",        MDCT_CHAR,     0,                  CColumn::DEFAULTS);
 }
 
 /******************************************************************************
@@ -74,7 +75,7 @@ CRow& CCache::CreateRow()
 //	oRow[FILE_TYPE]      =
 //	oRow[FILE_DATE]      =
 //	oRow[FILE_SIZE]      = 
-//	oRow[IS_NEW]         =
+//	oRow[STATUS]         =
 	
 	return oRow;
 }

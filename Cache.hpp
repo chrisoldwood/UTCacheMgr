@@ -26,6 +26,10 @@ const char TEXTURE_FILE = 'T';
 const char SOUND_FILE   = 'S';
 const char MUSIC_FILE   = 'M';
 
+// File status.
+const char NEW_FILE = 'N';
+const char OLD_FILE = 'O';
+
 /******************************************************************************
 ** 
 ** The table used to store the cached files details.
@@ -54,6 +58,7 @@ public:
 		FILE_TYPE,
 		FILE_DATE,
 		FILE_SIZE,
+		STATUS,
 	};
 
 	//
