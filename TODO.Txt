@@ -1,1 +1,3 @@
 - Update helpfile.
+
+- Add toolbar to help.
