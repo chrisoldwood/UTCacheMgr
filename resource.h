@@ -10,11 +10,11 @@
 #define ID_CACHE_PROFILE                101
 #define ID_CACHE_RESCAN                 102
 #define ID_CACHE_EXIT                   109
+#define ID_VIEW_SHOW_ALL                158
 #define ID_EDIT_POPUP                   200
 #define ID_EDIT_MOVE                    201
 #define ID_EDIT_COPY                    202
 #define ID_EDIT_DELETE                  203
-#define ID_EDIT_MOVE_TO                 204
 #define ID_EDIT_COPY_TO                 205
 #define ID_VIEW_POPUP                   300
 #define ID_VIEW_SELECT_ALL              301
@@ -39,10 +39,13 @@
 #define IDC_SCAN_ON_SWITCH              1075
 #define IDC_SOUNDS_DIR                  1076
 #define IDC_ADD                         1076
+#define IDC_SCAN_TMP_FILES              1076
 #define IDC_MUSIC_DIR                   1077
 #define IDC_EDIT                        1077
+#define IDC_SCAN_INDEX                  1077
 #define IDC_REMOVE                      1078
 #define IDC_NAME                        1078
+#define IDC_SHOW_ALL                    1078
 #define IDC_BROWSE_CACHE                1079
 #define IDC_BROWSE_SYSTEM               1080
 #define IDC_PROGRESS                    1080
@@ -55,6 +58,7 @@
 #define IDC_BROWSE_MUSIC                1084
 #define IDC_CONFIG_FILE                 1085
 #define IDC_BROWSE_CONFIG               1086
+#define IDC_QUICK_SETUP                 1087
 #define IDD_MAIN                        5000
 #define IDD_ABOUT                       5001
 #define IDD_SEL_PROFILE                 5002
@@ -71,7 +75,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        130
-#define _APS_NEXT_COMMAND_VALUE         158
+#define _APS_NEXT_COMMAND_VALUE         159
 #define _APS_NEXT_CONTROL_VALUE         1083
 #define _APS_NEXT_SYMED_VALUE           104
 #endif

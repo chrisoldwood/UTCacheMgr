@@ -83,7 +83,6 @@ BEGIN
         MENUITEM "&Copy",                       ID_EDIT_COPY
         MENUITEM "&Delete",                     ID_EDIT_DELETE
         MENUITEM SEPARATOR
-        MENUITEM "Mo&ve To...",                 ID_EDIT_MOVE_TO
         MENUITEM "Cop&y To...",                 ID_EDIT_COPY_TO
     END
     POPUP "&View"
@@ -94,6 +93,8 @@ BEGIN
         MENUITEM "Sort By &Type",               ID_VIEW_SORT_TYPE
         MENUITEM "Sort By &Date",               ID_VIEW_SORT_DATE
         MENUITEM "Sort By &Size",               ID_VIEW_SORT_SIZE
+        MENUITEM SEPARATOR
+        MENUITEM "Sho&w All Files",             ID_VIEW_SHOW_ALL
     END
     POPUP "&Options"
     BEGIN
@@ -130,7 +131,7 @@ FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDR_APPICON,IDC_STATIC,10,10,20,20
     CTEXT           "UT Cache Manager",IDC_STATIC,40,10,70,10
-    CTEXT           "v1.0 Alpha",IDC_STATIC,40,20,70,8
+    CTEXT           "v1.0 Beta",IDC_STATIC,40,20,70,8
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,40,100,1
     CTEXT           "(C) Chris Oldwood 2002",IDC_STATIC,10,50,100,10
     CTEXT           "gort@cix.co.uk",IDC_STATIC,10,59,100,10
@@ -169,20 +170,26 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,155,220,50,14
 END
 
-IDD_PREFS DIALOG DISCARDABLE  0, 0, 127, 106
+IDD_PREFS DIALOG DISCARDABLE  0, 0, 222, 130
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Preferences"
 FONT 8, "MS Sans Serif"
 BEGIN
-    LTEXT           "Default &Profile:",IDC_STATIC,15,10,50,8
-    COMBOBOX        IDC_DEF_PROFILE,15,20,100,75,CBS_DROPDOWNLIST | CBS_SORT | 
+    LTEXT           "Default &Profile:",IDC_STATIC,55,10,105,8
+    COMBOBOX        IDC_DEF_PROFILE,55,20,105,75,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_TABSTOP
     CONTROL         "Scan Default On &Startup?",IDC_SCAN_ON_START,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,15,40,100,10
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,45,100,10
     CONTROL         "Scan On Profile &Change?",IDC_SCAN_ON_SWITCH,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,15,55,100,10
-    DEFPUSHBUTTON   "OK",IDOK,10,80,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,65,80,50,14
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,60,100,10
+    CONTROL         "Scan for old .&tmp files?",IDC_SCAN_TMP_FILES,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,115,45,100,10
+    CONTROL         "Scan index for old entries?",IDC_SCAN_INDEX,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,115,60,100,10
+    CONTROL         "Sho&w All Files?",IDC_SHOW_ALL,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,10,80,100,10
+    DEFPUSHBUTTON   "OK",IDOK,55,105,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,111,105,50,14
 END
 
 IDD_PROFILES DIALOG DISCARDABLE  0, 0, 186, 121
@@ -205,6 +212,7 @@ FONT 8, "MS Sans Serif"
 BEGIN
     LTEXT           "&Profile Name:",IDC_STATIC,10,12,60,8
     EDITTEXT        IDC_NAME,70,10,100,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Quick Setup...",IDC_QUICK_SETUP,255,10,60,14
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,35,305,1
     LTEXT           "&Cache Folder:",IDC_STATIC,10,48,60,8
     EDITTEXT        IDC_CACHE_DIR,70,45,225,14,ES_AUTOHSCROLL
@@ -299,9 +307,9 @@ BEGIN
     IDD_PREFS, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 120
+        RIGHTMARGIN, 215
         TOPMARGIN, 7
-        BOTTOMMARGIN, 99
+        BOTTOMMARGIN, 123
     END
 
     IDD_PROFILES, DIALOG
@@ -421,8 +429,12 @@ BEGIN
     ID_EDIT_MOVE            "Move the selected files to the relevant profile folders\nMove Files"
     ID_EDIT_COPY            "Copy the selected files to the relevant profile folders\nCopy Files"
     ID_EDIT_DELETE          "Delete the selected files from the cache\nDelete Files"
-    ID_EDIT_MOVE_TO         "Move the selected files to another folder\nMove Files To"
     ID_EDIT_COPY_TO         "Copy the selected files to another folder\nCopy Files To"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_VIEW_SHOW_ALL        "Show files which already exist in the UT directories as well\nShow All"
 END
 
 #endif    // English (U.K.) resources
