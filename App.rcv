@@ -1,5 +1,5 @@
 /******************************************************************************
-** (C) Chris Wood 1998
+** (C) Chris Oldwood
 **
 ** MODULE:		APP.RCV
 ** COMPONENT:	The Application.
@@ -34,7 +34,6 @@ BEGIN
 	BEGIN
 		BLOCK "040904E4"
 		BEGIN
-			VALUE "CompanyName", "Comgraphix Ltd\0"
 			VALUE "FileDescription", "UT Cache Manager\0"
 			VALUE "FileVersion", "1.0\0"
 			VALUE "InternalName", "UTCacheMgr.exe\0"
