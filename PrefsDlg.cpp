@@ -107,6 +107,9 @@ bool CPrefsDlg::OnOk()
 	App.m_bShowAllFiles = m_ckShowAll.IsChecked();
 	App.m_bLogEdits     = m_ckLogEdits.IsChecked();
 
+	// Mark settings as modified.
+	App.m_nModified |= App.SETTINGS;
+
 	return true;
 }
 
