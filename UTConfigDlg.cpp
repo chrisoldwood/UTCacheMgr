@@ -10,6 +10,7 @@
 
 #include "AppHeaders.hpp"
 #include "UTConfigDlg.hpp"
+#include "HelpTopics.h"
 
 /******************************************************************************
 **
@@ -86,4 +87,22 @@ bool CUTConfigDlg::OnOk()
 	m_oIniFile.WriteString(CFG_SECTION, EXPIRY_CFG_ENTRY, m_ebExpiry.Text());
 
 	return true;
+}
+
+/******************************************************************************
+** Method:		OnHelp()
+**
+** Description:	Help requested for the dialog.
+**
+** Parameters:	See HELPINFO.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CUTConfigDlg::OnHelp(HELPINFO& /*oInfo*/)
+{
+	// Show the dialogs help topic.
+	App.m_oHelpFile.Topic(IDH_UTCFGDLG);
 }

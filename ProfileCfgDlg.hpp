@@ -37,6 +37,7 @@ protected:
 	// Message processors.
 	//
 	virtual void OnInitDialog();
+	virtual void OnHelp(HELPINFO& oInfo);
 
 	void OnAdd();
 	void OnEdit();

@@ -11,6 +11,7 @@
 #include "AppHeaders.hpp"
 #include "ProfileCfgDlg.hpp"
 #include "EditProfileDlg.hpp"
+#include "HelpTopics.h"
 
 /******************************************************************************
 ** Method:		Default constructor.
@@ -178,4 +179,22 @@ void CProfileCfgDlg::OnRemove()
 		nSel--;
 
 	m_lbProfiles.CurSel(nSel);
+}
+
+/******************************************************************************
+** Method:		OnHelp()
+**
+** Description:	Help requested for the dialog.
+**
+** Parameters:	See HELPINFO.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CProfileCfgDlg::OnHelp(HELPINFO& /*oInfo*/)
+{
+	// Show the dialogs help topic.
+	App.m_oHelpFile.Topic(IDH_PROFILESDLG);
 }

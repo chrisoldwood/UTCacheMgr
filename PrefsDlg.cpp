@@ -10,6 +10,7 @@
 
 #include "AppHeaders.hpp"
 #include "PrefsDlg.hpp"
+#include "HelpTopics.h"
 
 /******************************************************************************
 ** Method:		Default constructor.
@@ -107,4 +108,22 @@ bool CPrefsDlg::OnOk()
 	App.m_bShowAllFiles = m_ckShowAll.IsChecked();
 
 	return true;
+}
+
+/******************************************************************************
+** Method:		OnHelp()
+**
+** Description:	Help requested for the dialog.
+**
+** Parameters:	See HELPINFO.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CPrefsDlg::OnHelp(HELPINFO& /*oInfo*/)
+{
+	// Show the dialogs help topic.
+	App.m_oHelpFile.Topic(IDH_PREFSDLG);
 }

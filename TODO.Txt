@@ -1,5 +1,0 @@
-- Help buttons on dialogs.
-
-- Check menu + dialog acclerator underscores (Help menu).
-
-- Prefs dialog, upper/lower case of labels.

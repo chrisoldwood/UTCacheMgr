@@ -10,6 +10,7 @@
 
 #include "AppHeaders.hpp"
 #include "SelProfileDlg.hpp"
+#include "HelpTopics.h"
 
 /******************************************************************************
 ** Method:		Default constructor.
@@ -129,4 +130,22 @@ void CSelProfileDlg::OnSelectProfile()
 	m_ebSoundDir.Text(pProfile->m_strSoundDir);
 	m_ebMusicDir.Text(pProfile->m_strMusicDir);
 	m_ebConfigFile.Text(pProfile->m_strConfigFile);
+}
+
+/******************************************************************************
+** Method:		OnHelp()
+**
+** Description:	Help requested for the dialog.
+**
+** Parameters:	See HELPINFO.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CSelProfileDlg::OnHelp(HELPINFO& /*oInfo*/)
+{
+	// Show the dialogs help topic.
+	App.m_oHelpFile.Topic(IDH_SELPROFDLG);
 }

@@ -10,6 +10,7 @@
 
 #include "AppHeaders.hpp"
 #include "EditProfileDlg.hpp"
+#include "HelpTopics.h"
 
 /******************************************************************************
 ** Method:		Default constructor.
@@ -303,4 +304,22 @@ void CEditProfileDlg::OnQuickSetup()
 	m_ebSoundDir.Text  (CPath(strBaseDir, CProfile::DEF_SOUNDS_DIR  ));
 	m_ebMusicDir.Text  (CPath(strBaseDir, CProfile::DEF_MUSIC_DIR   ));
 	m_ebConfigFile.Text(CPath(m_ebSystemDir.Text(), CProfile::DEF_CONFIG_FILE));
+}
+
+/******************************************************************************
+** Method:		OnHelp()
+**
+** Description:	Help requested for the dialog.
+**
+** Parameters:	See HELPINFO.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CEditProfileDlg::OnHelp(HELPINFO& /*oInfo*/)
+{
+	// Show the dialogs help topic.
+	App.m_oHelpFile.Topic(IDH_EDITPROFDLG);
 }
