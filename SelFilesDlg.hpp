@@ -62,6 +62,7 @@ protected:
 	virtual bool OnOk();
 	virtual void OnHelp(HELPINFO& oInfo);
 	LRESULT OnGridClickColumn(NMHDR& oHdr);
+	        void OnSelectAll();
 
 	//
 	// Internal methods.

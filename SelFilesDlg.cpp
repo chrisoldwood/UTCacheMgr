@@ -35,13 +35,15 @@ CSelFilesDlg::CSelFilesDlg()
 	END_CTRL_TABLE
 
 	DEFINE_GRAVITY_TABLE
-		CTRLGRAV(IDC_GRID, LEFT_EDGE,  TOP_EDGE,    RIGHT_EDGE, BOTTOM_EDGE)
-		CTRLGRAV(IDOK,     RIGHT_EDGE, BOTTOM_EDGE, RIGHT_EDGE, BOTTOM_EDGE)
-		CTRLGRAV(IDCANCEL, RIGHT_EDGE, BOTTOM_EDGE, RIGHT_EDGE, BOTTOM_EDGE)
+		CTRLGRAV(IDC_GRID,    LEFT_EDGE,  TOP_EDGE,    RIGHT_EDGE, BOTTOM_EDGE)
+		CTRLGRAV(IDC_SEL_ALL, LEFT_EDGE,  BOTTOM_EDGE, LEFT_EDGE,  BOTTOM_EDGE)
+		CTRLGRAV(IDOK,        RIGHT_EDGE, BOTTOM_EDGE, RIGHT_EDGE, BOTTOM_EDGE)
+		CTRLGRAV(IDCANCEL,    RIGHT_EDGE, BOTTOM_EDGE, RIGHT_EDGE, BOTTOM_EDGE)
 	END_GRAVITY_TABLE
 
 	DEFINE_CTRLMSG_TABLE
-		NFY_CTRLMSG(IDC_GRID, LVN_COLUMNCLICK, OnGridClickColumn)
+		NFY_CTRLMSG(IDC_GRID,    LVN_COLUMNCLICK, OnGridClickColumn)
+		CMD_CTRLMSG(IDC_SEL_ALL, BN_CLICKED,      OnSelectAll      )
 	END_CTRLMSG_TABLE
 }
 
@@ -262,4 +264,25 @@ LRESULT CSelFilesDlg::OnGridClickColumn(NMHDR& oHdr)
 	RefreshView();
 
 	return 0;
+}
+
+/******************************************************************************
+** Method:		OnSelectAll()
+**
+** Description:	Select all items in the grid.
+**
+** Parameters:	None.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CSelFilesDlg::OnSelectAll()
+{
+	int nItems = m_lvGrid.ItemCount();
+
+	// For all all items...
+	for (int i = 0; i < nItems; ++i)
+		m_lvGrid.Select(i);
 }
