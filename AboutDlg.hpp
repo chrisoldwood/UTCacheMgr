@@ -31,12 +31,14 @@ protected:
 	//
 	// Members.
 	//
+	CLabel		m_txtVersion;
 	CURLLabel	m_txtEmail;
 	CURLLabel	m_txtWebSite;
 	
 	//
 	// Message processors.
 	//
+	virtual void OnInitDialog();
 };
 
 /******************************************************************************
