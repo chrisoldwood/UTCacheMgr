@@ -259,10 +259,16 @@ void CEditProfileDlg::OnBrowseCfgFile()
 								"All Files (*.*)\0*.*\0"
 								"\0\0"							};
 
+	CPath strDir = m_ebConfigFile.Text();
+
+	// If empty start from last path.
+	if (strDir == "")
+		strDir = m_strLastPath;
+
 	CPath strFile = m_ebConfigFile.Text();
 
 	// Show Select Directory common dialog.
-	if (strFile.Select(*this, CPath::SaveFile, szExts, "ini", m_strLastPath))
+	if (strFile.Select(*this, CPath::SaveFile, szExts, "ini", strDir))
 	{
 		// Display path.
 		m_ebConfigFile.Text(strFile);
