@@ -1,0 +1,7 @@
+- Delete/Copy To/Move To options.
+
+- UT Settings dialog.
+
+- Icons + toolbar buttons.
+
+- Find real UT directory on startup.

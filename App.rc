@@ -1,0 +1,438 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "Resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+#include "WclRsc.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.K.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENG)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_UK
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "Resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""WclRsc.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "\r\n"
+    "#include ""App.rcv""\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_APPICON             ICON    DISCARDABLE     "App.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_APPMENU MENU DISCARDABLE 
+BEGIN
+    POPUP "&Cache"
+    BEGIN
+        MENUITEM "Profile...\tCtrl+P",          ID_CACHE_PROFILE
+        MENUITEM "&Rescan\tF5",                 ID_CACHE_RESCAN
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit\tAlt+F4",               ID_CACHE_EXIT
+    END
+    POPUP "&Edit"
+    BEGIN
+        MENUITEM "&Move",                       ID_EDIT_MOVE
+        MENUITEM "&Copy",                       ID_EDIT_COPY
+        MENUITEM "&Delete",                     ID_EDIT_DELETE
+        MENUITEM SEPARATOR
+        MENUITEM "Mo&ve To...",                 ID_EDIT_MOVE_TO
+        MENUITEM "Cop&y To...",                 ID_EDIT_COPY_TO
+    END
+    POPUP "&View"
+    BEGIN
+        MENUITEM "Select &All\tCtrl+A",         ID_VIEW_SELECT_ALL
+        MENUITEM SEPARATOR
+        MENUITEM "Sort By &Name",               ID_VIEW_SORT_NAME
+        MENUITEM "Sort By &Type",               ID_VIEW_SORT_TYPE
+        MENUITEM "Sort By &Date",               ID_VIEW_SORT_DATE
+        MENUITEM "Sort By &Size",               ID_VIEW_SORT_SIZE
+    END
+    POPUP "&Options"
+    BEGIN
+        MENUITEM "&Profiles...",                ID_OPTIONS_PROFILES
+        MENUITEM "P&references...",             ID_OPTIONS_PREFS
+        MENUITEM SEPARATOR
+        MENUITEM "UT Settings...",              ID_OPTIONS_UT_CONFIG
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About UT Cache Manager",     ID_HELP_ABOUT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_MAIN DIALOGEX 0, 0, 301, 201
+STYLE WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    CONTROL         "List1",IDC_GRID,"SysListView32",LVS_REPORT | 
+                    LVS_ALIGNLEFT | LVS_NOSORTHEADER | WS_BORDER | 
+                    WS_TABSTOP,5,5,290,190,WS_EX_CLIENTEDGE
+END
+
+IDD_ABOUT DIALOG DISCARDABLE  0, 0, 142, 101
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "About UTCacheMgr"
+FONT 8, "MS Sans Serif"
+BEGIN
+    ICON            IDR_APPICON,IDC_STATIC,10,10,20,20
+    CTEXT           "UT Cache Manager",IDC_STATIC,40,10,90,10
+    CTEXT           "v1.0 Alpha",IDC_STATIC,40,20,90,8
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,40,120,1
+    CTEXT           "(C) Chris Oldwood 2002",IDC_STATIC,10,50,120,10
+    CTEXT           "gort@cix.co.uk",IDC_STATIC,10,59,120,10
+    DEFPUSHBUTTON   "OK",IDOK,46,80,50,15
+END
+
+IDD_SEL_PROFILE DIALOG DISCARDABLE  0, 0, 282, 246
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Select Profile"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "&Profile Name:",IDC_STATIC,10,12,60,8
+    COMBOBOX        IDC_PROFILES,70,10,100,75,CBS_DROPDOWNLIST | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,35,260,1
+    LTEXT           "Cache Folder:",IDC_STATIC,10,48,60,8
+    EDITTEXT        IDC_CACHE_DIR,70,45,200,14,ES_AUTOHSCROLL | ES_READONLY
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,70,260,1
+    LTEXT           "System Folder:",IDC_STATIC,10,83,60,8
+    EDITTEXT        IDC_SYSTEM_DIR,70,80,200,14,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Maps Folder:",IDC_STATIC,10,103,60,8
+    EDITTEXT        IDC_MAPS_DIR,70,100,200,14,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Textures Folder:",IDC_STATIC,10,123,60,8
+    EDITTEXT        IDC_TEXTURES_DIR,70,120,200,14,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    LTEXT           "Sounds Folder:",IDC_STATIC,10,143,60,8
+    EDITTEXT        IDC_SOUNDS_DIR,70,140,200,14,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    LTEXT           "Music Folder:",IDC_STATIC,10,163,60,8
+    EDITTEXT        IDC_MUSIC_DIR,70,160,200,14,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Config File:",IDC_STATIC,10,183,60,8
+    EDITTEXT        IDC_CONFIG_FILE,70,180,200,14,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,205,260,1
+    DEFPUSHBUTTON   "OK",IDOK,90,220,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,145,220,50,14
+END
+
+IDD_PREFS DIALOG DISCARDABLE  0, 0, 127, 106
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Preferences"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Default &Profile:",IDC_STATIC,15,10,50,8
+    COMBOBOX        IDC_DEF_PROFILE,15,20,100,75,CBS_DROPDOWNLIST | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Scan Default On &Startup?",IDC_SCAN_ON_START,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,15,40,100,10
+    CONTROL         "Scan On Profile &Change?",IDC_SCAN_ON_SWITCH,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,15,55,100,10
+    DEFPUSHBUTTON   "OK",IDOK,10,80,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,65,80,50,14
+END
+
+IDD_PROFILES DIALOG DISCARDABLE  0, 0, 186, 121
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Profiles"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LISTBOX         IDC_PROFILES,10,10,100,100,LBS_SORT | 
+                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "&Add...",IDC_ADD,120,10,50,14
+    PUSHBUTTON      "&Edit...",IDC_EDIT,120,30,50,14
+    PUSHBUTTON      "&Delete",IDC_REMOVE,120,50,50,14
+    DEFPUSHBUTTON   "Close",IDCANCEL,120,95,50,14
+END
+
+IDD_EDIT_PROFILE DIALOG DISCARDABLE  0, 0, 282, 246
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Edit Profile"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "&Profile Name:",IDC_STATIC,10,12,60,8
+    EDITTEXT        IDC_NAME,70,10,100,14,ES_AUTOHSCROLL
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,35,260,1
+    LTEXT           "Cache Folder:",IDC_STATIC,10,48,60,8
+    EDITTEXT        IDC_CACHE_DIR,70,45,175,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_BROWSE_CACHE,250,45,15,14
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,70,260,1
+    LTEXT           "System Folder:",IDC_STATIC,10,83,60,8
+    EDITTEXT        IDC_SYSTEM_DIR,70,80,175,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_BROWSE_SYSTEM,250,80,15,14
+    LTEXT           "Maps Folder:",IDC_STATIC,10,103,60,8
+    EDITTEXT        IDC_MAPS_DIR,70,100,175,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_BROWSE_MAPS,250,100,15,14
+    LTEXT           "Textures Folder:",IDC_STATIC,10,123,60,8
+    EDITTEXT        IDC_TEXTURES_DIR,70,120,175,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_BROWSE_TEXTURES,250,120,15,14
+    LTEXT           "Sounds Folder:",IDC_STATIC,10,143,60,8
+    EDITTEXT        IDC_SOUNDS_DIR,70,140,175,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_BROWSE_SOUNDS,250,140,15,14
+    LTEXT           "Music Folder:",IDC_STATIC,10,163,60,8
+    EDITTEXT        IDC_MUSIC_DIR,70,160,175,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_BROWSE_MUSIC,250,160,15,14
+    LTEXT           "Config File:",IDC_STATIC,10,183,60,8
+    EDITTEXT        IDC_CONFIG_FILE,70,180,175,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_BROWSE_CONFIG,250,180,15,14
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,205,259,1
+    DEFPUSHBUTTON   "OK",IDOK,90,220,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,145,220,50,14
+END
+
+IDD_PROGRESS DIALOG DISCARDABLE  0, 0, 202, 41
+STYLE DS_MODALFRAME | WS_POPUP | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | 
+    WS_CAPTION
+CAPTION "Scanning Cache"
+FONT 8, "MS Sans Serif"
+BEGIN
+    ICON            IDR_APPICON,IDC_STATIC,10,10,20,20
+    LTEXT           "%s...",IDC_OPERATION,40,10,150,8
+    CONTROL         "Progress1",IDC_PROGRESS,"msctls_progress32",WS_BORDER,
+                    40,20,150,10
+END
+
+IDD_UT_CONFIG DIALOG DISCARDABLE  0, 0, 186, 95
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "UT Settings"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,35,70,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,90,70,50,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDR_APPTOOLBAR          BITMAP  DISCARDABLE     "Toolbar.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_APPACCEL ACCELERATORS DISCARDABLE 
+BEGIN
+    "A",            ID_VIEW_SELECT_ALL,     VIRTKEY, CONTROL, NOINVERT
+    "P",            ID_CACHE_PROFILE,       VIRTKEY, CONTROL, NOINVERT
+    VK_F5,          ID_CACHE_RESCAN,        VIRTKEY, NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_SEL_PROFILE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 275
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 239
+    END
+
+    IDD_PREFS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 120
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 99
+    END
+
+    IDD_PROFILES, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 114
+    END
+
+    IDD_EDIT_PROFILE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 275
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 239
+    END
+
+    IDD_PROGRESS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 195
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 34
+    END
+
+    IDD_UT_CONFIG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 88
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_SYS_RESTORE         "Restore the window size and position."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_SYS_MOVE            "Move the window"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_SYS_SIZE            "Resize the window"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_SYS_MINIMIZE        "Minimize the window"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_SYS_MAXIMIZE        "Maximize the window"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_SYS_CLOSE           "Close the window"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_SYS_SWITCH          "Switch to another application"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_CACHE_POPUP          "Scanning options"
+    ID_CACHE_PROFILE        "Select a different cache profile\nSelect Profile"
+    ID_CACHE_RESCAN         "Rescan the cache\nRescan Cache"
+    ID_CACHE_EXIT           "Exit UT Cache Manager\nExit"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_HELP_POPUP           "Help options"
+    ID_HELP_ABOUT           "Show UT Cache Manager version\nAbout"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_OPTIONS_POPUP        "Settings"
+    ID_OPTIONS_PROFILES     "Configure cache profiles\nEdit Profiles"
+    ID_OPTIONS_PREFS        "UT Cache Manager settings\nEdit Preferences"
+    ID_OPTIONS_UT_CONFIG    "Edit the UT cache settings\nEdit UT Settings"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_VIEW_POPUP           "View options"
+    ID_VIEW_SELECT_ALL      "Select all files\nSelect All"
+    ID_VIEW_SORT_NAME       "Sort the files by name\nSort By Name"
+    ID_VIEW_SORT_DATE       "Sort the files by date\nSort By Date"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_VIEW_SORT_SIZE       "Sort the files by size\nSort By Size"
+    ID_VIEW_SORT_TYPE       "Sort the files by type\nSort By Type"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_EDIT_POPUP           "Editing options"
+    ID_EDIT_MOVE            "Move the selected files to the relevant folders\nMove Files"
+    ID_EDIT_COPY            "Copy the selected files to the relevant folders\nCopy Files"
+    ID_EDIT_DELETE          "Delete the selected files from the cache\nDelete Files"
+    ID_EDIT_MOVE_TO         "Move the selected files to another folder\nMove Files To"
+    ID_EDIT_COPY_TO         "Copy the selected files to another folder\nCopy Files To"
+END
+
+#endif    // English (U.K.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+#include "App.rcv"
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
