@@ -18,6 +18,7 @@
 #include "ProgressDlg.hpp"
 #include "UTConfigDlg.hpp"
 #include "RestoreDlg.hpp"
+#include "ErrorsDlg.hpp"
 
 /******************************************************************************
 ** Method:		Constructor.
@@ -38,14 +39,14 @@ CAppCmds::CAppCmds()
 		// File menu.
 		CMD_ENTRY(ID_CACHE_PROFILE,		OnCacheProfile,		NULL,				 3)
 		CMD_ENTRY(ID_CACHE_RESCAN,		OnCacheRescan,		NULL,				 0)
-		CMD_ENTRY(ID_CACHE_RESTORE,		OnCacheRestore,		NULL,				 0)
+		CMD_ENTRY(ID_CACHE_RESTORE,		OnCacheRestore,		OnUICacheRestore,	-1)
 		CMD_ENTRY(ID_CACHE_EXIT,		OnCacheExit,		NULL,				-1)
 		// Edit menu.
-		CMD_ENTRY(ID_EDIT_PIN,			OnEditPin,			NULL,				-1)
-		CMD_ENTRY(ID_EDIT_MOVE,			OnEditMove,			NULL,				 5)
-		CMD_ENTRY(ID_EDIT_COPY,			OnEditCopy,			NULL,				 6)
-		CMD_ENTRY(ID_EDIT_DELETE,		OnEditDelete,		NULL,				 7)
-		CMD_ENTRY(ID_EDIT_COPY_TO,		OnEditCopyTo,		NULL,				 9)
+		CMD_ENTRY(ID_EDIT_PIN,			OnEditPin,			OnUIEditPin,		-1)
+		CMD_ENTRY(ID_EDIT_MOVE,			OnEditMove,			OnUIEditMove,		 5)
+		CMD_ENTRY(ID_EDIT_COPY,			OnEditCopy,			OnUIEditCopy,		 6)
+		CMD_ENTRY(ID_EDIT_DELETE,		OnEditDelete,		OnUIEditDelete,		 7)
+		CMD_ENTRY(ID_EDIT_COPY_TO,		OnEditCopyTo,		OnUIEditCopyTo,		 9)
 		// View menu.
 		CMD_ENTRY(ID_VIEW_SELECT_NEW,	OnViewSelectNew,	NULL,				-1)
 		CMD_ENTRY(ID_VIEW_SELECT_ALL,	OnViewSelectAll,	NULL,				-1)
@@ -116,6 +117,7 @@ void CAppCmds::OnCacheProfile()
 			// Update UI.
 			App.m_AppWnd.UpdateTitle();
 			App.m_AppWnd.m_AppDlg.RefreshView();
+			UpdateUI();
 
 			// Scan on profile change?
 			if (App.m_bScanOnSwitch)
@@ -170,6 +172,9 @@ void CAppCmds::OnCacheRescan()
 	Dlg.Title("Scanning Cache");
 	Dlg.UpdateLabel("Searching cache for files...");
 
+	// Create errors dialog.
+	CErrorsDlg dlgErrors;
+
 	CString	strFindMask;
 
 	// Create 'find files' mask.
@@ -183,9 +188,6 @@ void CAppCmds::OnCacheRescan()
 
 	CStrArray& astrFiles = oFiles.Root()->m_oData.m_astrFiles;
 	CIniFile   oIdxFile(strCacheFile);
-	uint       nIndexErrs = 0;
-	uint       nInfoErrs  = 0;
-	uint       nTypeErrs  = 0;
 
 	Dlg.InitMeter(astrFiles.Size());
 
@@ -200,7 +202,8 @@ void CAppCmds::OnCacheRescan()
 		// File not in index?
 		if (strRealName.Length() == 0)
 		{
-			nIndexErrs++;
+			dlgErrors.m_astrFiles.Add(strCacheName);
+			dlgErrors.m_astrErrors.Add("Index entry missing");
 			continue;
 		}
 
@@ -213,7 +216,8 @@ void CAppCmds::OnCacheRescan()
 		// Unknown file type?
 		if (cType == NULL)
 		{
-			nTypeErrs++;
+			dlgErrors.m_astrFiles.Add(strRealName);
+			dlgErrors.m_astrErrors.Add("Unknown file type");
 			continue;
 		}
 
@@ -231,7 +235,8 @@ void CAppCmds::OnCacheRescan()
 
 		if (!CFile::QueryInfo(strFile, oInfo))
 		{
-			nInfoErrs++;
+			dlgErrors.m_astrFiles.Add(strCacheName);
+			dlgErrors.m_astrErrors.Add("Size query failed");
 			continue;
 		}
 
@@ -242,7 +247,7 @@ void CAppCmds::OnCacheRescan()
 		oRow[CCache::INDEX_KEY]      = strIndexName;
 		oRow[CCache::REAL_FILENAME]  = strRealName;
 		oRow[CCache::FILE_TYPE]      = cType;
-		oRow[CCache::FILE_DATE]      = oInfo.st_ctime;
+		oRow[CCache::FILE_DATE]      = oInfo.st_mtime;
 		oRow[CCache::FILE_SIZE]      = (int)oInfo.st_size;
 		oRow[CCache::STATUS]         = (bPinned) ? PIN_FILE : (bExists) ? OLD_FILE : NEW_FILE;
 
@@ -256,13 +261,10 @@ void CAppCmds::OnCacheRescan()
 	Dlg.Destroy();
 
 	// Report any errors.
-	uint nErrors = nIndexErrs + nInfoErrs + nTypeErrs;
-
-	if (nErrors > 0)
+	if (dlgErrors.m_astrFiles.Size()  > 0)
 	{
-		App.AlertMsg("Encountered %d error(s) during the scan.\n\n"
-					 "%d Index Lookup Error(s)\n%d Status Query Error(s)\n%d File Extension Error(s)\n",
-					nErrors, nIndexErrs, nInfoErrs, nTypeErrs);
+		dlgErrors.m_strTitle = "Cache Scan Errors";
+		dlgErrors.RunModal(App.m_AppWnd);
 	}
 
 	// Search for old .tmp files?
@@ -325,6 +327,8 @@ void CAppCmds::OnCacheRescan()
 				oIdxFile.DeleteEntry("Cache", astrInvalid[i]);
 		}
 	}
+
+	UpdateUI();
 }
 
 /******************************************************************************
@@ -356,7 +360,10 @@ void CAppCmds::OnCacheRestore()
 
 		// Logfile not created yet?
 		if (!strLogFile.Exists())
+		{
+			App.NotifyMsg("There are no files that can be restored.");
 			return;
+		}
 
 		fLogFile.Open(strLogFile, CFile::ReadOnly);
 
@@ -441,6 +448,13 @@ void CAppCmds::OnCacheRestore()
 		return;
 	}
 
+	// Nothing to restore?
+	if (oRestore.RowCount() == 0)
+	{
+		App.NotifyMsg("There are no files that can be restored.");
+		return;
+	}
+
 	CRestoreDlg oRestoreDlg;
 
 	oRestoreDlg.m_pTable = &oRestore;
@@ -449,9 +463,7 @@ void CAppCmds::OnCacheRestore()
 	if (oRestoreDlg.RunModal(App.m_AppWnd) != IDOK)
 		return;
 
-	int   nFiles      = oRestore.RowCount();
-	int   nErrors     = 0;
-	DWORD dwLastError = 0;
+	int nFiles = oRestore.RowCount();
 
 	// No files selected?
 	if (nFiles == 0)
@@ -468,6 +480,9 @@ void CAppCmds::OnCacheRestore()
 	Dlg.RunModeless(App.m_AppWnd);
 	Dlg.Title("Restoring Files");
 	Dlg.InitMeter(nFiles);
+
+	// Create errors dialog.
+	CErrorsDlg dlgErrors;
 
 	// For all files to restore...
 	for (int i = 0; i < nFiles; ++i)
@@ -488,8 +503,8 @@ void CAppCmds::OnCacheRestore()
 		// Move it...
 		if (::MoveFile(strSrcFile, strDstFile) == 0)
 		{
-			nErrors++;
-			dwLastError = ::GetLastError();
+			dlgErrors.m_astrFiles.Add(oRow[CCache::REAL_FILENAME].GetString());
+			dlgErrors.m_astrErrors.Add(App.FormatError());
 			continue;
 		}
 
@@ -501,11 +516,15 @@ void CAppCmds::OnCacheRestore()
 	Dlg.Destroy();
 
 	// Report any errors.
-	if (nErrors > 0)
-		App.AlertMsg("Failed to restore %d of %d file(s).", nErrors, nFiles);
+	if (dlgErrors.m_astrFiles.Size() > 0)
+	{
+		dlgErrors.m_strTitle = "Restore Errors";
+		dlgErrors.RunModal(App.m_AppWnd);
+	}
 
 	// Rescan cache to pick up restored files.
 	OnCacheRescan();
+	UpdateUI();
 }
 
 /******************************************************************************
@@ -598,6 +617,7 @@ void CAppCmds::OnEditPin()
 
 	// Update UI.
 	App.m_AppWnd.m_AppDlg.RefreshView();
+	UpdateUI();
 }
 
 /******************************************************************************
@@ -622,9 +642,7 @@ void CAppCmds::OnEditMove()
 	// Get the current selection.
 	App.m_AppWnd.m_AppDlg.GetSelectedFiles(oRS);
 
-	int   nFiles      = oRS.Count();
-	int   nErrors     = 0;
-	DWORD dwLastError = 0;
+	int nFiles = oRS.Count();
 
 	// Ignore if nothing to move.
 	if (nFiles == 0)
@@ -641,6 +659,9 @@ void CAppCmds::OnEditMove()
 	Dlg.RunModeless(App.m_AppWnd);
 	Dlg.Title("Moving Files");
 	Dlg.InitMeter(nFiles);
+
+	// Create errors dialog.
+	CErrorsDlg dlgErrors;
 
 	// For all rows...
 	for (int i = 0; i < nFiles; ++i)
@@ -665,8 +686,8 @@ void CAppCmds::OnEditMove()
 		// Move it...
 		if (::MoveFile(strSrcFile, strDstFile) == 0)
 		{
-			nErrors++;
-			dwLastError = ::GetLastError();
+			dlgErrors.m_astrFiles.Add(oRow[CCache::REAL_FILENAME].GetString());
+			dlgErrors.m_astrErrors.Add(App.FormatError());
 			continue;
 		}
 
@@ -688,11 +709,15 @@ void CAppCmds::OnEditMove()
 	App.m_oCache.DeleteRows(oEditsRS);
 
 	// Report any errors.
-	if (nErrors > 0)
-		App.AlertMsg("Failed to move %d of %d file(s).", nErrors, nFiles);
+	if (dlgErrors.m_astrFiles.Size() > 0)
+	{
+		dlgErrors.m_strTitle = "Move Errors";
+		dlgErrors.RunModal(App.m_AppWnd);
+	}
 
 	// Update UI.
 	App.m_AppWnd.m_AppDlg.RefreshView();
+	UpdateUI();
 }
 
 /******************************************************************************
@@ -717,9 +742,7 @@ void CAppCmds::OnEditCopy()
 	// Get the current selection.
 	App.m_AppWnd.m_AppDlg.GetSelectedFiles(oRS);
 
-	int   nFiles      = oRS.Count();
-	int   nErrors     = 0;
-	DWORD dwLastError = 0;
+	int nFiles = oRS.Count();
 
 	// Ignore if nothing to copy.
 	if (nFiles == 0)
@@ -736,6 +759,9 @@ void CAppCmds::OnEditCopy()
 	Dlg.RunModeless(App.m_AppWnd);
 	Dlg.Title("Copying Files");
 	Dlg.InitMeter(nFiles);
+
+	// Create errors dialog.
+	CErrorsDlg dlgErrors;
 
 	// For all rows...
 	for (int i = 0; i < nFiles; ++i)
@@ -760,8 +786,8 @@ void CAppCmds::OnEditCopy()
 		// Copy it...
 		if (::CopyFile(strSrcFile, strDstFile, TRUE) == 0)
 		{
-			nErrors++;
-			dwLastError = ::GetLastError();
+			dlgErrors.m_astrFiles.Add(oRow[CCache::REAL_FILENAME].GetString());
+			dlgErrors.m_astrErrors.Add(App.FormatError());
 			continue;
 		}
 
@@ -780,11 +806,15 @@ void CAppCmds::OnEditCopy()
 		LogEdits(oEditsRS);
 
 	// Report any errors.
-	if (nErrors > 0)
-		App.AlertMsg("Failed to copy %d of %d file(s).", nErrors, nFiles);
+	if (dlgErrors.m_astrFiles.Size() > 0)
+	{
+		dlgErrors.m_strTitle = "Copy Errors";
+		dlgErrors.RunModal(App.m_AppWnd);
+	}
 
 	// Update UI.
 	App.m_AppWnd.m_AppDlg.RefreshView();
+	UpdateUI();
 }
 
 /******************************************************************************
@@ -809,9 +839,7 @@ void CAppCmds::OnEditDelete()
 	// Get the current selection.
 	App.m_AppWnd.m_AppDlg.GetSelectedFiles(oRS);
 
-	int   nFiles      = oRS.Count();
-	int   nErrors     = 0;
-	DWORD dwLastError = 0;
+	int nFiles = oRS.Count();
 
 	// Ignore if nothing to copy.
 	if (nFiles == 0)
@@ -821,6 +849,9 @@ void CAppCmds::OnEditDelete()
 	CPath    strCacheDir  = App.m_pProfile->m_strCacheDir;
 	CPath    strCacheFile = strCacheDir + App.m_strCacheIndex;
 	CIniFile oIdxFile(strCacheFile);
+
+	// Create errors dialog.
+	CErrorsDlg dlgErrors;
 
 	// For all rows...
 	for (int i = 0; i < nFiles; ++i)
@@ -832,8 +863,8 @@ void CAppCmds::OnEditDelete()
 		// Delete it...
 		if (::DeleteFile(strSrcFile) == 0)
 		{
-			nErrors++;
-			dwLastError = ::GetLastError();
+			dlgErrors.m_astrFiles.Add(oRow[CCache::REAL_FILENAME].GetString());
+			dlgErrors.m_astrErrors.Add(App.FormatError());
 			continue;
 		}
 
@@ -848,11 +879,15 @@ void CAppCmds::OnEditDelete()
 	App.m_oCache.DeleteRows(oEditsRS);
 
 	// Report any errors.
-	if (nErrors > 0)
-		App.AlertMsg("Failed to delete %d of %d file(s).", nErrors, nFiles);
+	if (dlgErrors.m_astrFiles.Size() > 0)
+	{
+		dlgErrors.m_strTitle = "Delete Errors";
+		dlgErrors.RunModal(App.m_AppWnd);
+	}
 
 	// Update UI.
 	App.m_AppWnd.m_AppDlg.RefreshView();
+	UpdateUI();
 }
 
 /******************************************************************************
@@ -874,9 +909,7 @@ void CAppCmds::OnEditCopyTo()
 	// Get the current selection.
 	App.m_AppWnd.m_AppDlg.GetSelectedFiles(oRS);
 
-	int   nFiles      = oRS.Count();
-	int   nErrors     = 0;
-	DWORD dwLastError = 0;
+	int nFiles = oRS.Count();
 
 	// Ignore if nothing to copy.
 	if (nFiles == 0)
@@ -900,6 +933,9 @@ void CAppCmds::OnEditCopyTo()
 	Dlg.Title("Copying Files");
 	Dlg.InitMeter(nFiles);
 
+	// Create errors dialog.
+	CErrorsDlg dlgErrors;
+
 	// For all rows...
 	for (int i = 0; i < nFiles; ++i)
 	{
@@ -920,8 +956,8 @@ void CAppCmds::OnEditCopyTo()
 		// Copy it...
 		if (::CopyFile(strSrcFile, strDstFile, TRUE) == 0)
 		{
-			nErrors++;
-			dwLastError = ::GetLastError();
+			dlgErrors.m_astrFiles.Add(oRow[CCache::REAL_FILENAME].GetString());
+			dlgErrors.m_astrErrors.Add(App.FormatError());
 			continue;
 		}
 	}
@@ -930,11 +966,16 @@ void CAppCmds::OnEditCopyTo()
 	Dlg.Destroy();
 
 	// Report any errors.
-	if (nErrors > 0)
-		App.AlertMsg("Failed to copy %d of %d file(s).", nErrors, nFiles);
+	if (dlgErrors.m_astrFiles.Size() > 0)
+	{
+		dlgErrors.m_strTitle = "Copy Errors";
+		dlgErrors.RunModal(App.m_AppWnd);
+	}
 
 	// Save folder as default.
 	App.m_strLastCopyTo = strDstDir;
+
+	UpdateUI();
 }
 
 /******************************************************************************
@@ -952,6 +993,7 @@ void CAppCmds::OnEditCopyTo()
 void CAppCmds::OnViewSelectNew()
 {
 	App.m_AppWnd.m_AppDlg.SelectNew();
+	UpdateUI();
 }
 
 /******************************************************************************
@@ -969,6 +1011,7 @@ void CAppCmds::OnViewSelectNew()
 void CAppCmds::OnViewSelectAll()
 {
 	App.m_AppWnd.m_AppDlg.SelectAll();
+	UpdateUI();
 }
 
 /******************************************************************************
@@ -1070,6 +1113,8 @@ void CAppCmds::OnOptionsProfiles()
 	CProfileCfgDlg Dlg;
 
 	Dlg.RunModal(App.m_rMainWnd);
+
+	UpdateUI();
 }
 
 /******************************************************************************
@@ -1166,6 +1211,86 @@ void CAppCmds::OnHelpAbout()
 **
 *******************************************************************************
 */
+
+void CAppCmds::OnUICacheRestore()
+{
+	ASSERT(App.m_pProfile != NULL);
+
+	CMenu&       oMenu    = App.m_AppWnd.m_Menu;
+//	CAppToolBar& oToolBar = App.m_AppWnd.m_ToolBar;
+//	CAppDlg&     oAppDlg  = App.m_AppWnd.m_AppDlg;
+
+	bool bReadOnly = App.m_pProfile->m_bReadOnly;
+
+	oMenu.EnableCmd(ID_CACHE_RESTORE, !bReadOnly);
+//	oToolBar.m_btnMove.Enable(bSelection && !bReadOnly);
+}
+
+void CAppCmds::OnUIEditPin()
+{
+	CMenu&       oMenu    = App.m_AppWnd.m_Menu;
+//	CAppToolBar& oToolBar = App.m_AppWnd.m_ToolBar;
+	CAppDlg&     oAppDlg  = App.m_AppWnd.m_AppDlg;
+
+	bool bSelection = oAppDlg.m_lvGrid.IsSelection();
+
+	oMenu.EnableCmd(ID_EDIT_PIN, bSelection);
+//	oToolBar.m_btnPin.Enable(bSelection);
+}
+
+void CAppCmds::OnUIEditMove()
+{
+	ASSERT(App.m_pProfile != NULL);
+
+	CMenu&       oMenu    = App.m_AppWnd.m_Menu;
+	CAppToolBar& oToolBar = App.m_AppWnd.m_ToolBar;
+	CAppDlg&     oAppDlg  = App.m_AppWnd.m_AppDlg;
+
+	bool bSelection = oAppDlg.m_lvGrid.IsSelection();
+	bool bReadOnly  = App.m_pProfile->m_bReadOnly;
+
+	oMenu.EnableCmd(ID_EDIT_MOVE, bSelection && !bReadOnly);
+	oToolBar.m_btnMove.Enable(bSelection && !bReadOnly);
+}
+
+void CAppCmds::OnUIEditCopy()
+{
+	CMenu&       oMenu    = App.m_AppWnd.m_Menu;
+	CAppToolBar& oToolBar = App.m_AppWnd.m_ToolBar;
+	CAppDlg&     oAppDlg  = App.m_AppWnd.m_AppDlg;
+
+	bool bSelection = oAppDlg.m_lvGrid.IsSelection();
+
+	oMenu.EnableCmd(ID_EDIT_COPY, bSelection);
+	oToolBar.m_btnCopy.Enable(bSelection);
+}
+
+void CAppCmds::OnUIEditDelete()
+{
+	ASSERT(App.m_pProfile != NULL);
+
+	CMenu&       oMenu    = App.m_AppWnd.m_Menu;
+	CAppToolBar& oToolBar = App.m_AppWnd.m_ToolBar;
+	CAppDlg&     oAppDlg  = App.m_AppWnd.m_AppDlg;
+
+	bool bSelection = oAppDlg.m_lvGrid.IsSelection();
+	bool bReadOnly  = App.m_pProfile->m_bReadOnly;
+
+	oMenu.EnableCmd(ID_EDIT_DELETE, bSelection && !bReadOnly);
+	oToolBar.m_btnDelete.Enable(bSelection && !bReadOnly);
+}
+
+void CAppCmds::OnUIEditCopyTo()
+{
+	CMenu&       oMenu    = App.m_AppWnd.m_Menu;
+	CAppToolBar& oToolBar = App.m_AppWnd.m_ToolBar;
+	CAppDlg&     oAppDlg  = App.m_AppWnd.m_AppDlg;
+
+	bool bSelection = oAppDlg.m_lvGrid.IsSelection();
+
+	oMenu.EnableCmd(ID_EDIT_COPY_TO, bSelection);
+	oToolBar.m_btnCopyTo.Enable(bSelection);
+}
 
 void CAppCmds::OnUIViewShowAll()
 {

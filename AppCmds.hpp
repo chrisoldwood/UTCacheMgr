@@ -67,6 +67,12 @@ public:
 	//
 	// UI handlers.
 	//
+	void OnUICacheRestore();
+	void OnUIEditPin();
+	void OnUIEditMove();
+	void OnUIEditCopy();
+	void OnUIEditDelete();
+	void OnUIEditCopyTo();
 	void OnUIViewShowAll();
 	void OnUIViewSortByName();
 	void OnUIViewSortByType();
