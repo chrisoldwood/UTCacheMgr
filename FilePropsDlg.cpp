@@ -86,6 +86,7 @@ uint CFilePropsDlg::FileIcon(char cType)
 		case MUSIC_FILE:	return IDI_MUSIC;
 		case MESH_FILE:		return IDI_MESH;
 		case ANIM_FILE:		return IDI_ANIM;
+		case KARMA_FILE:	return IDI_KARMA;
 	}
 
 	ASSERT_FALSE();
