@@ -44,6 +44,7 @@ protected:
 	//
 	virtual void OnInitDialog();
 	virtual bool OnOk();
+	virtual void OnHelp(HELPINFO& oInfo);
 };
 
 /******************************************************************************

@@ -19,7 +19,7 @@
 *******************************************************************************
 */
 
-static const char* SEL_FOLDER_MSG = "Select The UT/UT2003/Mod Base Folder\n"
+static const char* SEL_FOLDER_MSG = "Select The UT/UT2003/UT2004/Mod Base Folder\n"
 									"e.g. C:\\UnrealTournament";
 
 /******************************************************************************

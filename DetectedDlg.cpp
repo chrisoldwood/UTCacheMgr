@@ -10,6 +10,7 @@
 
 #include "AppHeaders.hpp"
 #include "DetectedDlg.hpp"
+#include "HelpTopics.h"
 
 #ifdef _DEBUG
 // For memory leak detection.
@@ -85,4 +86,22 @@ void CDetectedDlg::OnInitDialog()
 bool CDetectedDlg::OnOk()
 {
 	return true;
+}
+
+/******************************************************************************
+** Method:		OnHelp()
+**
+** Description:	Help requested for the dialog.
+**
+** Parameters:	See HELPINFO.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CDetectedDlg::OnHelp(HELPINFO& /*oInfo*/)
+{
+	// Show the dialogs help topic.
+	App.m_oHelpFile.Topic(IDH_DETECTEDDLG);
 }

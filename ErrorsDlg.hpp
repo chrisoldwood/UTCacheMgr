@@ -45,6 +45,7 @@ protected:
 	//
 	virtual void OnInitDialog();
 	virtual void OnDestroy();
+	virtual void OnHelp(HELPINFO& oInfo);
 };
 
 /******************************************************************************

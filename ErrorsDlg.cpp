@@ -10,6 +10,7 @@
 
 #include "AppHeaders.hpp"
 #include "ErrorsDlg.hpp"
+#include "HelpTopics.h"
 
 /******************************************************************************
 ** Method:		Default constructor.
@@ -94,4 +95,22 @@ void CErrorsDlg::OnDestroy()
 {
 	// Save windows final position.
 	App.m_rcLastDlgPos = Placement();
+}
+
+/******************************************************************************
+** Method:		OnHelp()
+**
+** Description:	Help requested for the dialog.
+**
+** Parameters:	See HELPINFO.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CErrorsDlg::OnHelp(HELPINFO& /*oInfo*/)
+{
+	// Show the dialogs help topic.
+	App.m_oHelpFile.Topic(IDH_ERRORSDLG);
 }
