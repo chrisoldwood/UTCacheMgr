@@ -1,3 +1,7 @@
 - Update helpfile.
 
-- Add toolbar to help.
+- Fails to save LastCopyTo if profiled not changed.
+
+- Status bar incorrect after cache changes.
+
+- Make cache filename column slightly bigger.
