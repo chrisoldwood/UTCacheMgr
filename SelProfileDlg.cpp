@@ -77,8 +77,8 @@ void CSelProfileDlg::OnInitDialog()
 	}
 
 	// Load formats combo.
-	m_cbFormat.Add("UT");
-	m_cbFormat.Add("UT2003");
+	for (i = 0; i < CProfile::NUM_FORMATS; ++i)
+		m_cbFormat.Add(CProfile::s_pszFormats[i]);
 
 	// Select the default.
 	m_cbProfiles.CurSel(m_cbProfiles.FindExact(m_pChoice->m_strName, -1));
