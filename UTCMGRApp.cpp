@@ -33,9 +33,9 @@ CUTCMGRApp App;
 */
 
 #ifdef _DEBUG
-const char* CUTCMGRApp::VERSION      = "v2.0 Beta [Debug]";
+const char* CUTCMGRApp::VERSION      = "v2.0 [Debug]";
 #else
-const char* CUTCMGRApp::VERSION      = "v2.0 Beta";
+const char* CUTCMGRApp::VERSION      = "v2.0";
 #endif
 const char* CUTCMGRApp::INI_FILE_VER_10 = "1.0";
 const char* CUTCMGRApp::INI_FILE_VER_20 = "2.0";
@@ -55,6 +55,7 @@ const char* CUTCMGRApp::INI_FILE_VER_20 = "2.0";
 CUTCMGRApp::CUTCMGRApp()
 	: CApp(m_AppWnd, m_AppCmds)
 	, m_oHelpFile(m_AppWnd)
+	, m_nModified(NONE)
 	, m_oCache(m_oMDB)
 	, m_pProfile(NULL)
 	, m_bScanOnStart(true)
@@ -168,6 +169,10 @@ void CUTCMGRApp::LoadConfig()
 	// Read the file version.
 	CString strVer = m_oIniFile.ReadString("Version", "Version", "");
 
+	// If first run, mark all settings as modified.
+	if (strVer == "")
+		m_nModified = SETTINGS | PROFILES | PIN_LIST;
+
 	// Read the cache general settings.
 	m_strCacheIndex = m_oIniFile.ReadString("Cache", "Index",        CProfile::DEF_CACHE_IDX_FILE);
 	m_strCacheExt   = m_oIniFile.ReadString("Cache", "Ext",          CProfile::DEF_CACHE_FILE_EXT);
@@ -177,7 +182,6 @@ void CUTCMGRApp::LoadConfig()
 	m_bScanIndex    = m_oIniFile.ReadBool  ("Cache", "ScanIndex",    m_bScanIndex);
 	m_bShowAllFiles = m_oIniFile.ReadBool  ("Cache", "ShowAllFiles", m_bShowAllFiles);
 	m_bLogEdits     = m_oIniFile.ReadBool  ("Cache", "LogEdits",     m_bLogEdits);
-	m_strLastCopyTo = m_oIniFile.ReadString("Cache", "LastCopyTo",   "");
 
 	// Read the number of profiles.
 	uint nProfiles  = m_oIniFile.ReadInt("Profiles", "Count",   0);
@@ -204,6 +208,7 @@ void CUTCMGRApp::LoadConfig()
 		oProfile.m_strMeshDir    = m_oIniFile.ReadString(strSection, "MeshDir",    "");
 		oProfile.m_strAnimDir    = m_oIniFile.ReadString(strSection, "AnimDir",    "");
 		oProfile.m_strConfigFile = m_oIniFile.ReadString(strSection, "ConfigFile", "");
+		oProfile.m_strLastCopyTo = m_oIniFile.ReadString(strSection, "LastCopyTo", "");
 
 		// If valid, add to collection.
 		if (oProfile.m_strName.Length() > 0)
@@ -281,6 +286,11 @@ void CUTCMGRApp::LoadConfig()
 		// Create a default UT one, if nothing detected.
 		if (m_pProfile == NULL)
 		{
+			// Warn user.
+			AlertMsg("Your UT/UT2003 installation could not be detected.\n\n"
+					 "The inital cache scan may fail as it is performed on\n"
+					 "the default UT installation folder.");
+
 			m_pProfile = new CProfile();
 
 			// Initialise profile with sensible defaults.
@@ -347,56 +357,68 @@ void CUTCMGRApp::SaveConfig()
 	// Write the file version.
 	m_oIniFile.WriteString("Version", "Version", INI_FILE_VER_20);
 
-	// Write the cache general settings.
-	m_oIniFile.WriteString("Cache", "Index",        m_strCacheIndex);
-	m_oIniFile.WriteString("Cache", "Ext",          m_strCacheExt);
-	m_oIniFile.WriteBool  ("Cache", "ScanOnStart",  m_bScanOnStart);
-	m_oIniFile.WriteBool  ("Cache", "ScanOnSwitch", m_bScanOnSwitch);
-	m_oIniFile.WriteBool  ("Cache", "ScanForTmp",   m_bScanForTmp);
-	m_oIniFile.WriteBool  ("Cache", "ScanIndex",    m_bScanIndex);
-	m_oIniFile.WriteBool  ("Cache", "ShowAllFiles", m_bShowAllFiles);
-	m_oIniFile.WriteBool  ("Cache", "LogEdits",     m_bLogEdits);
-	m_oIniFile.WriteString("Cache", "LastCopyTo",   m_strLastCopyTo);
-
-	// Write the profiles.
-	m_oIniFile.WriteString("Profiles", "Default", m_strDefProfile    );
-	m_oIniFile.WriteInt   ("Profiles", "Count",   m_aoProfiles.Size());
-
-	for (int i = 0; i < m_aoProfiles.Size(); ++i)
+	// Application settings changed?
+	if (m_nModified & SETTINGS)
 	{
-		CString   strSection;
-		CProfile* pProfile = m_aoProfiles[i];
-
-		// Create section name.
-		strSection.Format("Profile%d", i);
-
-		// Write profile details.
-		m_oIniFile.WriteString(strSection, "Name",       pProfile->m_strName      );
-		m_oIniFile.WriteInt   (strSection, "Format",     pProfile->m_nFormat      );
-		m_oIniFile.WriteString(strSection, "CacheDir",   pProfile->m_strCacheDir  );
-		m_oIniFile.WriteBool  (strSection, "ReadOnly",   pProfile->m_bReadOnly    );
-		m_oIniFile.WriteString(strSection, "SystemDir",  pProfile->m_strSystemDir );
-		m_oIniFile.WriteString(strSection, "MapDir",     pProfile->m_strMapDir    );
-		m_oIniFile.WriteString(strSection, "TextureDir", pProfile->m_strTextureDir);
-		m_oIniFile.WriteString(strSection, "SoundDir",   pProfile->m_strSoundDir  );
-		m_oIniFile.WriteString(strSection, "MusicDir",   pProfile->m_strMusicDir  );
-		m_oIniFile.WriteString(strSection, "MeshDir",    pProfile->m_strMeshDir   );
-		m_oIniFile.WriteString(strSection, "AnimDir",    pProfile->m_strAnimDir   );
-		m_oIniFile.WriteString(strSection, "ConfigFile", pProfile->m_strConfigFile);
+		// Write the cache general settings.
+		m_oIniFile.WriteString("Cache",    "Index",        m_strCacheIndex);
+		m_oIniFile.WriteString("Cache",    "Ext",          m_strCacheExt);
+		m_oIniFile.WriteBool  ("Cache",    "ScanOnStart",  m_bScanOnStart);
+		m_oIniFile.WriteBool  ("Cache",    "ScanOnSwitch", m_bScanOnSwitch);
+		m_oIniFile.WriteBool  ("Cache",    "ScanForTmp",   m_bScanForTmp);
+		m_oIniFile.WriteBool  ("Cache",    "ScanIndex",    m_bScanIndex);
+		m_oIniFile.WriteBool  ("Cache",    "ShowAllFiles", m_bShowAllFiles);
+		m_oIniFile.WriteBool  ("Cache",    "LogEdits",     m_bLogEdits);
+		m_oIniFile.WriteString("Profiles", "Default",      m_strDefProfile);
 	}
 
-	// Write the list of pinned files.
-	m_oIniFile.DeleteSection("Pinned");
-	m_oIniFile.WriteInt ("Pinned", "Count", m_astrPinned.Size());
-
-	for (i = 0; i < m_astrPinned.Size(); ++i)
+	// Profiles changed?
+	if (m_nModified & PROFILES)
 	{
-		CString strEntry;
+		// Write the profiles.
+		m_oIniFile.WriteInt("Profiles", "Count", m_aoProfiles.Size());
 
-		// Create entry name.
-		strEntry.Format("File%d", i);
+		for (int i = 0; i < m_aoProfiles.Size(); ++i)
+		{
+			CString   strSection;
+			CProfile* pProfile = m_aoProfiles[i];
 
-		m_oIniFile.WriteString("Pinned", strEntry, m_astrPinned[i]);
+			// Create section name.
+			strSection.Format("Profile%d", i);
+
+			// Write profile details.
+			m_oIniFile.WriteString(strSection, "Name",       pProfile->m_strName      );
+			m_oIniFile.WriteInt   (strSection, "Format",     pProfile->m_nFormat      );
+			m_oIniFile.WriteString(strSection, "CacheDir",   pProfile->m_strCacheDir  );
+			m_oIniFile.WriteBool  (strSection, "ReadOnly",   pProfile->m_bReadOnly    );
+			m_oIniFile.WriteString(strSection, "SystemDir",  pProfile->m_strSystemDir );
+			m_oIniFile.WriteString(strSection, "MapDir",     pProfile->m_strMapDir    );
+			m_oIniFile.WriteString(strSection, "TextureDir", pProfile->m_strTextureDir);
+			m_oIniFile.WriteString(strSection, "SoundDir",   pProfile->m_strSoundDir  );
+			m_oIniFile.WriteString(strSection, "MusicDir",   pProfile->m_strMusicDir  );
+			m_oIniFile.WriteString(strSection, "MeshDir",    pProfile->m_strMeshDir   );
+			m_oIniFile.WriteString(strSection, "AnimDir",    pProfile->m_strAnimDir   );
+			m_oIniFile.WriteString(strSection, "ConfigFile", pProfile->m_strConfigFile);
+			m_oIniFile.WriteString(strSection, "LastCopyTo", pProfile->m_strLastCopyTo);
+		}
+	}
+
+	// Pinned files list changed?
+	if (m_nModified & PIN_LIST)
+	{
+		// Write the list of pinned files.
+		m_oIniFile.DeleteSection("Pinned");
+		m_oIniFile.WriteInt ("Pinned", "Count", m_astrPinned.Size());
+
+		for (int i = 0; i < m_astrPinned.Size(); ++i)
+		{
+			CString strEntry;
+
+			// Create entry name.
+			strEntry.Format("File%d", i);
+
+			m_oIniFile.WriteString("Pinned", strEntry, m_astrPinned[i]);
+		}
 	}
 
 	// Write the window pos and size.
@@ -457,7 +479,7 @@ CString CUTCMGRApp::FormatType(char cType) const
 		case ANIM_FILE:		return "Anim";
 	}
 
-	ASSERT(false);
+	ASSERT_FALSE();
 
 	return "";
 }
@@ -507,7 +529,37 @@ CString CUTCMGRApp::FormatStatus(char cStatus) const
 		case PIN_FILE :	return "Pinned";
 	}
 
-	ASSERT(false);
+	ASSERT_FALSE();
 
 	return "";
+}
+
+/******************************************************************************
+** Method:		IconIndex()
+**
+** Description:	Gets the index of the icon for the given file type.
+**
+** Parameters:	cType	The file type.
+**
+** Returns:		The icon index.
+**
+*******************************************************************************
+*/
+
+int CUTCMGRApp::IconIndex(char cType) const
+{
+	switch (cType)
+	{
+		case SYSTEM_FILE:	return 0;
+		case MAP_FILE:		return 1;
+		case TEXTURE_FILE:	return 2;
+		case SOUND_FILE:	return 3;
+		case MUSIC_FILE:	return 4;
+		case MESH_FILE:		return 5;
+		case ANIM_FILE:		return 6;
+	}
+
+	ASSERT_FALSE();
+
+	return -1;
 }

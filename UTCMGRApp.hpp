@@ -37,6 +37,8 @@ public:
 	CAppWnd		m_AppWnd;			// Main window.
 	CAppCmds	m_AppCmds;			// Command handler.
 	CHelpFile	m_oHelpFile;		// The help file.
+	CIniFile	m_oIniFile;			// Config File.
+	uint		m_nModified;		// Config modified flags.
 
 	CMDB		m_oMDB;				// Memory database.
 	CCache		m_oCache;			// MDB Cache table.
@@ -56,9 +58,10 @@ public:
 	bool		m_bScanIndex;		// Scan index for old entries?
 	bool		m_bShowAllFiles;	// Show all files?
 	bool		m_bLogEdits;		// Log edit operations to a file?
-	CPath		m_strLastCopyTo;	// Last "Copy To..." path.
 
 	CRect		m_rcLastPos;		// Main window position.
+
+	CString		m_strDefStatus;		// The default status bar text.
 
 	//
 	// Profile methods.
@@ -71,11 +74,23 @@ public:
 	CString FormatType(char cType) const;
 	CString FormatSize(int nSize) const;
 	CString FormatStatus(char cStatus) const;
+	int     IconIndex(char cType) const;
 
 	//
 	// Constants.
 	//
 	static const char* VERSION;
+
+	//
+	// Modified flags.
+	//
+	enum
+	{
+		NONE	 = 0x0000,
+		SETTINGS = 0x0001,
+		PROFILES = 0x0002,
+		PIN_LIST = 0x0004,
+	};
 
 protected:
 	//
@@ -83,11 +98,6 @@ protected:
 	//
 	virtual	bool OnOpen();
 	virtual	bool OnClose();
-
-	//
-	// Preferences.
-	//
-	CIniFile	m_oIniFile;		// .INI FIle
 
 	//
 	// Internal methods.
