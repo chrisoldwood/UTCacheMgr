@@ -31,8 +31,19 @@ public:
 	//
 	// Methods.
 	//
-	CPath        GetTypeDir(char cType);
-	static char  GetFileType(const CString& strExt);
+	CPath GetTypeDir(char cType);
+
+	static bool IsValidType(const CString& strExt);
+	static char GetFileType(const CString& strExt);
+
+	//
+	// Helper methods.
+	//
+	static int Compare(const CProfile** ppProfile1, const CProfile** ppProfile2);
+
+	static CProfile* DetectUT();
+	static CProfile* DetectUT2003();
+	static CProfile* DetectTacOps();
 
 	//
 	// Members.
@@ -64,6 +75,7 @@ public:
 	// Default profiles.
 	static const char* DEF_UT_PROFILE_NAME;
 	static const char* DEF_UT2003_PROFILE_NAME;
+	static const char* DEF_TO_PROFILE_NAME;
 
 	static const char* DEF_ROOT_DIR;
 
@@ -89,6 +101,9 @@ public:
 	static const char* DEF_MESH_DIR;
 	static const char* DEF_ANIM_DIR;
 	static const char* DEF_2003_CONFIG_FILE;
+
+	// Tactical Ops specific settings.
+	static const char* DEF_TO_CONFIG_FILE;
 
 	// Cache formats.
 	static const int UT_FORMAT;

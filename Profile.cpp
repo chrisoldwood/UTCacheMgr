@@ -19,6 +19,7 @@
 
 const char* CProfile::DEF_UT_PROFILE_NAME     = "UT";
 const char* CProfile::DEF_UT2003_PROFILE_NAME = "UT2003";
+const char* CProfile::DEF_TO_PROFILE_NAME     = "Tactical Ops";
 
 const char* CProfile::DEF_ROOT_DIR       = "C:\\UnrealTournament";
 const char* CProfile::DEF_CACHE_DIR      = "Cache";
@@ -36,6 +37,8 @@ const char* CProfile::DEF_CACHE_TMP_MASK = "????.tmp";
 const char* CProfile::DEF_MESH_DIR         = "StaticMeshes";
 const char* CProfile::DEF_ANIM_DIR         = "Animations";
 const char* CProfile::DEF_2003_CONFIG_FILE = "UT2003.ini";
+
+const char* CProfile::DEF_TO_CONFIG_FILE   = "TacticalOps.ini";
 
 const int CProfile::UT_FORMAT     = 0;
 const int CProfile::UT2003_FORMAT = 1;
@@ -72,6 +75,27 @@ CProfile::CProfile()
 
 CProfile::~CProfile()
 {
+}
+
+/******************************************************************************
+** Method:		IsValidType()
+**
+** Description:	Queries if the file extension is a valid UT file extension.
+**
+** Parameters:	strExt		The file extension.
+**
+** Returns:		true or false.
+**
+*******************************************************************************
+*/
+
+bool CProfile::IsValidType(const CString& strExt)
+{
+	return ( (strExt == ".u")   || (strExt == ".int")
+		  || (strExt == ".unr") || (strExt == ".ut2")
+		  || (strExt == ".utx") || (strExt == ".uax")
+		  || (strExt == ".umx") || (strExt == ".usx")
+		  || (strExt == ".ukx") );
 }
 
 /******************************************************************************
@@ -150,4 +174,158 @@ CPath CProfile::GetTypeDir(char cType)
 	ASSERT_FALSE();
 
 	return "";
+}
+
+/******************************************************************************
+** Method:		Compare()
+**
+** Description:	Compare function used to sort the Profiles collection.
+**
+** Parameters:	See qsort().
+**
+** Returns:		See qsort().
+**
+*******************************************************************************
+*/
+
+int CProfile::Compare(const CProfile** ppProfile1, const CProfile** ppProfile2)
+{
+	ASSERT((ppProfile1  != NULL) && (ppProfile2  != NULL));
+	ASSERT((*ppProfile1 != NULL) && (*ppProfile2 != NULL));
+
+	return strcmp((*ppProfile1)->m_strName, (*ppProfile2)->m_strName);
+}
+
+/******************************************************************************
+** Method:		DetectUT()
+**
+** Description:	Attempt to detect a UT installation.
+**
+** Parameters:	None.
+**
+** Returns:		A profile or NULL, if none found.
+**
+*******************************************************************************
+*/
+
+CProfile* CProfile::DetectUT()
+{
+	CRegKey oKey;
+
+	// Try and find the regkey that contains the UT base path.
+	if (!oKey.Open(HKEY_LOCAL_MACHINE, "SOFTWARE\\Unreal Technology\\Installed Apps\\UnrealTournament"))
+		return NULL;
+
+	// Get the UT base path.
+	CPath strBaseDir = oKey.QueryString("Folder", "");
+
+	if (strBaseDir == "")
+		return NULL;
+
+	CProfile* pProfile = new CProfile();
+
+	// Create a profile for UT.
+	pProfile->m_strName       = DEF_UT_PROFILE_NAME;
+	pProfile->m_nFormat       = UT_FORMAT;
+	pProfile->m_strCacheDir   = CPath(strBaseDir, DEF_CACHE_DIR   );
+	pProfile->m_bReadOnly     = false;
+	pProfile->m_strSystemDir  = CPath(strBaseDir, DEF_SYSTEM_DIR  );
+	pProfile->m_strMapDir     = CPath(strBaseDir, DEF_MAPS_DIR    );
+	pProfile->m_strTextureDir = CPath(strBaseDir, DEF_TEXTURES_DIR);
+	pProfile->m_strSoundDir   = CPath(strBaseDir, DEF_SOUNDS_DIR  );
+	pProfile->m_strMusicDir   = CPath(strBaseDir, DEF_MUSIC_DIR   );
+	pProfile->m_strConfigFile = CPath(pProfile->m_strSystemDir, DEF_CONFIG_FILE);
+
+	return pProfile;
+}
+
+/******************************************************************************
+** Method:		DetectUT2003()
+**
+** Description:	Attempt to detect a UT2003 installation.
+**
+** Parameters:	None.
+**
+** Returns:		A profile or NULL, if none found.
+**
+*******************************************************************************
+*/
+
+CProfile* CProfile::DetectUT2003()
+{
+	CRegKey oKey;
+
+	// Try and find the regkey that contains the UT2003 base path.
+	if (!oKey.Open(HKEY_LOCAL_MACHINE, "SOFTWARE\\Unreal Technology\\Installed Apps\\UT2003"))
+		return NULL;
+
+	// Get the UT2003 base path.
+	CPath strBaseDir = oKey.QueryString("Folder", "");
+
+	if (strBaseDir == "")
+		return NULL;
+
+	CProfile* pProfile = new CProfile();
+
+	// Create a profile for UT2003.
+	pProfile->m_strName       = DEF_UT2003_PROFILE_NAME;
+	pProfile->m_nFormat       = UT2003_FORMAT;
+	pProfile->m_strCacheDir   = CPath(strBaseDir, DEF_CACHE_DIR   );
+	pProfile->m_bReadOnly     = false;
+	pProfile->m_strSystemDir  = CPath(strBaseDir, DEF_SYSTEM_DIR  );
+	pProfile->m_strMapDir     = CPath(strBaseDir, DEF_MAPS_DIR    );
+	pProfile->m_strTextureDir = CPath(strBaseDir, DEF_TEXTURES_DIR);
+	pProfile->m_strSoundDir   = CPath(strBaseDir, DEF_SOUNDS_DIR  );
+	pProfile->m_strMusicDir   = CPath(strBaseDir, DEF_MUSIC_DIR   );
+	pProfile->m_strMeshDir    = CPath(strBaseDir, DEF_MESH_DIR    );
+	pProfile->m_strAnimDir    = CPath(strBaseDir, DEF_ANIM_DIR    );
+	pProfile->m_strConfigFile = CPath(pProfile->m_strSystemDir, DEF_2003_CONFIG_FILE);
+
+	return pProfile;
+}
+
+/******************************************************************************
+** Method:		DetectTacOps()
+**
+** Description:	Attempt to detect a Tactical Ops installation.
+**
+** Parameters:	None.
+**
+** Returns:		A profile or NULL, if none found.
+**
+*******************************************************************************
+*/
+
+CProfile* CProfile::DetectTacOps()
+{
+	CRegKey oKey;
+
+	// Try and find the regkey that contains the TO base path.
+	if (!oKey.Open(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Tactical Ops"))
+		return NULL;
+
+	// Get the TO base path.
+	CPath strBaseDir = oKey.QueryString("InstallLocation", "");
+
+	if (strBaseDir == "")
+		return NULL;
+
+	CProfile* pProfile = new CProfile();
+
+	// Create a profile for TO.
+	pProfile->m_strName       = DEF_TO_PROFILE_NAME;
+	pProfile->m_nFormat       = UT_FORMAT;
+	pProfile->m_strCacheDir   = CPath(strBaseDir, DEF_CACHE_DIR   );
+	pProfile->m_bReadOnly     = false;
+	pProfile->m_strConfigFile = CPath(strBaseDir + DEF_SYSTEM_DIR, DEF_TO_CONFIG_FILE);
+
+	strBaseDir += "TacticalOps";
+
+	pProfile->m_strSystemDir  = CPath(strBaseDir, DEF_SYSTEM_DIR  );
+	pProfile->m_strMapDir     = CPath(strBaseDir, DEF_MAPS_DIR    );
+	pProfile->m_strTextureDir = CPath(strBaseDir, DEF_TEXTURES_DIR);
+	pProfile->m_strSoundDir   = CPath(strBaseDir, DEF_SOUNDS_DIR  );
+	pProfile->m_strMusicDir   = CPath(strBaseDir, DEF_MUSIC_DIR   );
+
+	return pProfile;
 }
