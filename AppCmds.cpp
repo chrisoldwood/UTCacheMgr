@@ -55,6 +55,7 @@ CAppCmds::CAppCmds()
 		CMD_ENTRY(ID_OPTIONS_PREFS,		OnOptionsPrefs,		NULL,	-1)
 		CMD_ENTRY(ID_OPTIONS_UT_CONFIG,	OnOptionsUTConfig,	NULL,	-1)
 		// Help menu.
+		CMD_ENTRY(ID_HELP_CONTENTS,		OnHelpContents,		NULL,	 1)
 		CMD_ENTRY(ID_HELP_ABOUT,		OnHelpAbout,		NULL,	 1)
 	END_CMD_TABLE
 }
@@ -241,7 +242,7 @@ void CAppCmds::OnCacheRescan()
 		CPath strUTFile = strUTDir + strRealName;
 
 		// File already in relevant UT folder?
-		bool bExists  = strUTFile.Exists();
+		bool bExists = strUTFile.Exists();
 
 		CPath strFile = strCacheDir + strCacheName;
 		struct _stat oInfo;
@@ -854,6 +855,23 @@ void CAppCmds::OnOptionsUTConfig()
 	CUTConfigDlg Dlg;
 
 	Dlg.RunModal(App.m_rMainWnd);
+}
+
+/******************************************************************************
+** Method:		OnHelpContents()
+**
+** Description:	Show the help file.
+**
+** Parameters:	None.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CAppCmds::OnHelpContents()
+{
+	App.m_oHelpFile.Contents();
 }
 
 /******************************************************************************

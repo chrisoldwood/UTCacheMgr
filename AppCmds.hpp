@@ -58,6 +58,7 @@ public:
 	void OnOptionsUTConfig();
 
 	// Help menu.
+	void OnHelpContents();
 	void OnHelpAbout();
 
 	//

@@ -36,6 +36,7 @@ public:
 	//
 	CAppWnd		m_AppWnd;			// Main window.
 	CAppCmds	m_AppCmds;			// Command handler.
+	CHelpFile	m_oHelpFile;		// The help file.
 
 	CMDB		m_oMDB;				// Memory database.
 	CCache		m_oCache;			// MDB Cache table.

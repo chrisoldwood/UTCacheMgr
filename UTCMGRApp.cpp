@@ -43,6 +43,7 @@ const char* CUTCMGRApp::INI_FILE_VER = "1.0";
 
 CUTCMGRApp::CUTCMGRApp()
 	: CApp(m_AppWnd, m_AppCmds)
+	, m_oHelpFile(m_AppWnd)
 	, m_oCache(m_oMDB)
 	, m_pProfile(NULL)
 	, m_bScanOnStart(true)
@@ -53,6 +54,9 @@ CUTCMGRApp::CUTCMGRApp()
 {
 	// Create the MDB.
 	m_oMDB.AddTable(m_oCache);
+
+	// Set the help file path.
+	m_oHelpFile.m_HelpFile  = CPath(CPath::AppDir(), "UTCacheMgr.hlp");
 }
 
 /******************************************************************************
