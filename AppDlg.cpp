@@ -214,7 +214,11 @@ LRESULT CAppDlg::OnGridRightClick(NMHDR&)
 	{
 		CPopupMenu oMenu(IDR_GRIDMENU);
 
-		// Not implemented yet.
+		bool bReadOnly = App.m_pProfile->m_bReadOnly;
+
+		// Enable/Disable relevant menu commands.
+		oMenu.EnableCmd(ID_EDIT_MOVE,       !bReadOnly);
+		oMenu.EnableCmd(ID_EDIT_DELETE,     !bReadOnly);
 		oMenu.EnableCmd(ID_VIEW_PROPERTIES, false);
 
 		// Get co-ordinates of mouse click.
