@@ -28,6 +28,8 @@ const char* CProfile::DEF_TEXTURES_DIR   = "Textures";
 const char* CProfile::DEF_SOUNDS_DIR     = "Sounds";
 const char* CProfile::DEF_MUSIC_DIR      = "Music";
 const char* CProfile::DEF_CONFIG_FILE    = "UnrealTournament.ini";
+const char* CProfile::DEF_CACHE_TMP_DIR  = "..\\.";
+const char* CProfile::DEF_CACHE_TMP_MASK = "Cache????.tmp";
 
 /******************************************************************************
 ** Method:		Constructor.

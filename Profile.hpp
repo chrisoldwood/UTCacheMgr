@@ -56,6 +56,9 @@ public:
 	static const char* DEF_CACHE_IDX_FILE;
 	static const char* DEF_CACHE_FILE_EXT;
 
+	static const char* DEF_CACHE_TMP_DIR;
+	static const char* DEF_CACHE_TMP_MASK;
+
 	static const char* DEF_SYSTEM_DIR;
 	static const char* DEF_MAPS_DIR;
 	static const char* DEF_TEXTURES_DIR;
