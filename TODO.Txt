@@ -1,1 +1,1 @@
-- Version number.
+- Help buttons on dialogs.

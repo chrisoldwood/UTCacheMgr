@@ -27,6 +27,7 @@
 #define ID_OPTIONS_PREFS                802
 #define ID_OPTIONS_UT_CONFIG            803
 #define ID_HELP_POPUP                   900
+#define ID_HELP_CONTENTS                901
 #define ID_HELP_ABOUT                   902
 #define IDC_GRID                        1060
 #define IDC_PROFILES                    1071
@@ -77,7 +78,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        130
-#define _APS_NEXT_COMMAND_VALUE         159
+#define _APS_NEXT_COMMAND_VALUE         160
 #define _APS_NEXT_CONTROL_VALUE         1085
 #define _APS_NEXT_SYMED_VALUE           104
 #endif

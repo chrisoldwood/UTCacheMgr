@@ -105,6 +105,8 @@ BEGIN
     END
     POPUP "&Help"
     BEGIN
+        MENUITEM "Help Topics\tF1",             ID_HELP_CONTENTS
+        MENUITEM SEPARATOR
         MENUITEM "&About UT Cache Manager",     ID_HELP_ABOUT
     END
 END
@@ -289,6 +291,7 @@ IDR_APPACCEL ACCELERATORS DISCARDABLE
 BEGIN
     "A",            ID_VIEW_SELECT_ALL,     VIRTKEY, CONTROL, NOINVERT
     "P",            ID_CACHE_PROFILE,       VIRTKEY, CONTROL, NOINVERT
+    VK_F1,          ID_HELP_CONTENTS,       VIRTKEY, NOINVERT
     VK_F5,          ID_CACHE_RESCAN,        VIRTKEY, NOINVERT
 END
 
@@ -400,8 +403,8 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     ID_CACHE_POPUP          "Scanning options"
-    ID_CACHE_PROFILE        "Select a different cache profile\nSelect Profile"
-    ID_CACHE_RESCAN         "Rescan the cache\nRescan Cache"
+    ID_CACHE_PROFILE        "Select a different cache profile\nSelect Profile (Ctrl+P)"
+    ID_CACHE_RESCAN         "Rescan the cache\nRescan Cache (F5)"
     ID_CACHE_EXIT           "Exit UT Cache Manager\nExit"
 END
 
