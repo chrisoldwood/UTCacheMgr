@@ -71,6 +71,7 @@
 #define IDC_SHOW_ALL                    1078
 #define IDC_BROWSE_CACHE                1079
 #define IDC_LOG_EDITS                   1079
+#define IDC_DETECT                      1079
 #define IDC_BROWSE_SYSTEM               1080
 #define IDC_PROGRESS                    1080
 #define IDC_IGNORE_DATES                1080
@@ -120,6 +121,7 @@
 #define IDD_ERRORS                      5010
 #define IDD_PROPERTIES                  5011
 #define IDD_CONFLICT                    5012
+#define IDD_DETECTED                    5013
 #define IDC_STATIC                      -1
 
 // Next default values for new objects
@@ -127,9 +129,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        140
+#define _APS_NEXT_RESOURCE_VALUE        141
 #define _APS_NEXT_COMMAND_VALUE         168
-#define _APS_NEXT_CONTROL_VALUE         1107
+#define _APS_NEXT_CONTROL_VALUE         1108
 #define _APS_NEXT_SYMED_VALUE           104
 #endif
 #endif
