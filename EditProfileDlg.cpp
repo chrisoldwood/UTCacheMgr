@@ -354,10 +354,10 @@ void CEditProfileDlg::OnBrowseCfgFile()
 	if (strDir == "")
 		strDir = m_strLastPath;
 
-	CPath strFile = m_ebConfigFile.Text();
+	CPath strFile;
 
-	// Show Select Directory common dialog.
-	if (strFile.Select(*this, CPath::SaveFile, szExts, "ini", strDir))
+	// Show Select File common dialog.
+	if (strFile.Select(*this, CPath::SelectFile, szExts, "ini", strDir))
 	{
 		// Display path.
 		m_ebConfigFile.Text(strFile);
