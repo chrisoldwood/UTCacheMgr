@@ -75,6 +75,8 @@ protected:
 	void OnBrowseDir(CEditBox& ebPath);
 	void OnBrowseCfgFile();
 	void OnQuickSetup();
+
+	bool ValidatePath(const CPath& strPath, CEditBox& ebControl, const char* pszName);
 };
 
 /******************************************************************************

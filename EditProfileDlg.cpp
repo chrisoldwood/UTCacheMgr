@@ -85,8 +85,8 @@ CEditProfileDlg::CEditProfileDlg()
 void CEditProfileDlg::OnInitDialog()
 {
 	// Initialise formats combo.
-	m_cbFormat.Add("UT");
-	m_cbFormat.Add("UT2003");
+	for (int i = 0; i < CProfile::NUM_FORMATS; ++i)
+		m_cbFormat.Add(CProfile::s_pszFormats[i]);
 
 	// Load the current config.
 	m_ebName.Text(m_oProfile.m_strName);
@@ -151,7 +151,7 @@ bool CEditProfileDlg::OnOk()
 	CPath   strKarmaDir   = m_ebKarmaDir.Text();
 	CPath   strConfigFile = m_ebConfigFile.Text();
 
-	// Validate name.
+	// Validate profile name.
 	if (strName.Length() == 0)
 	{
 		AlertMsg("Please supply a name for the profile.");
@@ -166,76 +166,40 @@ bool CEditProfileDlg::OnOk()
 		return false;
 	}
 
-	// Validate paths.
-	if (!strCacheDir.Exists())
-	{
-		AlertMsg("The cache folder is invalid.");
-		m_ebCacheDir.Focus();
+	// Validate common paths.
+	if (!ValidatePath(strCacheDir, m_ebCacheDir, "cache folder"))
 		return false;
+
+	if (!ValidatePath(strSystemDir, m_ebSystemDir, "system folder"))
+		return false;
+
+	if (!ValidatePath(strMapDir, m_ebMapDir, "maps folder"))
+		return false;
+
+	if (!ValidatePath(strTextureDir, m_ebTextureDir, "textures folder"))
+		return false;
+
+	if (!ValidatePath(strSoundDir, m_ebSoundDir, "sounds folder"))
+		return false;
+
+	if (!ValidatePath(strMusicDir, m_ebMusicDir, "music folder"))
+		return false;
+
+	// Validate UT2003/4 specific paths.
+	if ((nFormat == CProfile::UT2003_FORMAT) || (nFormat == CProfile::UT2004_FORMAT))
+	{
+		if (!ValidatePath(strMeshDir, m_ebMeshDir, "static meshes folder"))
+			return false;
+
+		if (!ValidatePath(strAnimDir, m_ebAnimDir, "animations folder"))
+			return false;
+
+		if (!ValidatePath(strKarmaDir, m_ebKarmaDir, "karma data folder"))
+			return false;
 	}
 
-	if (!strSystemDir.Exists())
-	{
-		AlertMsg("The system folder is invalid.");
-		m_ebSystemDir.Focus();
+	if (!ValidatePath(strConfigFile, m_ebConfigFile, "config file"))
 		return false;
-	}
-
-	if (!strMapDir.Exists())
-	{
-		AlertMsg("The maps folder is invalid.");
-		m_ebMapDir.Focus();
-		return false;
-	}
-
-	if (!strTextureDir.Exists())
-	{
-		AlertMsg("The textures folder is invalid.");
-		m_ebTextureDir.Focus();
-		return false;
-	}
-
-	if (!strSoundDir.Exists())
-	{
-		AlertMsg("The sounds folder is invalid.");
-		m_ebSoundDir.Focus();
-		return false;
-	}
-
-	if (!strMusicDir.Exists())
-	{
-		AlertMsg("The music folder is invalid.");
-		m_ebMusicDir.Focus();
-		return false;
-	}
-
-	if ( (nFormat == CProfile::UT2003_FORMAT) && (!strMeshDir.Exists()) )
-	{
-		AlertMsg("The static meshes folder is invalid.");
-		m_ebMeshDir.Focus();
-		return false;
-	}
-
-	if ( (nFormat == CProfile::UT2003_FORMAT) && (!strAnimDir.Exists()) )
-	{
-		AlertMsg("The animations folder is invalid.");
-		m_ebAnimDir.Focus();
-		return false;
-	}
-
-	if ( (nFormat == CProfile::UT2003_FORMAT) && (!strKarmaDir.Exists()) )
-	{
-		AlertMsg("The karma data folder is invalid.");
-		m_ebKarmaDir.Focus();
-		return false;
-	}
-
-	if (!strConfigFile.Exists())
-	{
-		AlertMsg("The config file is invalid.");
-		m_ebConfigFile.Focus();
-		return false;
-	}
 
 	// Update profile.
 	m_oProfile.m_strName       = strName;
@@ -417,16 +381,30 @@ void CEditProfileDlg::OnQuickSetup()
 	m_ebMusicDir.Text  (CPath(strBaseDir, CProfile::DEF_MUSIC_DIR   ));
 	m_ebConfigFile.Text(CPath(strSysDir,  CProfile::DEF_CONFIG_FILE ));
 
-	// Check for UT2003.
+	// Check for UT2004.
 	CPath strUT2003Cfg(strSysDir, CProfile::DEF_2003_CONFIG_FILE);
+	CPath strUT2004Cfg(strSysDir, CProfile::DEF_2004_CONFIG_FILE);
 
-	if (strUT2003Cfg.Exists())
+	if (strUT2003Cfg.Exists() || strUT2004Cfg.Exists())
 	{
-		m_cbFormat.CurSel  (CProfile::UT2003_FORMAT);
-		m_ebConfigFile.Text(strUT2003Cfg);
-		m_ebMeshDir.Text   (CPath(strBaseDir, CProfile::DEF_MESH_DIR   ));
-		m_ebAnimDir.Text   (CPath(strBaseDir, CProfile::DEF_ANIM_DIR   ));
-		m_ebKarmaDir.Text  (CPath(strBaseDir, CProfile::DEF_KARMA_DIR  ));
+		// Set common paths.
+		m_ebMeshDir.Text (CPath(strBaseDir, CProfile::DEF_MESH_DIR ));
+		m_ebAnimDir.Text (CPath(strBaseDir, CProfile::DEF_ANIM_DIR ));
+		m_ebKarmaDir.Text(CPath(strBaseDir, CProfile::DEF_KARMA_DIR));
+
+		// Set UT2003 paths.
+		if (strUT2003Cfg.Exists())
+		{
+			m_ebConfigFile.Text(strUT2003Cfg);
+			m_cbFormat.CurSel(CProfile::UT2003_FORMAT);
+		}
+
+		// Set UT2004 paths.
+		if (strUT2004Cfg.Exists())
+		{
+			m_ebConfigFile.Text(strUT2004Cfg);
+			m_cbFormat.CurSel(CProfile::UT2004_FORMAT);
+		}
 	}
 
 	OnSelectFormat();
@@ -448,4 +426,36 @@ void CEditProfileDlg::OnHelp(HELPINFO& /*oInfo*/)
 {
 	// Show the dialogs help topic.
 	App.m_oHelpFile.Topic(IDH_EDITPROFDLG);
+}
+
+/******************************************************************************
+** Method:		ValidatePath()
+**
+** Description:	Checks if the path is valid and if not queries the user if they
+**				want to allow it anyway.
+**
+** Parameters:	strPath		The path.
+**				ebControl	The control where the path is enetered.
+**				pszName		The name for the path.
+**
+** Returns:		true or false.
+**
+*******************************************************************************
+*/
+
+bool CEditProfileDlg::ValidatePath(const CPath& strPath, CEditBox& ebControl, const char* pszName)
+{
+	ASSERT(pszName != NULL);
+
+	// Path valid?
+	if (strPath.Exists())
+		return true;
+
+	// User allowing path anyway?
+	if (QueryMsg("The %s is invalid.\n\nDo you want to allow it?", pszName) == IDYES)
+		return true;
+		
+	ebControl.Focus();
+
+	return false;
 }
