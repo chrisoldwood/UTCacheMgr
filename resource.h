@@ -8,6 +8,8 @@
 #define IDR_APPTOOLBAR                  5
 #define IDR_GRIDMENU                    6
 #define IDB_LIST_ICONS                  7
+#define IDYESALL                        8
+#define IDNOALL                         9
 #define IDI_SYSTEM                      50
 #define IDI_MAP                         51
 #define IDI_TEXTURE                     52
@@ -15,6 +17,8 @@
 #define IDI_MUSIC                       54
 #define IDI_ANIM                        55
 #define IDI_MESH                        56
+#define IDI_KARMA                       57
+#define IDI_SETUP                       58
 #define ID_CACHE_POPUP                  100
 #define ID_CACHE_PROFILE                101
 #define ID_CACHE_RESCAN                 102
@@ -47,7 +51,6 @@
 #define ID_HELP_POPUP                   900
 #define ID_HELP_CONTENTS                901
 #define ID_HELP_ABOUT                   902
-#define ID_CACHE_FIRST_PROFILE          1000
 #define IDC_GRID                        1060
 #define IDC_PROFILES                    1071
 #define IDC_CACHE_DIR                   1072
@@ -70,6 +73,7 @@
 #define IDC_LOG_EDITS                   1079
 #define IDC_BROWSE_SYSTEM               1080
 #define IDC_PROGRESS                    1080
+#define IDC_IGNORE_DATES                1080
 #define IDC_BROWSE_MAPS                 1081
 #define IDC_OPERATION                   1081
 #define IDC_BROWSE_TEXTURES             1082
@@ -90,13 +94,20 @@
 #define IDC_BROWSE_ANIMS                1092
 #define IDC_FORMAT                      1093
 #define IDC_FILE_ICON                   1094
+#define IDC_KARMA_DIR                   1094
 #define IDC_REAL_NAME                   1095
+#define IDC_BROWSE_KARMA                1095
 #define IDC_CACHE_NAME                  1096
 #define IDC_FILE_DATE                   1097
 #define IDC_FILE_SIZE                   1098
 #define IDC_FILE_TYPE                   1099
-#define ID_CACHE_LAST_PROFILE           1099
 #define IDC_SEL_ALL                     1099
+#define IDC_FILENAME_1                  1101
+#define IDC_FILEINFO_1                  1102
+#define IDC_FILENAME_2                  1103
+#define IDC_FILEINFO_2                  1104
+#define ID_CACHE_FIRST_PROFILE          2000
+#define ID_CACHE_LAST_PROFILE           2099
 #define IDD_MAIN                        5000
 #define IDD_ABOUT                       5001
 #define IDD_SEL_PROFILE                 5002
@@ -108,6 +119,7 @@
 #define IDD_SELFILES                    5009
 #define IDD_ERRORS                      5010
 #define IDD_PROPERTIES                  5011
+#define IDD_CONFLICT                    5012
 #define IDC_STATIC                      -1
 
 // Next default values for new objects
@@ -115,9 +127,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        137
+#define _APS_NEXT_RESOURCE_VALUE        140
 #define _APS_NEXT_COMMAND_VALUE         168
-#define _APS_NEXT_CONTROL_VALUE         1101
+#define _APS_NEXT_CONTROL_VALUE         1107
 #define _APS_NEXT_SYMED_VALUE           104
 #endif
 #endif
