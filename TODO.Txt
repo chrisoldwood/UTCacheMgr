@@ -1,5 +1,3 @@
-- Properties dialog for exact file sizes etc.
-
 - ListView icons.
 
 - UT2K3 support.
