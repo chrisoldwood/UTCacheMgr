@@ -40,7 +40,7 @@ CAppCmds::CAppCmds()
 	DEFINE_CMD_TABLE
 		// File menu.
 		CMD_RANGE(ID_CACHE_FIRST_PROFILE, ID_CACHE_LAST_PROFILE,
-										OnCacheProfile,		NULL,					-1)
+										OnCacheProfile,		OnUICacheProfile,		-1)
 		CMD_ENTRY(ID_CACHE_PROFILE,		OnCacheProfileDlg,	NULL,					 3)
 		CMD_ENTRY(ID_CACHE_RESCAN,		OnCacheRescan,		NULL,					 0)
 		CMD_ENTRY(ID_CACHE_RESTORE,		OnCacheRestore,		OnUICacheRestore,		-1)
@@ -1738,6 +1738,24 @@ void CAppCmds::OnHelpAbout()
 **
 *******************************************************************************
 */
+
+void CAppCmds::OnUICacheProfile()
+{
+	ASSERT(App.m_pProfile != NULL);
+
+	CMenu&       oMenu    = App.m_AppWnd.m_Menu;
+//	CAppToolBar& oToolBar = App.m_AppWnd.m_ToolBar;
+//	CAppDlg&     oAppDlg  = App.m_AppWnd.m_AppDlg;
+
+	// Remove all check marks.
+	for (int i = 0; i < App.m_aoProfiles.Size(); ++i)
+		oMenu.CheckCmd(i + ID_CACHE_FIRST_PROFILE, false);
+
+	ASSERT(App.GetProfileIndex(App.m_pProfile) != -1);
+
+	// Place check next to active profile.
+	oMenu.CheckCmd(App.GetProfileIndex(App.m_pProfile) + ID_CACHE_FIRST_PROFILE, true);
+}
 
 void CAppCmds::OnUICacheRestore()
 {

@@ -75,6 +75,7 @@ public:
 	//
 	// UI handlers.
 	//
+	void OnUICacheProfile();
 	void OnUICacheRestore();
 	void OnUICacheProperties();
 	void OnUIEditPin();
