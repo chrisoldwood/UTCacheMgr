@@ -82,7 +82,7 @@ char CProfile::GetFileType(const CString& strExt)
 	{
 		return SYSTEM_FILE;
 	}
-	else if (strExt == ".unr")
+	else if ((strExt == ".unr") || (strExt == ".ut2"))
 	{
 		return MAP_FILE;
 	}
