@@ -286,6 +286,10 @@ SOURCE=.\HelpFile\ProfDlg.bmp
 # End Source File
 # Begin Source File
 
+SOURCE=.\HelpFile\RestoreDlg.bmp
+# End Source File
+# Begin Source File
+
 SOURCE=.\HelpFile\SelFolder.bmp
 # End Source File
 # Begin Source File

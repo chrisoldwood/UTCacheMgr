@@ -3,3 +3,5 @@
 - ListView icons.
 
 - UT2K3 support.
+
+- Folder checking (remote paths cause a problem).
