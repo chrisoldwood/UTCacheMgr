@@ -28,9 +28,9 @@ CUTCMGRApp App;
 */
 
 #ifdef _DEBUG
-const char* CUTCMGRApp::VERSION      = "v1.0 Beta [Debug]";
+const char* CUTCMGRApp::VERSION      = "v1.0 [Debug]";
 #else
-const char* CUTCMGRApp::VERSION      = "v1.0 Beta";
+const char* CUTCMGRApp::VERSION      = "v1.0";
 #endif
 const char* CUTCMGRApp::INI_FILE_VER = "1.0";
 
