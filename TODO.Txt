@@ -1,7 +1,17 @@
-- Update helpfile.
-
-- Fails to save LastCopyTo if profiled not changed.
+- Fails to save LastCopyTo if profile not changed.
 
 - Status bar incorrect after cache changes.
 
 - Make cache filename column slightly bigger.
+
+- Import into cache from another cache.
+
+- Merge caches.
+
+- Install Maps from a folder.
+
+- Auto-detect of TO/SF (Mod and retail).
+
+- Attempt to detect package dependencies.
+
+- Change profile selection to menu with old dialog as bottom option.
