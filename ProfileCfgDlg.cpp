@@ -33,9 +33,10 @@ CProfileCfgDlg::CProfileCfgDlg()
 	END_CTRL_TABLE
 
 	DEFINE_CTRLMSG_TABLE
-		CMD_CTRLMSG(IDC_ADD,	BN_CLICKED,	OnAdd   )
-		CMD_CTRLMSG(IDC_EDIT,	BN_CLICKED,	OnEdit  )
-		CMD_CTRLMSG(IDC_REMOVE,	BN_CLICKED,	OnRemove)
+		CMD_CTRLMSG(IDC_ADD,      BN_CLICKED, OnAdd   )
+		CMD_CTRLMSG(IDC_EDIT,     BN_CLICKED, OnEdit  )
+		CMD_CTRLMSG(IDC_REMOVE,   BN_CLICKED, OnRemove)
+		CMD_CTRLMSG(IDC_PROFILES, LBN_DBLCLK, OnDblClkProfile)
 	END_CTRLMSG_TABLE
 }
 
@@ -179,6 +180,23 @@ void CProfileCfgDlg::OnRemove()
 		nSel--;
 
 	m_lbProfiles.CurSel(nSel);
+}
+
+/******************************************************************************
+** Method:		OnDblClkProfile()
+**
+** Description:	Double-clicked a profile, edit it.
+**
+** Parameters:	None.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CProfileCfgDlg::OnDblClkProfile()
+{
+	OnEdit();
 }
 
 /******************************************************************************
