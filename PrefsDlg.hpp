@@ -37,6 +37,7 @@ protected:
 	CCheckBox	m_ckScanForTmp;
 	CCheckBox	m_ckScanIndex;
 	CCheckBox	m_ckShowAll;
+	CCheckBox	m_ckLogEdits;
 
 	//
 	// Message processors.

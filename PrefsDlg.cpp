@@ -34,6 +34,7 @@ CPrefsDlg::CPrefsDlg()
 		CTRL(IDC_SCAN_TMP_FILES,	&m_ckScanForTmp)
 		CTRL(IDC_SCAN_INDEX,		&m_ckScanIndex )
 		CTRL(IDC_SHOW_ALL,			&m_ckShowAll   )
+		CTRL(IDC_LOG_EDITS,			&m_ckLogEdits  )
 	END_CTRL_TABLE
 }
 
@@ -76,6 +77,7 @@ void CPrefsDlg::OnInitDialog()
 	m_ckScanForTmp.Check(App.m_bScanForTmp);
 	m_ckScanIndex.Check(App.m_bScanIndex);
 	m_ckShowAll.Check(App.m_bShowAllFiles);
+	m_ckLogEdits.Check(App.m_bLogEdits);
 }
 
 /******************************************************************************
@@ -106,6 +108,7 @@ bool CPrefsDlg::OnOk()
 	App.m_bScanForTmp   = m_ckScanForTmp.IsChecked();
 	App.m_bScanIndex    = m_ckScanIndex.IsChecked();
 	App.m_bShowAllFiles = m_ckShowAll.IsChecked();
+	App.m_bLogEdits     = m_ckLogEdits.IsChecked();
 
 	return true;
 }
