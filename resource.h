@@ -96,6 +96,7 @@
 #define IDC_FILE_SIZE                   1098
 #define IDC_FILE_TYPE                   1099
 #define ID_CACHE_LAST_PROFILE           1099
+#define IDC_SEL_ALL                     1099
 #define IDD_MAIN                        5000
 #define IDD_ABOUT                       5001
 #define IDD_SEL_PROFILE                 5002
@@ -104,7 +105,6 @@
 #define IDD_EDIT_PROFILE                5006
 #define IDD_PROGRESS                    5007
 #define IDD_UT_CONFIG                   5008
-#define IDD_RESTORE                     5009
 #define IDD_SELFILES                    5009
 #define IDD_ERRORS                      5010
 #define IDD_PROPERTIES                  5011
@@ -117,7 +117,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        137
 #define _APS_NEXT_COMMAND_VALUE         168
-#define _APS_NEXT_CONTROL_VALUE         1099
+#define _APS_NEXT_CONTROL_VALUE         1101
 #define _APS_NEXT_SYMED_VALUE           104
 #endif
 #endif
