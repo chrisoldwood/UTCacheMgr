@@ -34,7 +34,7 @@ CAppToolBar::CAppToolBar()
 		TBCTL(&m_btnDelete,		ID_EDIT_DELETE  )
 		TBCTL(&m_btnCopyTo,		ID_EDIT_COPY_TO )
 		TBGAP()
-		TBCTL(&m_btnHelp,		ID_HELP_ABOUT   )
+		TBCTL(&m_btnHelp,		ID_HELP_CONTENTS)
 	END_TOOLBAR
 }
 

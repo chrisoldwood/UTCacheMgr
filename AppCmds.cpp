@@ -56,7 +56,7 @@ CAppCmds::CAppCmds()
 		CMD_ENTRY(ID_OPTIONS_UT_CONFIG,	OnOptionsUTConfig,	NULL,	-1)
 		// Help menu.
 		CMD_ENTRY(ID_HELP_CONTENTS,		OnHelpContents,		NULL,	 1)
-		CMD_ENTRY(ID_HELP_ABOUT,		OnHelpAbout,		NULL,	 1)
+		CMD_ENTRY(ID_HELP_ABOUT,		OnHelpAbout,		NULL,	-1)
 	END_CMD_TABLE
 }
 
