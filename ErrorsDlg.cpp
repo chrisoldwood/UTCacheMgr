@@ -30,9 +30,10 @@ CErrorsDlg::CErrorsDlg()
 		CTRL(IDC_GRID,	&m_lvGrid)
 	END_CTRL_TABLE
 
-	DEFINE_CTRLMSG_TABLE
-		NFY_CTRLMSG(IDC_GRID, NM_DBLCLK, OnDblClick)
-	END_CTRLMSG_TABLE
+	DEFINE_GRAVITY_TABLE
+		CTRLGRAV(IDC_GRID,  LEFT_EDGE,  TOP_EDGE,    RIGHT_EDGE, BOTTOM_EDGE)
+		CTRLGRAV(IDCANCEL,  RIGHT_EDGE, BOTTOM_EDGE, RIGHT_EDGE, BOTTOM_EDGE)
+	END_GRAVITY_TABLE
 }
 
 /******************************************************************************
@@ -51,6 +52,10 @@ void CErrorsDlg::OnInitDialog()
 {
 	ASSERT(m_astrFiles.Size() == m_astrErrors.Size());
 
+	// Restore dialog size to last time.
+	if (!App.m_rcLastDlgPos.Empty())
+		Move(App.m_rcLastDlgPos);
+
 	// Set the dialog title.
 	Title(m_strTitle);
 
@@ -61,7 +66,7 @@ void CErrorsDlg::OnInitDialog()
 
 	// Create grid columns.
 	m_lvGrid.InsertColumn(0, "File",   250, LVCFMT_LEFT);
-	m_lvGrid.InsertColumn(1, "Error*", 125, LVCFMT_LEFT);
+	m_lvGrid.InsertColumn(1, "Status", 125, LVCFMT_LEFT);
 
 	// Add errors to grid.
 	for (int i = 0; i < m_astrFiles.Size(); ++i)
@@ -74,9 +79,9 @@ void CErrorsDlg::OnInitDialog()
 }
 
 /******************************************************************************
-** Method:		OnInitDialog()
+** Method:		OnDestroy()
 **
-** Description:	Initialise the dialog.
+** Description:	Dialog closing.
 **
 ** Parameters:	None.
 **
@@ -85,13 +90,8 @@ void CErrorsDlg::OnInitDialog()
 *******************************************************************************
 */
 
-LRESULT CErrorsDlg::OnDblClick(NMHDR&)
+void CErrorsDlg::OnDestroy()
 {
-	// Get selected error.
-	int nRow = m_lvGrid.Selection();
-
-	if (nRow != LB_ERR)
-		NotifyMsg(m_astrErrors[nRow]);
-
-	return 0;
+	// Save windows final position.
+	App.m_rcLastDlgPos = Placement();
 }

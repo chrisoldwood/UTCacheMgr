@@ -44,7 +44,7 @@ protected:
 	// Message processors.
 	//
 	virtual void OnInitDialog();
-	LRESULT OnDblClick(NMHDR&);
+	virtual void OnDestroy();
 };
 
 /******************************************************************************
