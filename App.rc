@@ -72,7 +72,7 @@ IDR_APPMENU MENU DISCARDABLE
 BEGIN
     POPUP "&Cache"
     BEGIN
-        MENUITEM "Profile...\tCtrl+P",          ID_CACHE_PROFILE
+        MENUITEM "&Profile...\tCtrl+P",         ID_CACHE_PROFILE
         MENUITEM "&Rescan\tF5",                 ID_CACHE_RESCAN
         MENUITEM SEPARATOR
         MENUITEM "E&xit\tAlt+F4",               ID_CACHE_EXIT
@@ -83,7 +83,7 @@ BEGIN
         MENUITEM "&Copy",                       ID_EDIT_COPY
         MENUITEM "&Delete",                     ID_EDIT_DELETE
         MENUITEM SEPARATOR
-        MENUITEM "Cop&y To...",                 ID_EDIT_COPY_TO
+        MENUITEM "Copy &To...",                 ID_EDIT_COPY_TO
     END
     POPUP "&View"
     BEGIN
@@ -101,11 +101,11 @@ BEGIN
         MENUITEM "&Profiles...",                ID_OPTIONS_PROFILES
         MENUITEM "P&references...",             ID_OPTIONS_PREFS
         MENUITEM SEPARATOR
-        MENUITEM "UT Settings...",              ID_OPTIONS_UT_CONFIG
+        MENUITEM "UT &Settings...",             ID_OPTIONS_UT_CONFIG
     END
     POPUP "&Help"
     BEGIN
-        MENUITEM "Help Topics\tF1",             ID_HELP_CONTENTS
+        MENUITEM "&Contents\tF1",               ID_HELP_CONTENTS
         MENUITEM SEPARATOR
         MENUITEM "&About UT Cache Manager",     ID_HELP_ABOUT
     END
@@ -146,7 +146,7 @@ BEGIN
 END
 
 IDD_SEL_PROFILE DIALOG DISCARDABLE  0, 0, 307, 247
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+STYLE DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Select Profile"
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -177,8 +177,8 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,155,220,50,14
 END
 
-IDD_PREFS DIALOG DISCARDABLE  0, 0, 222, 130
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_PREFS DIALOG DISCARDABLE  0, 0, 227, 130
+STYLE DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Preferences"
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -189,18 +189,18 @@ BEGIN
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,45,100,10
     CONTROL         "Scan On Profile &Change?",IDC_SCAN_ON_SWITCH,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,60,100,10
-    CONTROL         "Scan for old .&tmp files?",IDC_SCAN_TMP_FILES,"Button",
+    CONTROL         "Scan For Old .&tmp Files?",IDC_SCAN_TMP_FILES,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,115,45,100,10
-    CONTROL         "Scan index for old entries?",IDC_SCAN_INDEX,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,115,60,100,10
+    CONTROL         "Scan &Index For Old Entries?",IDC_SCAN_INDEX,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,115,60,105,10
     CONTROL         "Sho&w All Files?",IDC_SHOW_ALL,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,10,80,100,10
-    DEFPUSHBUTTON   "OK",IDOK,55,105,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,111,105,50,14
+    DEFPUSHBUTTON   "OK",IDOK,60,105,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,116,105,50,14
 END
 
 IDD_PROFILES DIALOG DISCARDABLE  0, 0, 186, 121
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+STYLE DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Profiles"
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -213,13 +213,13 @@ BEGIN
 END
 
 IDD_EDIT_PROFILE DIALOG DISCARDABLE  0, 0, 327, 247
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+STYLE DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Edit Profile"
 FONT 8, "MS Sans Serif"
 BEGIN
     LTEXT           "&Profile Name:",IDC_STATIC,10,12,60,8
     EDITTEXT        IDC_NAME,70,10,100,14,ES_AUTOHSCROLL
-    PUSHBUTTON      "Quick Setup...",IDC_QUICK_SETUP,255,10,60,14
+    PUSHBUTTON      "&Quick Setup...",IDC_QUICK_SETUP,255,10,60,14
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,35,305,1
     LTEXT           "&Cache Folder:",IDC_STATIC,10,48,60,8
     EDITTEXT        IDC_CACHE_DIR,70,45,225,14,ES_AUTOHSCROLL
@@ -261,7 +261,7 @@ BEGIN
 END
 
 IDD_UT_CONFIG DIALOG DISCARDABLE  0, 0, 172, 86
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+STYLE DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "UT Cache Settings"
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -320,7 +320,7 @@ BEGIN
     IDD_PREFS, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 215
+        RIGHTMARGIN, 220
         TOPMARGIN, 7
         BOTTOMMARGIN, 123
     END
@@ -411,14 +411,15 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     ID_HELP_POPUP           "Help options"
+    ID_HELP_CONTENTS        "Displays the help contents page\nHelp"
     ID_HELP_ABOUT           "Show UT Cache Manager version\nAbout"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
     ID_OPTIONS_POPUP        "Settings"
-    ID_OPTIONS_PROFILES     "Configure cache profiles\nEdit Profiles"
-    ID_OPTIONS_PREFS        "UT Cache Manager settings\nEdit Preferences"
+    ID_OPTIONS_PROFILES     "Configure the cache profiles\nEdit Profiles"
+    ID_OPTIONS_PREFS        "Configure the UT Cache Manager global options\nEdit Preferences"
     ID_OPTIONS_UT_CONFIG    "Configure the UT cache settings\nEdit UT Settings"
 END
 
