@@ -68,6 +68,7 @@ public:
 	// Profile methods.
 	//
 	CProfile* FindProfile(const char* pszName) const;
+	int       GetProfileIndex(CProfile* pProfile) const;
 	void      BuildProfileMenu();
 
 	//

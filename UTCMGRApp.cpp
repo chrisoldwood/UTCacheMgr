@@ -424,6 +424,32 @@ CProfile* CUTCMGRApp::FindProfile(const char* pszName) const
 }
 
 /******************************************************************************
+** Method:		GetProfileIndex()
+**
+** Description:	Gets the index of a profile.
+**
+** Parameters:	pProfile	The profile.
+**
+** Returns:		The index or -1 if not found.
+**
+*******************************************************************************
+*/
+
+int CUTCMGRApp::GetProfileIndex(CProfile* pProfile) const
+{
+	ASSERT(pProfile != NULL);
+
+	// For all profiles...
+	for (int i = 0; i < m_aoProfiles.Size(); ++i)
+	{
+		if (m_aoProfiles[i] == pProfile)
+			return i;
+	}
+
+	return -1;
+}
+
+/******************************************************************************
 ** Method:		BuildProfileMenu()
 **
 ** Description:	Builds the Cache | Profile sub-menu.
