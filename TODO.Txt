@@ -1,5 +1,3 @@
-- Detect package dependencies.
-
-- Map preview on Properties dialog.
-
 - Update helpfile.
+
+- Detect installations (Mods .ini file).
