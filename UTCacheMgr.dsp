@@ -146,7 +146,7 @@ SOURCE=.\ProgressDlg.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\RestoreDlg.cpp
+SOURCE=.\SelFilesDlg.cpp
 # End Source File
 # Begin Source File
 
@@ -226,7 +226,7 @@ SOURCE=.\Resource.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\RestoreDlg.hpp
+SOURCE=.\SelFilesDlg.hpp
 # End Source File
 # Begin Source File
 
