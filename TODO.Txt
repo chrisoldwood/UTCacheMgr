@@ -1,3 +1,5 @@
 - Detect MOD installations.
 
 - Don't import to cache if file exists in appropariate folders.
+
+- Allow user to choose which profiles when detecting.
