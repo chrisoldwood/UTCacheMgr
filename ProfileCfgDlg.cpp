@@ -281,7 +281,7 @@ void CProfileCfgDlg::OnDetect()
 	CDetectedDlg Dlg;
 
 	// App profiles to dialog.
-	for (i = 0; i < aoProfiles.Size(); ++i)
+	for (int i = 0; i < aoProfiles.Size(); ++i)
 	{
 		CProfile* pProfile = aoProfiles[i];
 

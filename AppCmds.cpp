@@ -768,7 +768,7 @@ void CAppCmds::OnCacheImport()
 	CErrorsDlg dlgErrors;
 
 	// For all files to import...
-	for (i = 0; i < nFiles; ++i)
+	for (int i = 0; i < nFiles; ++i)
 	{
 		CRow& oRow         = oImport[i];
 		CPath strRealName  = oRow[CCache::REAL_FILENAME];
@@ -943,7 +943,7 @@ void CAppCmds::OnEditPin()
 	}
 
 	// For all cache table rows...
-	for (i = 0; i < App.m_oCache.RowCount(); ++i)
+	for (int i = 0; i < App.m_oCache.RowCount(); ++i)
 	{
 		CRow&       oRow     = App.m_oCache[i];
 		char        cStatus  = oRow[CCache::STATUS];

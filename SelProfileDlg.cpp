@@ -77,7 +77,7 @@ void CSelProfileDlg::OnInitDialog()
 	}
 
 	// Load formats combo.
-	for (i = 0; i < CProfile::NUM_FORMATS; ++i)
+	for (int i = 0; i < CProfile::NUM_FORMATS; ++i)
 		m_cbFormat.Add(CProfile::s_pszFormats[i]);
 
 	// Select the default.

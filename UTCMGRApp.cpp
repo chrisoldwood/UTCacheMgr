@@ -285,10 +285,10 @@ void CUTCMGRApp::LoadConfig()
 	ASSERT(m_pProfile != NULL);
 
 	// Read the number of pinned files.
-	uint nPinned = m_oIniFile.ReadInt("Pinned", "Count",   0);
+	uint nPinned = m_oIniFile.ReadInt("Pinned", "Count", 0);
 
 	// Read the pinned files.
-	for (i = 0; i < nPinned; ++i)
+	for (uint i = 0; i < nPinned; ++i)
 	{
 		CString strEntry;
 		CString strName;
@@ -506,7 +506,7 @@ void CUTCMGRApp::BuildProfileMenu()
 	CPopupMenu oCacheMenu = App.m_AppWnd.m_Menu.GetItemPopup(0).GetItemPopup(0);
 
 	// Build new menu.
-	for (i = 0; i < m_aoProfiles.Size(); ++i)
+	for (int i = 0; i < m_aoProfiles.Size(); ++i)
 		oCacheMenu.InsertCmd(i, ID_CACHE_FIRST_PROFILE + i, m_aoProfiles[i]->m_strName);
 }
 
