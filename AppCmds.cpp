@@ -223,7 +223,7 @@ void CAppCmds::OnCacheRescan()
 		bool  bExists   = strUTFile.Exists();
 
 		// File pinned in cache?
-		bool bPinned = (App.m_astrPinned.Find(strRealName, false) != -1);
+		bool bPinned = (App.m_astrPinned.Find(strRealName, true) != -1);
 
 		// Get other file details.
 		CPath strFile = strCacheDir + strCacheName;
@@ -564,15 +564,15 @@ void CAppCmds::OnEditPin()
 		// Add to pinned list?
 		if (cStatus == NEW_FILE)
 		{
-			if (astrPinned.Find(pszName, false) == -1)
+			if (astrPinned.Find(pszName, true) == -1)
 				astrPinned.Add(pszName);
 		}
 
 		// Remove from pinned list?
 		if (cStatus == PIN_FILE)
 		{
-			if (astrPinned.Find(pszName, false) != -1)
-				astrPinned.Delete(astrPinned.Find(pszName, false));
+			if (astrPinned.Find(pszName, true) != -1)
+				astrPinned.Delete(astrPinned.Find(pszName, true));
 		}
 	}
 
@@ -582,7 +582,7 @@ void CAppCmds::OnEditPin()
 		CRow&       oRow     = App.m_oCache[i];
 		char        cStatus  = oRow[CCache::STATUS];
 		const char* pszName  = oRow[CCache::REAL_FILENAME];
-		int         nListIdx = astrPinned.Find(pszName, false);
+		int         nListIdx = astrPinned.Find(pszName, true);
 
 		// Pin, if in pinned list AND not already pinned.
 		if ( (nListIdx != -1) && (cStatus != PIN_FILE) )
