@@ -50,6 +50,7 @@ CEditProfileDlg::CEditProfileDlg()
 		CTRL(IDC_MUSIC_DIR,		&m_ebMusicDir  )
 		CTRL(IDC_MESH_DIR,		&m_ebMeshDir   )
 		CTRL(IDC_ANIM_DIR,		&m_ebAnimDir   )
+		CTRL(IDC_KARMA_DIR,		&m_ebKarmaDir  )
 		CTRL(IDC_CONFIG_FILE,	&m_ebConfigFile)
 	END_CTRL_TABLE
 
@@ -63,6 +64,7 @@ CEditProfileDlg::CEditProfileDlg()
 		CMD_CTRLMSG(IDC_BROWSE_MUSIC,		BN_CLICKED,		OnBrowseMusic   )
 		CMD_CTRLMSG(IDC_BROWSE_MESHS,		BN_CLICKED,		OnBrowseMeshes  )
 		CMD_CTRLMSG(IDC_BROWSE_ANIMS,		BN_CLICKED,		OnBrowseAnims   )
+		CMD_CTRLMSG(IDC_BROWSE_KARMA,		BN_CLICKED,		OnBrowseKarma   )
 		CMD_CTRLMSG(IDC_BROWSE_CONFIG,		BN_CLICKED,		OnBrowseCfgFile )
 		CMD_CTRLMSG(IDC_QUICK_SETUP,		BN_CLICKED,		OnQuickSetup    )
 	END_CTRLMSG_TABLE
@@ -98,6 +100,7 @@ void CEditProfileDlg::OnInitDialog()
 	m_ebMusicDir.Text(m_oProfile.m_strMusicDir);
 	m_ebMeshDir.Text(m_oProfile.m_strMeshDir);
 	m_ebAnimDir.Text(m_oProfile.m_strAnimDir);
+	m_ebKarmaDir.Text(m_oProfile.m_strKarmaDir);
 	m_ebConfigFile.Text(m_oProfile.m_strConfigFile);
 
 	// Initialise control string lengths.
@@ -110,6 +113,7 @@ void CEditProfileDlg::OnInitDialog()
 	m_ebMusicDir.TextLimit(MAX_PATH);
 	m_ebMeshDir.TextLimit(MAX_PATH);
 	m_ebAnimDir.TextLimit(MAX_PATH);
+	m_ebKarmaDir.TextLimit(MAX_PATH);
 	m_ebConfigFile.TextLimit(MAX_PATH);
 
 	// Cannot edit profile name.
@@ -144,6 +148,7 @@ bool CEditProfileDlg::OnOk()
 	CPath   strMusicDir   = m_ebMusicDir.Text();
 	CPath   strMeshDir    = m_ebMeshDir.Text();
 	CPath   strAnimDir    = m_ebAnimDir.Text();
+	CPath   strKarmaDir   = m_ebKarmaDir.Text();
 	CPath   strConfigFile = m_ebConfigFile.Text();
 
 	// Validate name.
@@ -218,6 +223,13 @@ bool CEditProfileDlg::OnOk()
 		return false;
 	}
 
+	if ( (nFormat == CProfile::UT2003_FORMAT) && (!strKarmaDir.Exists()) )
+	{
+		AlertMsg("The karma data folder is invalid.");
+		m_ebKarmaDir.Focus();
+		return false;
+	}
+
 	if (!strConfigFile.Exists())
 	{
 		AlertMsg("The config file is invalid.");
@@ -237,6 +249,7 @@ bool CEditProfileDlg::OnOk()
 	m_oProfile.m_strMusicDir   = strMusicDir;
 	m_oProfile.m_strMeshDir    = strMeshDir;
 	m_oProfile.m_strAnimDir    = strAnimDir;
+	m_oProfile.m_strKarmaDir   = strKarmaDir;
 	m_oProfile.m_strConfigFile = strConfigFile;
 
 	return true;
@@ -261,12 +274,14 @@ void CEditProfileDlg::OnSelectFormat()
 	// Enable/Disable depending on UT/UT2003.
 	m_ebMeshDir.ReadOnly(nFormat == CProfile::UT_FORMAT);
 	m_ebAnimDir.ReadOnly(nFormat == CProfile::UT_FORMAT);
+	m_ebKarmaDir.ReadOnly(nFormat == CProfile::UT_FORMAT);
 
 	// Clear non UT controls.
 	if (nFormat == CProfile::UT_FORMAT)
 	{
 		m_ebMeshDir.Text("");
 		m_ebAnimDir.Text("");
+		m_ebKarmaDir.Text("");
 	}
 }
 
@@ -320,6 +335,11 @@ void CEditProfileDlg::OnBrowseMeshes()
 void CEditProfileDlg::OnBrowseAnims()
 {
 	OnBrowseDir(m_ebAnimDir);
+}
+
+void CEditProfileDlg::OnBrowseKarma()
+{
+	OnBrowseDir(m_ebKarmaDir);
 }
 
 void CEditProfileDlg::OnBrowseDir(CEditBox& ebPath)
@@ -406,6 +426,7 @@ void CEditProfileDlg::OnQuickSetup()
 		m_ebConfigFile.Text(strUT2003Cfg);
 		m_ebMeshDir.Text   (CPath(strBaseDir, CProfile::DEF_MESH_DIR   ));
 		m_ebAnimDir.Text   (CPath(strBaseDir, CProfile::DEF_ANIM_DIR   ));
+		m_ebKarmaDir.Text  (CPath(strBaseDir, CProfile::DEF_KARMA_DIR  ));
 	}
 
 	OnSelectFormat();

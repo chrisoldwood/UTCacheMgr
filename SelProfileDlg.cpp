@@ -41,6 +41,7 @@ CSelProfileDlg::CSelProfileDlg()
 		CTRL(IDC_MUSIC_DIR,		&m_ebMusicDir  )
 		CTRL(IDC_MESH_DIR,		&m_ebMeshDir   )
 		CTRL(IDC_ANIM_DIR,		&m_ebAnimDir   )
+		CTRL(IDC_KARMA_DIR,		&m_ebKarmaDir  )
 		CTRL(IDC_CONFIG_FILE,	&m_ebConfigFile)
 	END_CTRL_TABLE
 
@@ -141,6 +142,7 @@ void CSelProfileDlg::OnSelectProfile()
 	m_ebMusicDir.Text(pProfile->m_strMusicDir);
 	m_ebMeshDir.Text(pProfile->m_strMeshDir);
 	m_ebAnimDir.Text(pProfile->m_strAnimDir);
+	m_ebKarmaDir.Text(pProfile->m_strKarmaDir);
 	m_ebConfigFile.Text(pProfile->m_strConfigFile);
 }
 

@@ -47,6 +47,7 @@ protected:
 	CEditBox	m_ebMusicDir;
 	CEditBox	m_ebMeshDir;
 	CEditBox	m_ebAnimDir;
+	CEditBox	m_ebKarmaDir;
 	CEditBox	m_ebConfigFile;
 
 	//
@@ -70,6 +71,7 @@ protected:
 	void OnBrowseMusic();
 	void OnBrowseMeshes();
 	void OnBrowseAnims();
+	void OnBrowseKarma();
 	void OnBrowseDir(CEditBox& ebPath);
 	void OnBrowseCfgFile();
 	void OnQuickSetup();
