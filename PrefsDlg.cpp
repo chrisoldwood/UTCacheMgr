@@ -30,6 +30,9 @@ CPrefsDlg::CPrefsDlg()
 		CTRL(IDC_DEF_PROFILE,		&m_cbProfiles  )
 		CTRL(IDC_SCAN_ON_START,		&m_ckScanStart )
 		CTRL(IDC_SCAN_ON_SWITCH,	&m_ckScanSwitch)
+		CTRL(IDC_SCAN_TMP_FILES,	&m_ckScanForTmp)
+		CTRL(IDC_SCAN_INDEX,		&m_ckScanIndex )
+		CTRL(IDC_SHOW_ALL,			&m_ckShowAll   )
 	END_CTRL_TABLE
 }
 
@@ -69,6 +72,9 @@ void CPrefsDlg::OnInitDialog()
 	// Initialise scanning defaults.
 	m_ckScanStart.Check(App.m_bScanOnStart);
 	m_ckScanSwitch.Check(App.m_bScanOnSwitch);
+	m_ckScanForTmp.Check(App.m_bScanForTmp);
+	m_ckScanIndex.Check(App.m_bScanIndex);
+	m_ckShowAll.Check(App.m_bShowAllFiles);
 }
 
 /******************************************************************************
@@ -96,6 +102,9 @@ bool CPrefsDlg::OnOk()
 	// Get the scanning defaults.
 	App.m_bScanOnStart  = m_ckScanStart.IsChecked();
 	App.m_bScanOnSwitch = m_ckScanSwitch.IsChecked();
+	App.m_bScanForTmp   = m_ckScanForTmp.IsChecked();
+	App.m_bScanIndex    = m_ckScanIndex.IsChecked();
+	App.m_bShowAllFiles = m_ckShowAll.IsChecked();
 
 	return true;
 }

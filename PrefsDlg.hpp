@@ -34,6 +34,9 @@ protected:
 	CComboBox	m_cbProfiles;
 	CCheckBox	m_ckScanStart;
 	CCheckBox	m_ckScanSwitch;
+	CCheckBox	m_ckScanForTmp;
+	CCheckBox	m_ckScanIndex;
+	CCheckBox	m_ckShowAll;
 
 	//
 	// Message processors.
