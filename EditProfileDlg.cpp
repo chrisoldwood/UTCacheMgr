@@ -296,8 +296,11 @@ void CEditProfileDlg::OnQuickSetup()
 	CPath strBaseDir;
 
 	// Select the base directory.
-	if (!strBaseDir.SelectDir(*this, "Select The UT Base Folder"))
+	if (!strBaseDir.SelectDir(*this, "Select The UT Or UT2003 Base Folder\ne.g. C:\\UnrealTournament"))
 		return;
+
+	// Create the full path to the System folder.
+	CPath strSysDir(strBaseDir, CProfile::DEF_SYSTEM_DIR);
 
 	// Create paths.
 	m_ebCacheDir.Text  (CPath(strBaseDir, CProfile::DEF_CACHE_DIR   ));
@@ -306,7 +309,13 @@ void CEditProfileDlg::OnQuickSetup()
 	m_ebTextureDir.Text(CPath(strBaseDir, CProfile::DEF_TEXTURES_DIR));
 	m_ebSoundDir.Text  (CPath(strBaseDir, CProfile::DEF_SOUNDS_DIR  ));
 	m_ebMusicDir.Text  (CPath(strBaseDir, CProfile::DEF_MUSIC_DIR   ));
-	m_ebConfigFile.Text(CPath(m_ebSystemDir.Text(), CProfile::DEF_CONFIG_FILE));
+	m_ebConfigFile.Text(CPath(strSysDir,  CProfile::DEF_CONFIG_FILE ));
+
+	// Check for UT2003.
+	CPath strUT2003Cfg(strSysDir, CProfile::DEF_2003_CONFIG_FILE);
+
+	if (strUT2003Cfg.Exists())
+		m_ebConfigFile.Text(strUT2003Cfg);
 }
 
 /******************************************************************************
