@@ -27,6 +27,11 @@ public:
 	//
 	CProfileCfgDlg();
 	
+	//
+	// Members.
+	//
+	bool m_bReScan;
+
 protected:
 	//
 	// Controls.

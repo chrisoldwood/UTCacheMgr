@@ -1,11 +1,15 @@
-- ListView icons.
-
-- UT2K3 support (extra folders, version in profile).
-
 - Folder checking (remote paths cause a problem).
 
-- Move UT Settings to Cache menu.
-
-- Fix Static Meshes path.
-
 - Restore log, cleanup up invalid records.
+
+- Better icons for properties dialog.
+
+- New class CIconCtrl (Replace code in file properties dialog).
+
+- Show actual cache file name.
+
+- Find file by (partial) name.
+
+- Restore dialog, add date and sorting options.
+
+- Show cache directory size (files/MB) in status bar.

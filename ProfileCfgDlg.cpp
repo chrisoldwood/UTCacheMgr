@@ -13,6 +13,11 @@
 #include "EditProfileDlg.hpp"
 #include "HelpTopics.h"
 
+#ifdef _DEBUG
+// For memory leak detection.
+#define new DBGCRT_NEW
+#endif
+
 /******************************************************************************
 ** Method:		Default constructor.
 **
@@ -27,6 +32,7 @@
 
 CProfileCfgDlg::CProfileCfgDlg()
 	: CDialog(IDD_PROFILES)
+	, m_bReScan(false)
 {
 	DEFINE_CTRL_TABLE
 		CTRL(IDC_PROFILES,	&m_lbProfiles)
@@ -130,6 +136,10 @@ void CProfileCfgDlg::OnEdit()
 	{
 		// Update profile.
 		*pProfile = Dlg.m_oProfile;
+
+		// Rescan, if the active one.
+		if (pProfile == App.m_pProfile)
+			m_bReScan = true;
 	}
 }
 
@@ -156,13 +166,6 @@ void CProfileCfgDlg::OnRemove()
 	// Get selected profile details.
 	CProfile* pProfile = (CProfile*) m_lbProfiles.ItemPtr(nSel);
 
-	// Check we're not deleting the default.
-	if (pProfile->m_strName == CProfile::DEF_PROFILE_NAME)
-	{
-		AlertMsg("You cannot delete the default profile.");
-		return;
-	}
-
 	// Check we're not deleting the active profile.
 	if (pProfile == App.m_pProfile)
 	{
@@ -170,8 +173,15 @@ void CProfileCfgDlg::OnRemove()
 		return;
 	}
 
+	// Check we're not deleting the default.
+	if (pProfile->m_strName == App.m_strDefProfile)
+	{
+		AlertMsg("You cannot delete the default profile.");
+		return;
+	}
+
 	// Remove from collection.
-	App.m_aoProfiles.Remove(App.m_aoProfiles.Find(pProfile));
+	App.m_aoProfiles.Delete(App.m_aoProfiles.Find(pProfile));
 
 	// Remove from view.
 	m_lbProfiles.Delete(nSel);
