@@ -1486,7 +1486,115 @@ void CAppCmds::OnViewShowAll()
 
 void CAppCmds::OnToolsInstall()
 {
-	App.NotifyMsg("Feature not implemented.");
+	CPath strSrcDir = App.m_pProfile->m_strLastInstall;
+
+	// Get the directory to install from.
+	if (!strSrcDir.SelectDir(App.m_AppWnd, "Select Folder To Install From", strSrcDir))
+		return;
+
+	// If changed, update profiles' default folder.
+	if (strSrcDir != App.m_pProfile->m_strLastInstall)
+	{
+		App.m_pProfile->m_strLastInstall = strSrcDir;
+
+		App.m_nModified |= App.PROFILES;
+	}
+
+	CBusyCursor oCursor;
+
+	// Show the progress dialog.
+	CProgressDlg Dlg;
+
+	Dlg.RunModeless(App.m_AppWnd);
+	Dlg.Title("Scanning Folder");
+	Dlg.UpdateLabel("Searching folder for files...");
+	App.m_AppWnd.Enable(false);
+
+	CFileFinder oFinder;
+	CFileTree   oFiles;
+
+	// Search folder for files.
+	oFinder.Find(strSrcDir, "*.*", true, oFiles);
+
+	CFileTreeIter  oCntIter(oFiles);
+	CFileTreeNode* pNode  = NULL;
+	int            nFiles = 0;
+
+	// Count all files found...
+	while ((pNode = oCntIter.Next()) != NULL)
+		nFiles += pNode->m_oData.m_astrFiles.Size();
+
+	// Nothing to install?
+	if (nFiles == 0)
+	{
+		// Remove progress dialog.
+		App.m_AppWnd.Enable(true);
+		Dlg.Destroy();
+
+		App.NotifyMsg("There are no files to install.");
+		return;
+	}
+
+	// Create errors dialog.
+	CErrorsDlg dlgErrors;
+
+	Dlg.Title("Installing Files");
+	Dlg.InitMeter(nFiles);
+
+	CFileTreeIter oInsIter(oFiles);
+	int           nFile = 0;
+
+	// For all folders...
+	while ((pNode = oInsIter.Next()) != NULL)
+	{
+		// For all files in the folder...
+		for (int i = 0; i < pNode->m_oData.m_astrFiles.Size(); ++i, ++nFile)
+		{
+			CPath   strSrcDir   = pNode->m_oData.m_strPath;
+			CPath   strFileName = pNode->m_oData.m_astrFiles[i];
+			CString strFileExt  = strFileName.FileExt().ToLower();
+
+			dlgErrors.m_astrFiles.Add(strFileName);
+
+			// Not a UT file?
+			if (!CProfile::IsValidType(strFileExt))
+			{
+				Dlg.UpdateLabelAndMeter("Skipping file: " + (CString)strFileName, nFile);
+				dlgErrors.m_astrErrors.Add("Ignored.");
+				continue;
+			}
+
+			Dlg.UpdateLabelAndMeter("Installing file: " + (CString)strFileName, nFile);
+
+			// Get the folder to copy to.
+			char  cType     = App.m_pProfile->GetFileType(strFileExt);
+			CPath strDstDir = App.m_pProfile->GetTypeDir(cType);
+
+			// Create the src and dst full paths.
+			CString	strSrcFile = strSrcDir + strFileName;
+			CString	strDstFile = strDstDir + strFileName;
+
+			// Copy it...
+			if (CFile::Copy(strSrcFile, strDstFile) == 0)
+			{
+				dlgErrors.m_astrErrors.Add(App.FormatError());
+				continue;
+			}
+
+			dlgErrors.m_astrErrors.Add("");
+		}
+	}
+
+	// Remove progress dialog.
+	App.m_AppWnd.Enable(true);
+	Dlg.Destroy();
+
+	// Report any errors.
+	if (dlgErrors.m_astrFiles.Size() > 0)
+	{
+		dlgErrors.m_strTitle = "Install Results";
+		dlgErrors.RunModal(App.m_AppWnd);
+	}
 }
 
 /******************************************************************************
@@ -1511,6 +1619,7 @@ void CAppCmds::OnOptionsProfiles()
 		App.m_AppWnd.PostCommand(ID_CACHE_RESCAN);
 
 	App.BuildProfileMenu();
+
 	UpdateUI();
 }
 
