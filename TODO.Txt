@@ -1,5 +1,7 @@
 - ListView icons.
 
-- UT2K3 support.
+- UT2K3 support (extra folders, version in profile).
 
 - Folder checking (remote paths cause a problem).
+
+- Move UT Settings to Cache menu.
