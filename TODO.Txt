@@ -3,3 +3,11 @@
 - Don't import to cache if file exists in appropariate folders.
 
 - Allow user to choose which profiles when detecting.
+
+- Prefabs folder.
+
+- Uninstall for map packs.
+
+- Support .ucl and .upl system files.
+
+- Add Move/Copy options when installing.
