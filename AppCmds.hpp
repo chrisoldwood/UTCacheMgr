@@ -33,9 +33,11 @@ public:
 	//
 
 	// Cache menu.
-	void OnCacheProfile();
+	void OnCacheProfile(uint nCmdID);
+	void OnCacheProfileDlg();
 	void OnCacheRescan();
 	void OnCacheRestore();
+	void OnCacheImport();
 	void OnCacheUTConfig();
 	void OnCacheProperties();
 	void OnCacheExit();
@@ -58,6 +60,9 @@ public:
 	void OnViewSortByCache();
 	void OnViewSortByColumn(uint nColumn, CSortColumns::Dir eDefDir);
 	void OnViewShowAll();
+
+	// Tools menu.
+	void OnToolsInstall();
 
 	// Options menu.
 	void OnOptionsProfiles();
@@ -84,6 +89,11 @@ public:
 	void OnUIViewSortBySize();
 	void OnUIViewSortByStatus();
 	void OnUIViewSortByCache();
+
+	//
+	// Command property methods.
+	//
+	virtual CString CmdHintStr(uint iCmdID) const;
 
 protected:
 	//

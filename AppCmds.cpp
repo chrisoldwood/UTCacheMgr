@@ -17,9 +17,10 @@
 #include "PrefsDlg.hpp"
 #include "ProgressDlg.hpp"
 #include "UTConfigDlg.hpp"
-#include "RestoreDlg.hpp"
+#include "SelFilesDlg.hpp"
 #include "ErrorsDlg.hpp"
 #include "FilePropsDlg.hpp"
+#include "HelpTopics.h"
 
 /******************************************************************************
 ** Method:		Constructor.
@@ -38,9 +39,12 @@ CAppCmds::CAppCmds()
 	// Define the command table.
 	DEFINE_CMD_TABLE
 		// File menu.
-		CMD_ENTRY(ID_CACHE_PROFILE,		OnCacheProfile,		NULL,					 3)
+		CMD_RANGE(ID_CACHE_FIRST_PROFILE, ID_CACHE_LAST_PROFILE,
+										OnCacheProfile,		NULL,					-1)
+		CMD_ENTRY(ID_CACHE_PROFILE,		OnCacheProfileDlg,	NULL,					 3)
 		CMD_ENTRY(ID_CACHE_RESCAN,		OnCacheRescan,		NULL,					 0)
 		CMD_ENTRY(ID_CACHE_RESTORE,		OnCacheRestore,		OnUICacheRestore,		-1)
+		CMD_ENTRY(ID_CACHE_IMPORT,		OnCacheImport,		NULL,					-1)
 		CMD_ENTRY(ID_CACHE_UT_CONFIG,	OnCacheUTConfig,	NULL,					-1)
 		CMD_ENTRY(ID_CACHE_PROPERTIES,	OnCacheProperties,	OnUICacheProperties,	-1)
 		CMD_ENTRY(ID_CACHE_EXIT,		OnCacheExit,		NULL,					-1)
@@ -60,6 +64,8 @@ CAppCmds::CAppCmds()
 		CMD_ENTRY(ID_VIEW_SORT_STATUS,	OnViewSortByStatus,	OnUIViewSortByStatus,	-1)
 		CMD_ENTRY(ID_VIEW_SORT_CACHE,	OnViewSortByCache,	OnUIViewSortByCache,	-1)
 		CMD_ENTRY(ID_VIEW_SHOW_ALL,		OnViewShowAll,		OnUIViewShowAll,		-1)
+		// Tools menu.
+		CMD_ENTRY(ID_TOOLS_INSTALL,		OnToolsInstall,		NULL,					-1)
 		// Options menu.
 		CMD_ENTRY(ID_OPTIONS_PROFILES,	OnOptionsProfiles,	NULL,					-1)
 		CMD_ENTRY(ID_OPTIONS_PREFS,		OnOptionsPrefs,		NULL,					-1)
@@ -88,7 +94,47 @@ CAppCmds::~CAppCmds()
 /******************************************************************************
 ** Method:		OnCacheProfile()
 **
-** Description:	Select the cache profile to use.
+** Description:	Cache profile selected from the Profile menu.
+**
+** Parameters:	nCmdID		The menu ID of the profile.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CAppCmds::OnCacheProfile(uint nCmdID)
+{
+	ASSERT(App.m_pProfile != NULL);
+
+	// Convert ID to profile index.
+	uint nProfile = nCmdID - ID_CACHE_FIRST_PROFILE;
+
+	// New profile selected?
+	if (App.m_aoProfiles[nProfile] != App.m_pProfile)
+	{
+		// Switch profiles...
+		App.m_pProfile = App.m_aoProfiles[nProfile];
+
+		// Reset the scan details.
+		App.m_oCache.Truncate();
+
+		// Update UI.
+		App.m_AppWnd.UpdateTitle();
+		App.m_AppWnd.m_AppDlg.RefreshView();
+		App.UpdateCacheStatus();
+		UpdateUI();
+
+		// Scan on profile change?
+		if (App.m_bScanOnSwitch)
+			App.m_AppWnd.PostCommand(ID_CACHE_RESCAN);
+	}
+}
+
+/******************************************************************************
+** Method:		OnCacheProfileDlg()
+**
+** Description:	Select the cache profile using the dialog.
 **
 ** Parameters:	None.
 **
@@ -97,7 +143,7 @@ CAppCmds::~CAppCmds()
 *******************************************************************************
 */
 
-void CAppCmds::OnCacheProfile()
+void CAppCmds::OnCacheProfileDlg()
 {
 	ASSERT(App.m_pProfile != NULL);
 
@@ -121,6 +167,7 @@ void CAppCmds::OnCacheProfile()
 			// Update UI.
 			App.m_AppWnd.UpdateTitle();
 			App.m_AppWnd.m_AppDlg.RefreshView();
+			App.UpdateCacheStatus();
 			UpdateUI();
 
 			// Scan on profile change?
@@ -168,10 +215,6 @@ void CAppCmds::OnCacheRescan()
 
 	// Reset the scan details.
 	App.m_oCache.Truncate();
-
-	// Reset cache size counters.
-	uint   nCacheFiles = 0;
-	double dCacheSize  = 0.0;
 
 	// Show the progress dialog.
 	CProgressDlg Dlg;
@@ -269,10 +312,6 @@ void CAppCmds::OnCacheRescan()
 		oRow[CCache::STATUS]         = (bPinned) ? PIN_FILE : (bExists) ? OLD_FILE : NEW_FILE;
 
 		App.m_oCache.InsertRow(oRow);
-
-		// Update cache size counters.
-		nCacheFiles++;
-		dCacheSize += oInfo.st_size;
 	}
 
 	// Update UI.
@@ -355,12 +394,9 @@ void CAppCmds::OnCacheRescan()
 		}
 	}
 
-	// Format default status bar message.
-	App.m_strDefStatus.Format("Total: %d Files - %.2f MB", nCacheFiles, dCacheSize / (1024.0*1024.0));
-
 	// Update UI.
+	App.UpdateCacheStatus();
 	UpdateUI();
-	App.m_AppWnd.m_StatusBar.Hint(App.m_strDefStatus);
 }
 
 /******************************************************************************
@@ -494,12 +530,14 @@ void CAppCmds::OnCacheRestore()
 		return;
 	}
 
-	CRestoreDlg oRestoreDlg;
+	CSelFilesDlg oSelFilesDlg;
 
-	oRestoreDlg.m_pTable = &oRestore;
+	oSelFilesDlg.m_pTable   = &oRestore;
+	oSelFilesDlg.m_strTitle = "Restore Files To Cache";
+	oSelFilesDlg.m_dwHelpID = IDH_RESTOREDLG;
 
 	// Get files to restore from user.
-	if (oRestoreDlg.RunModal(App.m_AppWnd) != IDOK)
+	if (oSelFilesDlg.RunModal(App.m_AppWnd) != IDOK)
 		return;
 
 	int nFiles = oRestore.RowCount();
@@ -561,6 +599,210 @@ void CAppCmds::OnCacheRestore()
 	}
 
 	// Rescan cache to pick up restored files.
+	OnCacheRescan();
+	UpdateUI();
+}
+
+/******************************************************************************
+** Method:		OnCacheImport()
+**
+** Description:	Import files into the cache from another cache folder.
+**
+** Parameters:	None.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CAppCmds::OnCacheImport()
+{
+	CPath strSrcDir = App.m_pProfile->m_strLastImport;
+
+	// Get the directory to import from.
+	if (!strSrcDir.SelectDir(App.m_AppWnd, "Select Folder To Import From", strSrcDir))
+		return;
+
+	// If changed, update profiles' default folder.
+	if (strSrcDir != App.m_pProfile->m_strLastImport)
+	{
+		App.m_pProfile->m_strLastImport = strSrcDir;
+
+		App.m_nModified |= App.PROFILES;
+	}
+
+	// Get cache + index file full paths.
+	CPath strSrcCacheDir  = strSrcDir;
+	CPath strSrcCacheFile = strSrcCacheDir + App.m_strCacheIndex;
+
+	// Check the cache index file exists.
+	if (!strSrcCacheFile.Exists())
+	{
+		App.AlertMsg("Failed to access the cache index file:\n\n%s", strSrcCacheFile);
+		return;
+	}
+
+	CBusyCursor oCursor;
+
+	// Tmp table to store files we can import.
+	CCache oImport(App.m_oMDB);
+
+	// Show the progress dialog.
+	CProgressDlg Dlg;
+
+	Dlg.RunModeless(App.m_AppWnd);
+	Dlg.Title("Scanning Cache");
+	Dlg.UpdateLabel("Searching cache for files...");
+	App.m_AppWnd.Enable(false);
+
+	CString	strFindMask;
+
+	// Create 'find files' mask.
+	strFindMask.Format("*.%s", App.m_strCacheExt);
+
+	CFileFinder oFinder;
+	CFileTree	oFiles;
+
+	// Search cache for files.
+	oFinder.Find(strSrcCacheDir, strFindMask, false, oFiles);
+
+	CStrArray& astrFiles = oFiles.Root()->m_oData.m_astrFiles;
+	CIniFile   oSrcIdxFile(strSrcCacheFile);
+
+	Dlg.InitMeter(astrFiles.Size());
+
+	// For all files found...
+	for (int i = 0; i < astrFiles.Size(); ++i)
+	{
+		// Get file name, index key and real name.
+		CPath   strCacheName = astrFiles[i];
+		CString strIndexName = strCacheName.FileTitle();
+		CPath   strRealName  = oSrcIdxFile.ReadString("Cache", strIndexName, "");
+
+		// Workaround for UT2003 v2166/86 patch bug which appends a "-1"
+		// after the 32 char file name, but the index entry remains the same.
+		if ( (strRealName.Empty()) && (strIndexName.Length() > 32) )
+		{
+			strIndexName = strIndexName.Left(32);
+			strRealName  = oSrcIdxFile.ReadString("Cache", strIndexName, "");
+		}
+
+		// File not in index?
+		if (strRealName.Empty())
+			continue;
+
+		Dlg.UpdateLabelAndMeter("Processing file: " + (CString)strRealName, i);
+
+		// File already in cache?
+		if (App.m_oCache.Exists(CWhereCmp(CCache::CACHE_FILENAME, CWhereCmp::EQUALS, strCacheName)))
+			continue;
+
+		// Get file type from extension.
+		CString strExt = strRealName.FileExt().ToLower();
+		char    cType  = CProfile::GetFileType(strExt);
+
+		// Unknown file type?
+		if (cType == NULL)
+			continue;
+
+		// Get other file details.
+		CPath strFile = strSrcCacheDir + strCacheName;
+		struct _stat oInfo;
+
+		if (!CFile::QueryInfo(strFile, oInfo))
+			continue;
+
+		// Add file details to the table.
+		CRow& oRow = oImport.CreateRow();
+
+		oRow[CCache::CACHE_FILENAME] = strCacheName;
+		oRow[CCache::INDEX_KEY]      = strIndexName;
+		oRow[CCache::REAL_FILENAME]  = strRealName;
+		oRow[CCache::FILE_TYPE]      = cType;
+		oRow[CCache::FILE_DATE]      = oInfo.st_mtime;
+		oRow[CCache::FILE_SIZE]      = (int)oInfo.st_size;
+		oRow[CCache::STATUS]         = NEW_FILE;
+
+		oImport.InsertRow(oRow);
+	}
+
+	// Remove progress dialog.
+	App.m_AppWnd.Enable(true);
+	Dlg.Destroy();
+
+	// Nothing to import?
+	if (oImport.RowCount() == 0)
+	{
+		App.NotifyMsg("There are no files that can be imported.");
+		return;
+	}
+
+	CSelFilesDlg oSelFilesDlg;
+
+	oSelFilesDlg.m_pTable   = &oImport;
+	oSelFilesDlg.m_strTitle = "Import Files Into Cache";
+	oSelFilesDlg.m_dwHelpID = IDH_IMPORTDLG;
+
+	// Get files to import from user.
+	if (oSelFilesDlg.RunModal(App.m_AppWnd) != IDOK)
+		return;
+
+	int nFiles = oImport.RowCount();
+
+	// No files selected?
+	if (nFiles == 0)
+		return;
+
+	// Get cache + index file full paths.
+	CPath    strDstCacheDir  = App.m_pProfile->m_strCacheDir;
+	CPath    strDstCacheFile = strDstCacheDir + App.m_strCacheIndex;
+	CIniFile oDstIdxFile(strDstCacheFile);
+
+	// Show the progress dialog.
+	Dlg.RunModeless(App.m_AppWnd);
+	Dlg.Title("Importing Files");
+	Dlg.InitMeter(nFiles);
+
+	// Create errors dialog.
+	CErrorsDlg dlgErrors;
+
+	// For all files to import...
+	for (i = 0; i < nFiles; ++i)
+	{
+		CRow& oRow         = oImport[i];
+		CPath strRealName  = oRow[CCache::REAL_FILENAME];
+		CPath strCacheName = oRow[CCache::CACHE_FILENAME];
+
+		Dlg.UpdateLabelAndMeter("Importing file: " + (CString)strRealName, i);
+
+		// Create the src and dst full paths.
+		CString	strSrcFile = strSrcCacheDir + strCacheName;
+		CString	strDstFile = strDstCacheDir + strCacheName;
+
+		// Copy it...
+		if (!CFile::Copy(strSrcFile, strDstFile))
+		{
+			dlgErrors.m_astrFiles.Add(oRow[CCache::REAL_FILENAME].GetString());
+			dlgErrors.m_astrErrors.Add(App.FormatError());
+			continue;
+		}
+
+		// Add to index.
+		oDstIdxFile.WriteString("Cache", oRow[CCache::INDEX_KEY], strRealName);
+	}
+
+	// Remove progress dialog.
+	App.m_AppWnd.Enable(true);
+	Dlg.Destroy();
+
+	// Report any errors.
+	if (dlgErrors.m_astrFiles.Size() > 0)
+	{
+		dlgErrors.m_strTitle = "Import Errors";
+		dlgErrors.RunModal(App.m_AppWnd);
+	}
+
+	// Rescan cache to pick up imported files.
 	OnCacheRescan();
 	UpdateUI();
 }
@@ -724,6 +966,7 @@ void CAppCmds::OnEditPin()
 
 	// Update UI.
 	App.m_AppWnd.m_AppDlg.RefreshView();
+	App.UpdateCacheStatus();
 	UpdateUI();
 }
 
@@ -826,6 +1069,7 @@ void CAppCmds::OnEditMove()
 
 	// Update UI.
 	App.m_AppWnd.m_AppDlg.RefreshView();
+	App.UpdateCacheStatus();
 	UpdateUI();
 }
 
@@ -925,6 +1169,7 @@ void CAppCmds::OnEditCopy()
 
 	// Update UI.
 	App.m_AppWnd.m_AppDlg.RefreshView();
+	App.UpdateCacheStatus();
 	UpdateUI();
 }
 
@@ -998,6 +1243,7 @@ void CAppCmds::OnEditDelete()
 
 	// Update UI.
 	App.m_AppWnd.m_AppDlg.RefreshView();
+	App.UpdateCacheStatus();
 	UpdateUI();
 }
 
@@ -1033,6 +1279,14 @@ void CAppCmds::OnEditCopyTo()
 	// Get the directory to copy to.
 	if (!strDstDir.SelectDir(App.m_AppWnd, "Select Folder To Copy To", strDstDir))
 		return;
+
+	// If changed, update profiles' default folder.
+	if (strDstDir != App.m_pProfile->m_strLastCopyTo)
+	{
+		App.m_pProfile->m_strLastCopyTo = strDstDir;
+
+		App.m_nModified |= App.PROFILES;
+	}
 
 	// Get cache + index file full paths.
 	CPath    strCacheDir  = App.m_pProfile->m_strCacheDir;
@@ -1086,9 +1340,6 @@ void CAppCmds::OnEditCopyTo()
 		dlgErrors.m_strTitle = "Copy Errors";
 		dlgErrors.RunModal(App.m_AppWnd);
 	}
-
-	// Save folder as default.
-	App.m_pProfile->m_strLastCopyTo = strDstDir;
 
 	UpdateUI();
 }
@@ -1222,6 +1473,23 @@ void CAppCmds::OnViewShowAll()
 }
 
 /******************************************************************************
+** Method:		OnToolsInstall()
+**
+** Description:	Copy file sets such as map packs into the profile folders.
+**
+** Parameters:	None.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CAppCmds::OnToolsInstall()
+{
+	App.NotifyMsg("Feature not implemented.");
+}
+
+/******************************************************************************
 ** Method:		OnOptionsProfiles()
 **
 ** Description:	Show the profiles editing dialog.
@@ -1242,6 +1510,7 @@ void CAppCmds::OnOptionsProfiles()
 	if (Dlg.m_bReScan)
 		App.m_AppWnd.PostCommand(ID_CACHE_RESCAN);
 
+	App.BuildProfileMenu();
 	UpdateUI();
 }
 
@@ -1461,6 +1730,28 @@ void CAppCmds::OnUIViewSortByCache()
 	CAppDlg& oAppDlg = App.m_AppWnd.m_AppDlg;
 
 	oMenu.CheckCmd(ID_VIEW_SORT_CACHE, (oAppDlg.m_nSortColumn == CCache::CACHE_FILENAME));
+}
+
+/******************************************************************************
+** Method:		CmdHintStr()
+**
+** Description:	Get the status bar hint for the command.
+**
+** Parameters:	iCmdID		The command ID.
+**
+** Returns:		The hint string.
+**
+*******************************************************************************
+*/
+
+CString CAppCmds::CmdHintStr(uint iCmdID) const
+{
+	// Remap all Cache profiles to first ID.
+	if ( (iCmdID >= ID_CACHE_FIRST_PROFILE) && (iCmdID <= ID_CACHE_LAST_PROFILE) )
+		iCmdID = ID_CACHE_FIRST_PROFILE;
+
+	// Forward to base class.
+	return CCmdControl::CmdHintStr(iCmdID);
 }
 
 /******************************************************************************
