@@ -66,6 +66,7 @@ protected:
 	// Internal methods.
 	//
 	CRow& GetRow(int nRow);
+	int   IconIndex(char cType);
 };
 
 /******************************************************************************

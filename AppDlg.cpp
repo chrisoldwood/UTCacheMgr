@@ -62,6 +62,9 @@ void CAppDlg::OnInitDialog()
 	m_lvGrid.FullRowSelect(true);
 //	m_lvGrid.GridLines(true);
 
+	// Set the ListView icons.
+	m_lvGrid.ImageList(LVSIL_SMALL, IDB_LIST_ICONS, 16, RGB(255, 0, 255));
+
 	// Create grid columns.
 	m_lvGrid.InsertColumn(FILE_COLUMN,   "File",   200, LVCFMT_LEFT  );
 	m_lvGrid.InsertColumn(TYPE_COLUMN,   "Type",    50, LVCFMT_LEFT  );
@@ -103,11 +106,12 @@ void CAppDlg::RefreshView()
 			int n = m_lvGrid.ItemCount();
 
 			// Add to the grid.
-			m_lvGrid.InsertItem(n,                oRow[CCache::REAL_FILENAME], &oRow);
+			m_lvGrid.InsertItem(n,                oRow[CCache::REAL_FILENAME], IconIndex(oRow[CCache::FILE_TYPE]));
 			m_lvGrid.ItemText  (n, TYPE_COLUMN,   App.FormatType(oRow[CCache::FILE_TYPE]));
 			m_lvGrid.ItemText  (n, DATE_COLUMN,   oRow[CCache::FILE_DATE].Format());
 			m_lvGrid.ItemText  (n, SIZE_COLUMN,   App.FormatSize(oRow[CCache::FILE_SIZE]));
 			m_lvGrid.ItemText  (n, STATUS_COLUMN, App.FormatStatus(oRow[CCache::STATUS]));
+			m_lvGrid.ItemPtr   (n,                &oRow);
 		}
 	}
 }
@@ -217,9 +221,9 @@ LRESULT CAppDlg::OnGridRightClick(NMHDR&)
 		bool bReadOnly = App.m_pProfile->m_bReadOnly;
 
 		// Enable/Disable relevant menu commands.
-		oMenu.EnableCmd(ID_EDIT_MOVE,       !bReadOnly);
-		oMenu.EnableCmd(ID_EDIT_DELETE,     !bReadOnly);
-		oMenu.EnableCmd(ID_VIEW_PROPERTIES, false);
+		oMenu.EnableCmd(ID_EDIT_MOVE,        !bReadOnly);
+		oMenu.EnableCmd(ID_EDIT_DELETE,      !bReadOnly);
+		oMenu.EnableCmd(ID_CACHE_PROPERTIES, true);
 
 		// Get co-ordinates of mouse click.
 		const MSG& oCurrMsg = App.m_MainThread.CurrentMsg();
@@ -263,4 +267,34 @@ LRESULT CAppDlg::OnGridClickColumn(NMHDR& oHdr)
 	}
 
 	return 0;
+}
+
+/******************************************************************************
+** Method:		IconIndex()
+**
+** Description:	Gets the index of the icon for the given file type.
+**
+** Parameters:	cType	The file type.
+**
+** Returns:		The icon index.
+**
+*******************************************************************************
+*/
+
+int CAppDlg::IconIndex(char cType)
+{
+	switch (cType)
+	{
+		case SYSTEM_FILE:	return 0;
+		case MAP_FILE:		return 1;
+		case TEXTURE_FILE:	return 2;
+		case SOUND_FILE:	return 3;
+		case MUSIC_FILE:	return 4;
+		case MESH_FILE:		return 5;
+		case ANIM_FILE:		return 6;
+	}
+
+	ASSERT(false);
+
+	return -1;
 }
