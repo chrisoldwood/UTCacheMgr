@@ -61,6 +61,7 @@ public:
 	CPath	m_strMusicDir;		// Music directory.
 	CPath	m_strMeshDir;		// StaticMeshes directory.
 	CPath	m_strAnimDir;		// Animations directory.
+	CPath	m_strKarmaDir;		// Karma Data directory.
 
 	CPath	m_strConfigFile;	// UT Config file.
 
@@ -100,6 +101,7 @@ public:
 	// UT2003 specific settings.
 	static const char* DEF_MESH_DIR;
 	static const char* DEF_ANIM_DIR;
+	static const char* DEF_KARMA_DIR;
 	static const char* DEF_2003_CONFIG_FILE;
 
 	// Tactical Ops specific settings.

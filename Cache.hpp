@@ -27,6 +27,7 @@ const char SOUND_FILE   = 'A';
 const char MUSIC_FILE   = 'M';
 const char MESH_FILE    = 'S';
 const char ANIM_FILE    = 'K';
+const char KARMA_FILE   = 'D';
 
 // File status.
 const char NEW_FILE = 'N';

@@ -36,6 +36,7 @@ const char* CProfile::DEF_CACHE_TMP_MASK = "????.tmp";
 
 const char* CProfile::DEF_MESH_DIR         = "StaticMeshes";
 const char* CProfile::DEF_ANIM_DIR         = "Animations";
+const char* CProfile::DEF_KARMA_DIR        = "KarmaData";
 const char* CProfile::DEF_2003_CONFIG_FILE = "UT2003.ini";
 
 const char* CProfile::DEF_TO_CONFIG_FILE   = "TacticalOps.ini";
@@ -91,11 +92,12 @@ CProfile::~CProfile()
 
 bool CProfile::IsValidType(const CString& strExt)
 {
-	return ( (strExt == ".u")   || (strExt == ".int")
+	return ( (strExt == ".u"  ) || (strExt == ".int")
 		  || (strExt == ".unr") || (strExt == ".ut2")
 		  || (strExt == ".utx") || (strExt == ".uax")
-		  || (strExt == ".umx") || (strExt == ".usx")
-		  || (strExt == ".ukx") );
+		  || (strExt == ".umx") || (strExt == ".ogg")
+		  || (strExt == ".usx") || (strExt == ".ukx")
+		  || (strExt == ".ka" )  );
 }
 
 /******************************************************************************
@@ -128,7 +130,7 @@ char CProfile::GetFileType(const CString& strExt)
 	{
 		return SOUND_FILE;
 	}
-	else if (strExt == ".umx")
+	else if ((strExt == ".umx") || (strExt == ".ogg"))
 	{
 		return MUSIC_FILE;
 	}
@@ -139,6 +141,10 @@ char CProfile::GetFileType(const CString& strExt)
 	else if (strExt == ".ukx")
 	{
 		return ANIM_FILE;
+	}
+	else if (strExt == ".ka")
+	{
+		return KARMA_FILE;
 	}
 
 	ASSERT_FALSE();
@@ -169,6 +175,7 @@ CPath CProfile::GetTypeDir(char cType)
 		case MUSIC_FILE:	return m_strMusicDir;
 		case MESH_FILE:		return m_strMeshDir;
 		case ANIM_FILE:		return m_strAnimDir;
+		case KARMA_FILE:	return m_strKarmaDir;
 	}
 
 	ASSERT_FALSE();
@@ -279,6 +286,7 @@ CProfile* CProfile::DetectUT2003()
 	pProfile->m_strMusicDir   = CPath(strBaseDir, DEF_MUSIC_DIR   );
 	pProfile->m_strMeshDir    = CPath(strBaseDir, DEF_MESH_DIR    );
 	pProfile->m_strAnimDir    = CPath(strBaseDir, DEF_ANIM_DIR    );
+	pProfile->m_strKarmaDir   = CPath(strBaseDir, DEF_KARMA_DIR   );
 	pProfile->m_strConfigFile = CPath(pProfile->m_strSystemDir, DEF_2003_CONFIG_FILE);
 
 	return pProfile;
