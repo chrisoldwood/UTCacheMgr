@@ -5,3 +5,7 @@
 - Folder checking (remote paths cause a problem).
 
 - Move UT Settings to Cache menu.
+
+- Fix Static Meshes path.
+
+- Restore log, cleanup up invalid records.
