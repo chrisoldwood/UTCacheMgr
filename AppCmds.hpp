@@ -35,15 +35,18 @@ public:
 	// Cache menu.
 	void OnCacheProfile();
 	void OnCacheRescan();
+	void OnCacheRestore();
 	void OnCacheExit();
 
 	// Edit menu.
+	void OnEditPin();
 	void OnEditMove();
 	void OnEditCopy();
 	void OnEditDelete();
 	void OnEditCopyTo();
 
 	// View menu.
+	void OnViewSelectNew();
 	void OnViewSelectAll();
 	void OnViewSortByName();
 	void OnViewSortByType();
@@ -64,15 +67,17 @@ public:
 	//
 	// UI handlers.
 	//
-
-	//
-	// Command property methods.
-	//
+	void OnUIViewShowAll();
+	void OnUIViewSortByName();
+	void OnUIViewSortByType();
+	void OnUIViewSortByDate();
+	void OnUIViewSortBySize();
 
 protected:
 	//
-	// Members.
+	// Internal methods.
 	//
+	void LogEdits(CResultSet& oRS);
 };
 
 /******************************************************************************

@@ -17,6 +17,7 @@
 #include "PrefsDlg.hpp"
 #include "ProgressDlg.hpp"
 #include "UTConfigDlg.hpp"
+#include "RestoreDlg.hpp"
 
 /******************************************************************************
 ** Method:		Constructor.
@@ -35,28 +36,31 @@ CAppCmds::CAppCmds()
 	// Define the command table.
 	DEFINE_CMD_TABLE
 		// File menu.
-		CMD_ENTRY(ID_CACHE_PROFILE,		OnCacheProfile,		NULL,	 3)
-		CMD_ENTRY(ID_CACHE_RESCAN,		OnCacheRescan,		NULL,	 0)
-		CMD_ENTRY(ID_CACHE_EXIT,		OnCacheExit,		NULL,	-1)
+		CMD_ENTRY(ID_CACHE_PROFILE,		OnCacheProfile,		NULL,				 3)
+		CMD_ENTRY(ID_CACHE_RESCAN,		OnCacheRescan,		NULL,				 0)
+		CMD_ENTRY(ID_CACHE_RESTORE,		OnCacheRestore,		NULL,				 0)
+		CMD_ENTRY(ID_CACHE_EXIT,		OnCacheExit,		NULL,				-1)
 		// Edit menu.
-		CMD_ENTRY(ID_EDIT_MOVE,			OnEditMove,			NULL,	 5)
-		CMD_ENTRY(ID_EDIT_COPY,			OnEditCopy,			NULL,	 6)
-		CMD_ENTRY(ID_EDIT_DELETE,		OnEditDelete,		NULL,	 7)
-		CMD_ENTRY(ID_EDIT_COPY_TO,		OnEditCopyTo,		NULL,	 9)
+		CMD_ENTRY(ID_EDIT_PIN,			OnEditPin,			NULL,				-1)
+		CMD_ENTRY(ID_EDIT_MOVE,			OnEditMove,			NULL,				 5)
+		CMD_ENTRY(ID_EDIT_COPY,			OnEditCopy,			NULL,				 6)
+		CMD_ENTRY(ID_EDIT_DELETE,		OnEditDelete,		NULL,				 7)
+		CMD_ENTRY(ID_EDIT_COPY_TO,		OnEditCopyTo,		NULL,				 9)
 		// View menu.
-		CMD_ENTRY(ID_VIEW_SELECT_ALL,	OnViewSelectAll,	NULL,	-1)
-		CMD_ENTRY(ID_VIEW_SORT_NAME,	OnViewSortByName,	NULL,	-1)
-		CMD_ENTRY(ID_VIEW_SORT_TYPE,	OnViewSortByType,	NULL,	-1)
-		CMD_ENTRY(ID_VIEW_SORT_DATE,	OnViewSortByDate,	NULL,	-1)
-		CMD_ENTRY(ID_VIEW_SORT_SIZE,	OnViewSortBySize,	NULL,	-1)
-		CMD_ENTRY(ID_VIEW_SHOW_ALL,		OnViewShowAll,		NULL,	-1)
+		CMD_ENTRY(ID_VIEW_SELECT_NEW,	OnViewSelectNew,	NULL,				-1)
+		CMD_ENTRY(ID_VIEW_SELECT_ALL,	OnViewSelectAll,	NULL,				-1)
+		CMD_ENTRY(ID_VIEW_SORT_NAME,	OnViewSortByName,	OnUIViewSortByName,	-1)
+		CMD_ENTRY(ID_VIEW_SORT_TYPE,	OnViewSortByType,	OnUIViewSortByType,	-1)
+		CMD_ENTRY(ID_VIEW_SORT_DATE,	OnViewSortByDate,	OnUIViewSortByDate,	-1)
+		CMD_ENTRY(ID_VIEW_SORT_SIZE,	OnViewSortBySize,	OnUIViewSortBySize,	-1)
+		CMD_ENTRY(ID_VIEW_SHOW_ALL,		OnViewShowAll,		OnUIViewShowAll,	-1)
 		// Options menu.
-		CMD_ENTRY(ID_OPTIONS_PROFILES,	OnOptionsProfiles,	NULL,	-1)
-		CMD_ENTRY(ID_OPTIONS_PREFS,		OnOptionsPrefs,		NULL,	-1)
-		CMD_ENTRY(ID_OPTIONS_UT_CONFIG,	OnOptionsUTConfig,	NULL,	-1)
+		CMD_ENTRY(ID_OPTIONS_PROFILES,	OnOptionsProfiles,	NULL,				-1)
+		CMD_ENTRY(ID_OPTIONS_PREFS,		OnOptionsPrefs,		NULL,				-1)
+		CMD_ENTRY(ID_OPTIONS_UT_CONFIG,	OnOptionsUTConfig,	NULL,				-1)
 		// Help menu.
-		CMD_ENTRY(ID_HELP_CONTENTS,		OnHelpContents,		NULL,	 1)
-		CMD_ENTRY(ID_HELP_ABOUT,		OnHelpAbout,		NULL,	-1)
+		CMD_ENTRY(ID_HELP_CONTENTS,		OnHelpContents,		NULL,				 1)
+		CMD_ENTRY(ID_HELP_ABOUT,		OnHelpAbout,		NULL,				-1)
 	END_CMD_TABLE
 }
 
@@ -193,61 +197,38 @@ void CAppCmds::OnCacheRescan()
 		CString strIndexName = strCacheName.FileTitle();
 		CPath   strRealName  = oIdxFile.ReadString("Cache", strIndexName, "");
 
-		Dlg.UpdateLabelAndMeter("Processing file: " + (CString)strRealName, i);
-
-		// File in index?
+		// File not in index?
 		if (strRealName.Length() == 0)
 		{
 			nIndexErrs++;
 			continue;
 		}
 
-		// Get file extension in lowercase.
-		CString strExt = strRealName.FileExt().ToLower();
-		char    cType  = '\0';
-		CPath   strUTDir;
+		Dlg.UpdateLabelAndMeter("Processing file: " + (CString)strRealName, i);
 
-		// Determine file type and relevant UT folder.
-		if ((strExt == ".u") || (strExt == ".int"))
-		{
-			cType  = SYSTEM_FILE;
-			strUTDir = App.m_pProfile->m_strSystemDir;
-		}
-		else if (strExt == ".unr")
-		{
-			cType = MAP_FILE;
-			strUTDir = App.m_pProfile->m_strMapDir;
-		}
-		else if (strExt == ".utx")
-		{
-			cType = TEXTURE_FILE;
-			strUTDir = App.m_pProfile->m_strTextureDir;
-		}
-		else if (strExt == ".uax")
-		{
-			cType = SOUND_FILE;
-			strUTDir = App.m_pProfile->m_strSoundDir;
-		}
-		else if (strExt == ".umx")
-		{
-			cType = MUSIC_FILE;
-			strUTDir = App.m_pProfile->m_strMusicDir;
-		}
-		else
+		// Get file type from extension.
+		CString strExt = strRealName.FileExt().ToLower();
+		char    cType  = App.m_pProfile->GetFileType(strExt);
+
+		// Unknown file type?
+		if (cType == NULL)
 		{
 			nTypeErrs++;
 			continue;
 		}
 
-		CPath strUTFile = strUTDir + strRealName;
-
 		// File already in relevant UT folder?
-		bool bExists = strUTFile.Exists();
+		CPath strUTDir  = App.m_pProfile->GetTypeDir(cType);
+		CPath strUTFile = strUTDir + strRealName;
+		bool  bExists   = strUTFile.Exists();
 
+		// File pinned in cache?
+		bool bPinned = (App.m_astrPinned.Find(strRealName, false) != -1);
+
+		// Get other file details.
 		CPath strFile = strCacheDir + strCacheName;
 		struct _stat oInfo;
 
-		// Get other file details.
 		if (!CFile::QueryInfo(strFile, oInfo))
 		{
 			nInfoErrs++;
@@ -263,7 +244,7 @@ void CAppCmds::OnCacheRescan()
 		oRow[CCache::FILE_TYPE]      = cType;
 		oRow[CCache::FILE_DATE]      = oInfo.st_ctime;
 		oRow[CCache::FILE_SIZE]      = (int)oInfo.st_size;
-		oRow[CCache::STATUS]         = (bExists) ? OLD_FILE : NEW_FILE;
+		oRow[CCache::STATUS]         = (bPinned) ? PIN_FILE : (bExists) ? OLD_FILE : NEW_FILE;
 
 		App.m_oCache.InsertRow(oRow);
 	}
@@ -316,7 +297,7 @@ void CAppCmds::OnCacheRescan()
 		}
 	}
 
-	// Search index old entries?
+	// Search index for old entries?
 	if (App.m_bScanIndex)
 	{
 		CStrArray astrKeys, astrValues;
@@ -347,6 +328,187 @@ void CAppCmds::OnCacheRescan()
 }
 
 /******************************************************************************
+** Method:		OnCacheRestore()
+**
+** Description:	Restore files to the cache which were previously extracted.
+**
+** Parameters:	None.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CAppCmds::OnCacheRestore()
+{
+	ASSERT(App.m_pProfile != NULL);
+
+	CBusyCursor oCursor;
+
+	// Tmp table to store files we can restore.
+	CCache oRestore(App.m_oMDB);
+
+	try
+	{
+		// Get logfile path.
+		CPath   strLogFile(CPath::AppDir(), "UTCacheMgr.log");
+		CFile   fLogFile;
+
+		// Logfile not created yet?
+		if (!strLogFile.Exists())
+			return;
+
+		fLogFile.Open(strLogFile, CFile::ReadOnly);
+
+		// Show the progress dialog.
+		CProgressDlg Dlg;
+
+		Dlg.RunModeless(App.m_AppWnd);
+		Dlg.Title("Loading Restore Log");
+		Dlg.InitMeter(CFile::Size(strLogFile));
+
+		// For all lines.
+		while (!fLogFile.IsEOF())
+		{
+			CString strLine = fLogFile.ReadLine();
+
+			// Ignore blank and commented lines.
+			if ( (strLine.Empty()) || (strLine[0] == '#') )
+				continue;
+
+			CStrArray astrFields;
+
+			// Split line into separate fields.
+			// NB: Fields are RealFileName, CacheFileName, Size.
+			if (strLine.Split(",", astrFields) != 3)
+				continue;
+
+			CPath strRealName  = astrFields[0];
+			CPath strCacheName = astrFields[1];
+			int   nFileSize    = atoi(astrFields[2]);
+
+			Dlg.UpdateLabelAndMeter("Checking file: " + (CString)strRealName, fLogFile.CurPos());
+
+			// Duplicate entry?
+			if (oRestore.Exists(CWhereEqual(CCache::REAL_FILENAME, strRealName)))
+				continue;
+
+			// Get file type from extension.
+			CString strExt = strRealName.FileExt().ToLower();
+			char    cType  = App.m_pProfile->GetFileType(strExt);
+
+			// Unknown file type?
+			if (cType == NULL)
+				continue;
+
+			CPath strUTDir  = App.m_pProfile->GetTypeDir(cType);
+			CPath strUTFile = strUTDir + strRealName;
+
+			// File missing from relevant UT folder?
+			if (!strUTFile.Exists())
+				continue;
+
+			struct _stat oInfo;
+
+			// File has different size?
+			if ( (!CFile::QueryInfo(strUTFile, oInfo))
+			  || (oInfo.st_size != nFileSize) )
+				continue;
+
+			// Add file details to the table.
+			CRow& oRow = oRestore.CreateRow();
+
+			oRow[CCache::CACHE_FILENAME] = strCacheName;
+			oRow[CCache::INDEX_KEY]      = strCacheName.FileTitle();
+			oRow[CCache::REAL_FILENAME]  = strRealName;
+			oRow[CCache::FILE_TYPE]      = cType;
+			oRow[CCache::FILE_DATE]      = oInfo.st_ctime;
+			oRow[CCache::FILE_SIZE]      = nFileSize;
+			oRow[CCache::STATUS]         = OLD_FILE;
+
+			oRestore.InsertRow(oRow);
+		}
+
+		// Remove progress dialog.
+		Dlg.Destroy();
+
+		fLogFile.Close();
+	}
+	catch (CStreamException& e)
+	{
+		// Report error.
+		App.AlertMsg(e.ErrorText());
+		return;
+	}
+
+	CRestoreDlg oRestoreDlg;
+
+	oRestoreDlg.m_pTable = &oRestore;
+
+	// Get files to restore from user.
+	if (oRestoreDlg.RunModal(App.m_AppWnd) != IDOK)
+		return;
+
+	int   nFiles      = oRestore.RowCount();
+	int   nErrors     = 0;
+	DWORD dwLastError = 0;
+
+	// No files selected?
+	if (nFiles == 0)
+		return;
+
+	// Get cache + index file full paths.
+	CPath    strCacheDir  = App.m_pProfile->m_strCacheDir;
+	CPath    strCacheFile = strCacheDir + App.m_strCacheIndex;
+	CIniFile oIdxFile(strCacheFile);
+
+	// Show the progress dialog.
+	CProgressDlg Dlg;
+
+	Dlg.RunModeless(App.m_AppWnd);
+	Dlg.Title("Restoring Files");
+	Dlg.InitMeter(nFiles);
+
+	// For all files to restore...
+	for (int i = 0; i < nFiles; ++i)
+	{
+		CRow& oRow        = oRestore[i];
+		CPath strRealName = oRow[CCache::REAL_FILENAME];
+		CPath strDstDir   = strCacheDir;
+
+		Dlg.UpdateLabelAndMeter("Restoring file: " + (CString)strRealName, i);
+
+		// Get the folder to move from.
+		CPath strSrcDir = App.m_pProfile->GetTypeDir(oRow[CCache::FILE_TYPE]);
+
+		// Create the src and dst full paths.
+		CString	strSrcFile = strSrcDir + oRow[CCache::REAL_FILENAME];
+		CString	strDstFile = strDstDir + oRow[CCache::CACHE_FILENAME];
+
+		// Move it...
+		if (::MoveFile(strSrcFile, strDstFile) == 0)
+		{
+			nErrors++;
+			dwLastError = ::GetLastError();
+			continue;
+		}
+
+		// Add to index.
+		oIdxFile.WriteString("Cache", oRow[CCache::INDEX_KEY], strRealName);
+	}
+
+	// Remove progress dialog.
+	Dlg.Destroy();
+
+	// Report any errors.
+	if (nErrors > 0)
+		App.AlertMsg("Failed to restore %d of %d file(s).", nErrors, nFiles);
+
+	// Rescan cache to pick up restored files.
+	OnCacheRescan();
+}
+
+/******************************************************************************
 ** Method:		OnCacheExit()
 **
 ** Description:	Terminate the app.
@@ -361,6 +523,81 @@ void CAppCmds::OnCacheRescan()
 void CAppCmds::OnCacheExit()
 {
 	App.m_AppWnd.Close();
+}
+
+/******************************************************************************
+** Method:		OnEditPin()
+**
+** Description:	Mark the selected files as pinned or unpinned within the cache.
+**
+** Parameters:	None.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CAppCmds::OnEditPin()
+{
+	ASSERT(App.m_pProfile != NULL);
+
+	CResultSet oRS(App.m_oCache);
+
+	// Get the current selection.
+	App.m_AppWnd.m_AppDlg.GetSelectedFiles(oRS);
+
+	int nFiles = oRS.Count();
+
+	// Ignore if nothing to do.
+	if (nFiles == 0)
+		return;
+
+	CStrArray& astrPinned = App.m_astrPinned;
+
+	// For all selected rows...
+	for (int i = 0; i < nFiles; ++i)
+	{
+		CRow&       oRow    = oRS[i];
+		char        cStatus = oRow[CCache::STATUS];
+		const char* pszName = oRow[CCache::REAL_FILENAME];
+
+		// Add to pinned list?
+		if (cStatus == NEW_FILE)
+		{
+			if (astrPinned.Find(pszName, false) == -1)
+				astrPinned.Add(pszName);
+		}
+
+		// Remove from pinned list?
+		if (cStatus == PIN_FILE)
+		{
+			if (astrPinned.Find(pszName, false) != -1)
+				astrPinned.Delete(astrPinned.Find(pszName, false));
+		}
+	}
+
+	// For all cache table rows...
+	for (i = 0; i < App.m_oCache.RowCount(); ++i)
+	{
+		CRow&       oRow     = App.m_oCache[i];
+		char        cStatus  = oRow[CCache::STATUS];
+		const char* pszName  = oRow[CCache::REAL_FILENAME];
+		int         nListIdx = astrPinned.Find(pszName, false);
+
+		// Pin, if in pinned list AND not already pinned.
+		if ( (nListIdx != -1) && (cStatus != PIN_FILE) )
+		{
+			oRow[CCache::STATUS] = PIN_FILE;
+		}
+		// Unpin, if not in pinned list AND currently pinned.
+		else if ( (nListIdx == -1) && (cStatus == PIN_FILE) )
+		{
+			oRow[CCache::STATUS] = NEW_FILE;
+		}
+	}
+
+	// Update UI.
+	App.m_AppWnd.m_AppDlg.RefreshView();
 }
 
 /******************************************************************************
@@ -380,6 +617,7 @@ void CAppCmds::OnEditMove()
 	ASSERT(App.m_pProfile != NULL);
 
 	CResultSet oRS(App.m_oCache);
+	CResultSet oEditsRS(App.m_oCache);
 
 	// Get the current selection.
 	App.m_AppWnd.m_AppDlg.GetSelectedFiles(oRS);
@@ -388,7 +626,7 @@ void CAppCmds::OnEditMove()
 	int   nErrors     = 0;
 	DWORD dwLastError = 0;
 
-	// Ignore if nothing to copy.
+	// Ignore if nothing to move.
 	if (nFiles == 0)
 		return;
 
@@ -410,24 +648,15 @@ void CAppCmds::OnEditMove()
 		CRow&	oRow        = oRS[i];
 		CPath	strSrcDir   = App.m_pProfile->m_strCacheDir;
 		CPath   strRealName = oRow[CCache::REAL_FILENAME];
-		CPath	strDstDir;
 
 		Dlg.UpdateLabelAndMeter("Moving file: " + (CString)strRealName, i);
 
-		// Already moved?
-		if (oRow[CCache::STATUS] == OLD_FILE)
+		// Shouldn't move?
+		if (oRow[CCache::STATUS] != NEW_FILE)
 			continue;
 
 		// Get the folder to copy to.
-		switch (oRow[CCache::FILE_TYPE].GetChar())
-		{
-			case SYSTEM_FILE :	strDstDir = App.m_pProfile->m_strSystemDir;		break;
-			case MAP_FILE    :	strDstDir = App.m_pProfile->m_strMapDir;		break;
-			case TEXTURE_FILE:	strDstDir = App.m_pProfile->m_strTextureDir;	break;
-			case SOUND_FILE  :	strDstDir = App.m_pProfile->m_strSoundDir;		break;
-			case MUSIC_FILE  :	strDstDir = App.m_pProfile->m_strMusicDir;		break;
-			default:			ASSERT(false);									break;
-		}
+		CPath strDstDir = App.m_pProfile->GetTypeDir(oRow[CCache::FILE_TYPE]);
 
 		// Create the src and dst full paths.
 		CString	strSrcFile = strSrcDir + oRow[CCache::CACHE_FILENAME];
@@ -444,12 +673,19 @@ void CAppCmds::OnEditMove()
 		// Delete from index.
 		oIdxFile.DeleteEntry("Cache", oRow[CCache::INDEX_KEY]);
 
-		// Delete from cache table.
-		App.m_oCache.DeleteRow(oRow);
+		// Add to list of edits.
+		oEditsRS.Add(oRow);
 	}
 
 	// Remove progress dialog.
 	Dlg.Destroy();
+
+	// Log cache changes.
+	if (App.m_bLogEdits)
+		LogEdits(oEditsRS);
+
+	// Delete rows from cache table.
+	App.m_oCache.DeleteRows(oEditsRS);
 
 	// Report any errors.
 	if (nErrors > 0)
@@ -476,6 +712,7 @@ void CAppCmds::OnEditCopy()
 	ASSERT(App.m_pProfile != NULL);
 
 	CResultSet oRS(App.m_oCache);
+	CResultSet oEditsRS(App.m_oCache);
 
 	// Get the current selection.
 	App.m_AppWnd.m_AppDlg.GetSelectedFiles(oRS);
@@ -506,24 +743,15 @@ void CAppCmds::OnEditCopy()
 		CRow&	oRow        = oRS[i];
 		CPath	strSrcDir   = App.m_pProfile->m_strCacheDir;
 		CPath   strRealName = oRow[CCache::REAL_FILENAME];
-		CPath	strDstDir;
 
 		Dlg.UpdateLabelAndMeter("Copying file: " + (CString)strRealName, i);
 
-		// Already copied?
-		if (oRow[CCache::STATUS] == OLD_FILE)
+		// Shouldn't copy?
+		if (oRow[CCache::STATUS] != NEW_FILE)
 			continue;
 
 		// Get the folder to copy to.
-		switch (oRow[CCache::FILE_TYPE].GetChar())
-		{
-			case SYSTEM_FILE :	strDstDir = App.m_pProfile->m_strSystemDir;		break;
-			case MAP_FILE    :	strDstDir = App.m_pProfile->m_strMapDir;		break;
-			case TEXTURE_FILE:	strDstDir = App.m_pProfile->m_strTextureDir;	break;
-			case SOUND_FILE  :	strDstDir = App.m_pProfile->m_strSoundDir;		break;
-			case MUSIC_FILE  :	strDstDir = App.m_pProfile->m_strMusicDir;		break;
-			default:			ASSERT(false);									break;
-		}
+		CPath strDstDir = App.m_pProfile->GetTypeDir(oRow[CCache::FILE_TYPE]);
 
 		// Create the src and dst full paths.
 		CString	strSrcFile = strSrcDir + oRow[CCache::CACHE_FILENAME];
@@ -539,10 +767,17 @@ void CAppCmds::OnEditCopy()
 
 		// Update cache table status.
 		oRow[CCache::STATUS] = OLD_FILE;
+
+		// Add to list of edits.
+		oEditsRS.Add(oRow);
 	}
 
 	// Remove progress dialog.
 	Dlg.Destroy();
+
+	// Log cache changes.
+	if (App.m_bLogEdits)
+		LogEdits(oEditsRS);
 
 	// Report any errors.
 	if (nErrors > 0)
@@ -569,6 +804,7 @@ void CAppCmds::OnEditDelete()
 	ASSERT(App.m_pProfile != NULL);
 
 	CResultSet oRS(App.m_oCache);
+	CResultSet oEditsRS(App.m_oCache);
 
 	// Get the current selection.
 	App.m_AppWnd.m_AppDlg.GetSelectedFiles(oRS);
@@ -604,9 +840,12 @@ void CAppCmds::OnEditDelete()
 		// Delete from index.
 		oIdxFile.DeleteEntry("Cache", oRow[CCache::INDEX_KEY]);
 
-		// Delete from cache table.
-		App.m_oCache.DeleteRow(oRow);
+		// Add to list of edits.
+		oEditsRS.Add(oRow);
 	}
+
+	// Delete rows from cache table.
+	App.m_oCache.DeleteRows(oEditsRS);
 
 	// Report any errors.
 	if (nErrors > 0)
@@ -699,6 +938,23 @@ void CAppCmds::OnEditCopyTo()
 }
 
 /******************************************************************************
+** Method:		OnViewSelectNew()
+**
+** Description:	Select all new files in the view.
+**
+** Parameters:	None.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CAppCmds::OnViewSelectNew()
+{
+	App.m_AppWnd.m_AppDlg.SelectNew();
+}
+
+/******************************************************************************
 ** Method:		OnViewSelectAll()
 **
 ** Description:	Select all files in the view.
@@ -766,6 +1022,9 @@ void CAppCmds::OnViewSortByColumn(uint nColumn, CSortColumns::Dir eDefDir)
 
 	// Refresh grid.
 	oAppDlg.RefreshView();
+
+	// Update UI.
+	UpdateUI();
 }
 
 /******************************************************************************
@@ -789,6 +1048,9 @@ void CAppCmds::OnViewShowAll()
 
 	// Refresh grid.
 	App.m_AppWnd.m_AppDlg.RefreshView();
+
+	// Update UI.
+	UpdateUI();
 }
 
 /******************************************************************************
@@ -905,3 +1167,103 @@ void CAppCmds::OnHelpAbout()
 *******************************************************************************
 */
 
+void CAppCmds::OnUIViewShowAll()
+{
+	CMenu&   oMenu   = App.m_AppWnd.m_Menu;
+	CAppDlg& oAppDlg = App.m_AppWnd.m_AppDlg;
+
+	oMenu.CheckCmd(ID_VIEW_SHOW_ALL, oAppDlg.m_bShowAllFiles);
+}
+
+void CAppCmds::OnUIViewSortByName()
+{
+	CMenu&   oMenu   = App.m_AppWnd.m_Menu;
+	CAppDlg& oAppDlg = App.m_AppWnd.m_AppDlg;
+
+	oMenu.CheckCmd(ID_VIEW_SORT_NAME, (oAppDlg.m_nSortColumn == CCache::REAL_FILENAME));
+}
+
+void CAppCmds::OnUIViewSortByType()
+{
+	CMenu&   oMenu   = App.m_AppWnd.m_Menu;
+	CAppDlg& oAppDlg = App.m_AppWnd.m_AppDlg;
+
+	oMenu.CheckCmd(ID_VIEW_SORT_TYPE, (oAppDlg.m_nSortColumn == CCache::FILE_TYPE));
+}
+
+void CAppCmds::OnUIViewSortByDate()
+{
+	CMenu&   oMenu   = App.m_AppWnd.m_Menu;
+	CAppDlg& oAppDlg = App.m_AppWnd.m_AppDlg;
+
+	oMenu.CheckCmd(ID_VIEW_SORT_DATE, (oAppDlg.m_nSortColumn == CCache::FILE_DATE));
+}
+
+void CAppCmds::OnUIViewSortBySize()
+{
+	CMenu&   oMenu   = App.m_AppWnd.m_Menu;
+	CAppDlg& oAppDlg = App.m_AppWnd.m_AppDlg;
+
+	oMenu.CheckCmd(ID_VIEW_SORT_SIZE, (oAppDlg.m_nSortColumn == CCache::FILE_SIZE));
+}
+
+/******************************************************************************
+** Method:		LogEdits()
+**
+** Description:	Log the edited cache files.
+**
+** Parameters:	None.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CAppCmds::LogEdits(CResultSet& oRS)
+{
+	ASSERT(App.m_bLogEdits);
+
+	// Get logfile path.
+	CPath strLogFile(CPath::AppDir(), "UTCacheMgr.log");
+	CFile fLogFile;
+
+	try
+	{
+		// Open logfile.
+		if (strLogFile.Exists())
+		{
+			// Open existing file and seek to end.
+			fLogFile.Open(strLogFile, CFile::WriteOnly);
+			fLogFile.Seek(0, CFile::End);
+		}
+		else
+		{
+			// Create new file and add column header.
+			fLogFile.Create(strLogFile);
+			fLogFile.WriteLine("# RealFileName, CacheFileName, Size");
+		}
+
+		// For all edited rows...
+		for (int i = 0; i < oRS.Count(); ++i)
+		{
+			CRow& oRow = oRS[i];
+
+			// Create log entry.
+			CString strLogEntry;
+
+			strLogEntry  = oRow[CCache::REAL_FILENAME].Format();
+			strLogEntry += ',';
+			strLogEntry += oRow[CCache::CACHE_FILENAME].Format();
+			strLogEntry += ',';
+			strLogEntry += oRow[CCache::FILE_SIZE].Format();
+
+			// Add to logfile.
+			fLogFile.WriteLine(strLogEntry);
+		}
+	}
+	catch (CStreamException& e)
+	{
+		// Report error.
+		App.AlertMsg(e.ErrorText());
+	}
+}
