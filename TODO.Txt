@@ -1,5 +1,5 @@
-- Copy To/Move To options.
+- Static URL control.
 
-- Icons for different file types.
+- Version number.
 
-- Show all files in cache option.
+- Errors on copying.
