@@ -1,13 +1,5 @@
-- Make class for pinned files.
-
-- ReadOnly cache types.
-
-- Handle files with no extensions (eg [VSK] Patch)
-
-- Better Move toolbar button.
-
-- Show filenames when errors occur.
-
 - Properties dialog for exact file sizes etc.
 
-- Right click menu.
+- ListView icons.
+
+- UT2K3 support.

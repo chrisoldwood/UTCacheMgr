@@ -28,11 +28,11 @@ CUTCMGRApp App;
 */
 
 #ifdef _DEBUG
-const char* CUTCMGRApp::VERSION      = "v1.0 [Debug]";
+const char* CUTCMGRApp::VERSION      = "v1.1 Beta [Debug]";
 #else
-const char* CUTCMGRApp::VERSION      = "v1.0";
+const char* CUTCMGRApp::VERSION      = "v1.1 Beta";
 #endif
-const char* CUTCMGRApp::INI_FILE_VER = "1.0";
+const char* CUTCMGRApp::INI_FILE_VER = "1.1";
 
 /******************************************************************************
 ** Method:		Constructor
@@ -188,6 +188,7 @@ void CUTCMGRApp::LoadConfig()
 		// Read profile details.
 		oProfile.m_strName       = m_oIniFile.ReadString(strSection, "Name",       "");
 		oProfile.m_strCacheDir   = m_oIniFile.ReadString(strSection, "CacheDir",   "");
+		oProfile.m_bReadOnly     = m_oIniFile.ReadBool  (strSection, "ReadOnly",   false);
 		oProfile.m_strSystemDir  = m_oIniFile.ReadString(strSection, "SystemDir",  "");
 		oProfile.m_strMapDir     = m_oIniFile.ReadString(strSection, "MapDir",     "");
 		oProfile.m_strTextureDir = m_oIniFile.ReadString(strSection, "TextureDir", "");
@@ -218,6 +219,7 @@ void CUTCMGRApp::LoadConfig()
 		// Initialise profile with sensible defaults.
 		m_pProfile->m_strName       = CProfile::DEF_PROFILE_NAME;
 		m_pProfile->m_strCacheDir   = CPath(CProfile::DEF_ROOT_DIR,     CProfile::DEF_CACHE_DIR   );
+		m_pProfile->m_bReadOnly     = false;
 		m_pProfile->m_strSystemDir  = CPath(CProfile::DEF_ROOT_DIR,     CProfile::DEF_SYSTEM_DIR  );
 		m_pProfile->m_strMapDir     = CPath(CProfile::DEF_ROOT_DIR,     CProfile::DEF_MAPS_DIR    );
 		m_pProfile->m_strTextureDir = CPath(CProfile::DEF_ROOT_DIR,     CProfile::DEF_TEXTURES_DIR);
@@ -324,6 +326,7 @@ void CUTCMGRApp::SaveConfig()
 		// Write profile details.
 		m_oIniFile.WriteString(strSection, "Name",       pProfile->m_strName      );
 		m_oIniFile.WriteString(strSection, "CacheDir",   pProfile->m_strCacheDir  );
+		m_oIniFile.WriteBool  (strSection, "ReadOnly",   pProfile->m_bReadOnly    );
 		m_oIniFile.WriteString(strSection, "SystemDir",  pProfile->m_strSystemDir );
 		m_oIniFile.WriteString(strSection, "MapDir",     pProfile->m_strMapDir    );
 		m_oIniFile.WriteString(strSection, "TextureDir", pProfile->m_strTextureDir);
