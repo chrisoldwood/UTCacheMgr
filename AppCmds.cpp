@@ -144,7 +144,7 @@ void CAppCmds::OnCacheRescan()
 	// Check the cache path exists.
 	if (!strCacheDir.Exists())
 	{
-		App.AlertMsg("Failed to access the cache folder:\n\n%s", strCacheDir);
+		App.AlertMsg("Failed to access the cache folder:\n\n%s\n\nPlease check the profile setup in Options | Profiles.", strCacheDir);
 		return;
 	}
 
@@ -670,8 +670,12 @@ void CAppCmds::OnEditCopyTo()
 		Dlg.UpdateLabelAndMeter("Copying file: " + (CString)strRealName, i);
 
 		// Create the src and dst full paths.
-		CString	strSrcFile = strSrcDir + oRow[CCache::CACHE_FILENAME];
-		CString	strDstFile = strDstDir + oRow[CCache::REAL_FILENAME];
+		CPath strSrcFile = strSrcDir + oRow[CCache::CACHE_FILENAME];
+		CPath strDstFile = strDstDir + oRow[CCache::REAL_FILENAME];
+
+		// Ignore if destination already exists.
+		if (strDstFile.Exists())
+			continue;
 
 		// Copy it...
 		if (::CopyFile(strSrcFile, strDstFile, TRUE) == 0)
