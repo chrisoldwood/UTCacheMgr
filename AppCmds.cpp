@@ -19,6 +19,7 @@
 #include "UTConfigDlg.hpp"
 #include "RestoreDlg.hpp"
 #include "ErrorsDlg.hpp"
+#include "FilePropsDlg.hpp"
 
 /******************************************************************************
 ** Method:		Constructor.
@@ -37,31 +38,32 @@ CAppCmds::CAppCmds()
 	// Define the command table.
 	DEFINE_CMD_TABLE
 		// File menu.
-		CMD_ENTRY(ID_CACHE_PROFILE,		OnCacheProfile,		NULL,				 3)
-		CMD_ENTRY(ID_CACHE_RESCAN,		OnCacheRescan,		NULL,				 0)
-		CMD_ENTRY(ID_CACHE_RESTORE,		OnCacheRestore,		OnUICacheRestore,	-1)
-		CMD_ENTRY(ID_CACHE_EXIT,		OnCacheExit,		NULL,				-1)
+		CMD_ENTRY(ID_CACHE_PROFILE,		OnCacheProfile,		NULL,					 3)
+		CMD_ENTRY(ID_CACHE_RESCAN,		OnCacheRescan,		NULL,					 0)
+		CMD_ENTRY(ID_CACHE_RESTORE,		OnCacheRestore,		OnUICacheRestore,		-1)
+		CMD_ENTRY(ID_CACHE_UT_CONFIG,	OnCacheUTConfig,	NULL,					-1)
+		CMD_ENTRY(ID_CACHE_PROPERTIES,	OnCacheProperties,	OnUICacheProperties,	-1)
+		CMD_ENTRY(ID_CACHE_EXIT,		OnCacheExit,		NULL,					-1)
 		// Edit menu.
-		CMD_ENTRY(ID_EDIT_PIN,			OnEditPin,			OnUIEditPin,		-1)
-		CMD_ENTRY(ID_EDIT_MOVE,			OnEditMove,			OnUIEditMove,		 5)
-		CMD_ENTRY(ID_EDIT_COPY,			OnEditCopy,			OnUIEditCopy,		 6)
-		CMD_ENTRY(ID_EDIT_DELETE,		OnEditDelete,		OnUIEditDelete,		 7)
-		CMD_ENTRY(ID_EDIT_COPY_TO,		OnEditCopyTo,		OnUIEditCopyTo,		 9)
+		CMD_ENTRY(ID_EDIT_PIN,			OnEditPin,			OnUIEditPin,			-1)
+		CMD_ENTRY(ID_EDIT_MOVE,			OnEditMove,			OnUIEditMove,			 5)
+		CMD_ENTRY(ID_EDIT_COPY,			OnEditCopy,			OnUIEditCopy,			 6)
+		CMD_ENTRY(ID_EDIT_DELETE,		OnEditDelete,		OnUIEditDelete,			 7)
+		CMD_ENTRY(ID_EDIT_COPY_TO,		OnEditCopyTo,		OnUIEditCopyTo,			 9)
 		// View menu.
-		CMD_ENTRY(ID_VIEW_SELECT_NEW,	OnViewSelectNew,	NULL,				-1)
-		CMD_ENTRY(ID_VIEW_SELECT_ALL,	OnViewSelectAll,	NULL,				-1)
-		CMD_ENTRY(ID_VIEW_SORT_NAME,	OnViewSortByName,	OnUIViewSortByName,	-1)
-		CMD_ENTRY(ID_VIEW_SORT_TYPE,	OnViewSortByType,	OnUIViewSortByType,	-1)
-		CMD_ENTRY(ID_VIEW_SORT_DATE,	OnViewSortByDate,	OnUIViewSortByDate,	-1)
-		CMD_ENTRY(ID_VIEW_SORT_SIZE,	OnViewSortBySize,	OnUIViewSortBySize,	-1)
-		CMD_ENTRY(ID_VIEW_SHOW_ALL,		OnViewShowAll,		OnUIViewShowAll,	-1)
+		CMD_ENTRY(ID_VIEW_SELECT_NEW,	OnViewSelectNew,	NULL,					-1)
+		CMD_ENTRY(ID_VIEW_SELECT_ALL,	OnViewSelectAll,	NULL,					-1)
+		CMD_ENTRY(ID_VIEW_SORT_NAME,	OnViewSortByName,	OnUIViewSortByName,		-1)
+		CMD_ENTRY(ID_VIEW_SORT_TYPE,	OnViewSortByType,	OnUIViewSortByType,		-1)
+		CMD_ENTRY(ID_VIEW_SORT_DATE,	OnViewSortByDate,	OnUIViewSortByDate,		-1)
+		CMD_ENTRY(ID_VIEW_SORT_SIZE,	OnViewSortBySize,	OnUIViewSortBySize,		-1)
+		CMD_ENTRY(ID_VIEW_SHOW_ALL,		OnViewShowAll,		OnUIViewShowAll,		-1)
 		// Options menu.
-		CMD_ENTRY(ID_OPTIONS_PROFILES,	OnOptionsProfiles,	NULL,				-1)
-		CMD_ENTRY(ID_OPTIONS_PREFS,		OnOptionsPrefs,		NULL,				-1)
-		CMD_ENTRY(ID_OPTIONS_UT_CONFIG,	OnOptionsUTConfig,	NULL,				-1)
+		CMD_ENTRY(ID_OPTIONS_PROFILES,	OnOptionsProfiles,	NULL,					-1)
+		CMD_ENTRY(ID_OPTIONS_PREFS,		OnOptionsPrefs,		NULL,					-1)
 		// Help menu.
-		CMD_ENTRY(ID_HELP_CONTENTS,		OnHelpContents,		NULL,				 1)
-		CMD_ENTRY(ID_HELP_ABOUT,		OnHelpAbout,		NULL,				-1)
+		CMD_ENTRY(ID_HELP_CONTENTS,		OnHelpContents,		NULL,					 1)
+		CMD_ENTRY(ID_HELP_ABOUT,		OnHelpAbout,		NULL,					-1)
 	END_CMD_TABLE
 }
 
@@ -194,20 +196,21 @@ void CAppCmds::OnCacheRescan()
 	// For all files found...
 	for (int i = 0; i < astrFiles.Size(); ++i)
 	{
-		// Get file name and index key.
+		// Get file name, index key and real name.
 		CPath   strCacheName = astrFiles[i];
 		CString strIndexName = strCacheName.FileTitle();
+		CPath   strRealName  = oIdxFile.ReadString("Cache", strIndexName, "");
 
-		// Workaround for UT2003 v2166 patch bug which
-		// appends a "-1" after the 32 char file name.
-		if (strIndexName.Length() > 32)
+		// Workaround for UT2003 v2166/86 patch bug which appends a "-1"
+		// after the 32 char file name, but the index entry remains the same.
+		if ( (strRealName.Empty()) && (strIndexName.Length() > 32) )
+		{
 			strIndexName = strIndexName.Left(32);
-
-		// Get real file name from index.
-		CPath strRealName = oIdxFile.ReadString("Cache", strIndexName, "");
+			strRealName  = oIdxFile.ReadString("Cache", strIndexName, "");
+		}
 
 		// File not in index?
-		if (strRealName.Length() == 0)
+		if (strRealName.Empty())
 		{
 			dlgErrors.m_astrFiles.Add(strCacheName);
 			dlgErrors.m_astrErrors.Add("Index entry missing");
@@ -320,9 +323,9 @@ void CAppCmds::OnCacheRescan()
 		{
 			CPath strFile = strCacheDir + (astrKeys[i] + "." + CProfile::DEF_CACHE_FILE_EXT);
 
-			// Workaround for UT2003 v2166 patch bug which
-			// appends a "-1" after the 32 char file name.
-			CPath strAltFile = strCacheDir + (astrKeys[i] +"-1" + "." + CProfile::DEF_CACHE_FILE_EXT);
+			// Workaround for UT2003 v2166/86 patch bug which appends a "-1"
+			// after the 32 char file name, but the index entry remains the same.
+			CPath strAltFile = strCacheDir + (astrKeys[i] + "-1." + CProfile::DEF_CACHE_FILE_EXT);
 
 			if ( (!strFile.Exists()) && (!strAltFile.Exists()) )
 				astrInvalid.Add(astrKeys[i]);
@@ -538,6 +541,74 @@ void CAppCmds::OnCacheRestore()
 	// Rescan cache to pick up restored files.
 	OnCacheRescan();
 	UpdateUI();
+}
+
+/******************************************************************************
+** Method:		OnCacheUTConfig()
+**
+** Description:	Show the dialog for editing the UT cache settings.
+**
+** Parameters:	None.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CAppCmds::OnCacheUTConfig()
+{
+	ASSERT(App.m_pProfile != NULL);
+
+	// Check config file exists.
+	if (!App.m_pProfile->m_strConfigFile.Exists())
+	{
+		App.AlertMsg("The config file is missing:\n\n%s", App.m_pProfile->m_strConfigFile);
+		return;
+	}
+
+	CUTConfigDlg Dlg;
+
+	Dlg.RunModal(App.m_rMainWnd);
+}
+
+/******************************************************************************
+** Method:		OnCacheProperties()
+**
+** Description:	Show the cache files' properties.
+**
+** Parameters:	None.
+**
+** Returns:		Nothing.
+**
+*******************************************************************************
+*/
+
+void CAppCmds::OnCacheProperties()
+{
+	ASSERT(App.m_pProfile != NULL);
+
+	CResultSet oRS(App.m_oCache);
+
+	// Get the current selection.
+	App.m_AppWnd.m_AppDlg.GetSelectedFiles(oRS);
+
+	// Ignore if nothing to do.
+	if (oRS.Count() == 0)
+		return;
+
+	// Only show details for the 1st file.
+	CRow& oRow = oRS[0];
+
+	CFilePropsDlg Dlg;
+
+	Dlg.m_cType        = oRow[CCache::FILE_TYPE];
+	Dlg.m_strRealName  = oRow[CCache::REAL_FILENAME];
+	Dlg.m_strCacheName = oRow[CCache::CACHE_FILENAME];
+	Dlg.m_strDate      = oRow[CCache::FILE_DATE].Format();
+	Dlg.m_strType      = App.FormatType(oRow[CCache::FILE_TYPE]);
+	Dlg.m_strSize      = oRow[CCache::FILE_SIZE].Format();
+
+	Dlg.RunModal(App.m_rMainWnd);
 }
 
 /******************************************************************************
@@ -1127,6 +1198,9 @@ void CAppCmds::OnOptionsProfiles()
 
 	Dlg.RunModal(App.m_rMainWnd);
 
+	if (Dlg.m_bReScan)
+		App.m_AppWnd.PostCommand(ID_CACHE_RESCAN);
+
 	UpdateUI();
 }
 
@@ -1145,34 +1219,6 @@ void CAppCmds::OnOptionsProfiles()
 void CAppCmds::OnOptionsPrefs()
 {
 	CPrefsDlg Dlg;
-
-	Dlg.RunModal(App.m_rMainWnd);
-}
-
-/******************************************************************************
-** Method:		OnOptionsUTConfig()
-**
-** Description:	Show the dialog for editing the UT settings.
-**
-** Parameters:	None.
-**
-** Returns:		Nothing.
-**
-*******************************************************************************
-*/
-
-void CAppCmds::OnOptionsUTConfig()
-{
-	ASSERT(App.m_pProfile != NULL);
-
-	// Check config file exists.
-	if (!App.m_pProfile->m_strConfigFile.Exists())
-	{
-		App.AlertMsg("The config file is missing:\n\n%s", App.m_pProfile->m_strConfigFile);
-		return;
-	}
-
-	CUTConfigDlg Dlg;
 
 	Dlg.RunModal(App.m_rMainWnd);
 }
@@ -1236,6 +1282,21 @@ void CAppCmds::OnUICacheRestore()
 	bool bReadOnly = App.m_pProfile->m_bReadOnly;
 
 	oMenu.EnableCmd(ID_CACHE_RESTORE, !bReadOnly);
+//	oToolBar.m_btnMove.Enable(bSelection && !bReadOnly);
+}
+
+void CAppCmds::OnUICacheProperties()
+{
+	ASSERT(App.m_pProfile != NULL);
+
+	CMenu&       oMenu    = App.m_AppWnd.m_Menu;
+//	CAppToolBar& oToolBar = App.m_AppWnd.m_ToolBar;
+	CAppDlg&     oAppDlg  = App.m_AppWnd.m_AppDlg;
+
+	bool bSelection = oAppDlg.m_lvGrid.IsSelection();
+//	bool bReadOnly  = App.m_pProfile->m_bReadOnly;
+
+	oMenu.EnableCmd(ID_CACHE_PROPERTIES, bSelection);
 //	oToolBar.m_btnMove.Enable(bSelection && !bReadOnly);
 }
 

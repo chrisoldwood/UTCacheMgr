@@ -36,6 +36,8 @@ public:
 	void OnCacheProfile();
 	void OnCacheRescan();
 	void OnCacheRestore();
+	void OnCacheUTConfig();
+	void OnCacheProperties();
 	void OnCacheExit();
 
 	// Edit menu.
@@ -58,7 +60,6 @@ public:
 	// Options menu.
 	void OnOptionsProfiles();
 	void OnOptionsPrefs();
-	void OnOptionsUTConfig();
 
 	// Help menu.
 	void OnHelpContents();
@@ -68,6 +69,7 @@ public:
 	// UI handlers.
 	//
 	void OnUICacheRestore();
+	void OnUICacheProperties();
 	void OnUIEditPin();
 	void OnUIEditMove();
 	void OnUIEditCopy();
