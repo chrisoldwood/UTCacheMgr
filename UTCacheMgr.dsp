@@ -138,6 +138,10 @@ SOURCE=.\ProgressDlg.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\RestoreDlg.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\SelProfileDlg.cpp
 # End Source File
 # Begin Source File
@@ -203,6 +207,10 @@ SOURCE=.\ProgressDlg.hpp
 # Begin Source File
 
 SOURCE=.\Resource.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\RestoreDlg.hpp
 # End Source File
 # Begin Source File
 

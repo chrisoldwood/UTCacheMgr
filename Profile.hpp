@@ -28,7 +28,12 @@ public:
 	CProfile();
 	~CProfile();
 	
-public:
+	//
+	// Methods.
+	//
+	char  GetFileType(const CString& strExt);
+	CPath GetTypeDir(char cType);
+
 	//
 	// Members.
 	//
