@@ -31,8 +31,8 @@ public:
 	//
 	// Methods.
 	//
-	char  GetFileType(const CString& strExt);
-	CPath GetTypeDir(char cType);
+	CPath        GetTypeDir(char cType);
+	static char  GetFileType(const CString& strExt);
 
 	//
 	// Members.
@@ -54,6 +54,8 @@ public:
 	CPath	m_strConfigFile;	// UT Config file.
 
 	CPath	m_strLastCopyTo;	// Last "Copy To..." path.
+	CPath	m_strLastImport;	// Last "Import..." path.
+	CPath	m_strLastInstall;	// Last "Install..." path.
 
 	//
 	// Constants.
