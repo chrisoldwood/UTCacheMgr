@@ -40,6 +40,7 @@ public:
 	CString	m_strName;			// The profile name.
 
 	CPath	m_strCacheDir;		// The cache directory.
+	bool	m_bReadOnly;
 
 	CPath	m_strSystemDir;		// System directory.
 	CPath	m_strMapDir;		// Maps directory.

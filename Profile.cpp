@@ -44,6 +44,7 @@ const char* CProfile::DEF_CACHE_TMP_MASK = "Cache????.tmp";
 */
 
 CProfile::CProfile()
+	: m_bReadOnly(false)
 {
 }
 
@@ -77,7 +78,7 @@ CProfile::~CProfile()
 
 char CProfile::GetFileType(const CString& strExt)
 {
-	if ((strExt == ".u") || (strExt == ".int"))
+	if ((strExt == ".u") || (strExt == ".int") || (strExt == ""))
 	{
 		return SYSTEM_FILE;
 	}
