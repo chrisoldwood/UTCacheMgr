@@ -26,6 +26,7 @@ CAppDlg::CAppDlg()
 	: CMainDlg(IDD_MAIN)
 	, m_nSortColumn(CCache::REAL_FILENAME)
 	, m_eSortOrder(CSortColumns::ASC)
+	, m_bShowAllFiles(false)
 {
 	DEFINE_CTRL_TABLE
 		CTRL(IDC_GRID,	&m_lvGrid)
@@ -56,10 +57,11 @@ void CAppDlg::OnInitDialog()
 //	m_lvGrid.GridLines(true);
 
 	// Create grid columns.
-	m_lvGrid.InsertColumn(0, "File", 200, LVCFMT_LEFT  );
-	m_lvGrid.InsertColumn(1, "Type",  50, LVCFMT_LEFT  );
-	m_lvGrid.InsertColumn(2, "Date", 125, LVCFMT_LEFT  );
-	m_lvGrid.InsertColumn(3, "Size",  75, LVCFMT_RIGHT );
+	m_lvGrid.InsertColumn(0, "File",   200, LVCFMT_LEFT  );
+	m_lvGrid.InsertColumn(1, "Type",    50, LVCFMT_LEFT  );
+	m_lvGrid.InsertColumn(2, "Date",   125, LVCFMT_LEFT  );
+	m_lvGrid.InsertColumn(3, "Size",    75, LVCFMT_RIGHT );
+	m_lvGrid.InsertColumn(4, "Status",  50, LVCFMT_CENTER);
 }
 
 /******************************************************************************
@@ -89,11 +91,18 @@ void CAppDlg::RefreshView()
 	{
 		CRow& oRow = oRS[i];
 
-		// Add to the grid.
-		m_lvGrid.InsertItem(i, oRow[CCache::REAL_FILENAME], &oRow);
-		m_lvGrid.ItemText  (i, 1, FormatType(oRow[CCache::FILE_TYPE]));
-		m_lvGrid.ItemText  (i, 2, oRow[CCache::FILE_DATE].Format());
-		m_lvGrid.ItemText  (i, 3, FormatSize(oRow[CCache::FILE_SIZE]));
+		// Check filter.
+		if ( (m_bShowAllFiles) || (oRow[CCache::STATUS] == NEW_FILE) )
+		{
+			int n = m_lvGrid.ItemCount();
+
+			// Add to the grid.
+			m_lvGrid.InsertItem(n,    oRow[CCache::REAL_FILENAME], &oRow);
+			m_lvGrid.ItemText  (n, 1, FormatType(oRow[CCache::FILE_TYPE]));
+			m_lvGrid.ItemText  (n, 2, oRow[CCache::FILE_DATE].Format());
+			m_lvGrid.ItemText  (n, 3, FormatSize(oRow[CCache::FILE_SIZE]));
+			m_lvGrid.ItemText  (n, 4, FormatStatus(oRow[CCache::STATUS]));
+		}
 	}
 }
 
@@ -147,6 +156,31 @@ CString CAppDlg::FormatSize(int nSize) const
 	str.Format("%d K", nSize/1024);
 
 	return str;
+}
+
+/******************************************************************************
+** Method:		FormatStatus()
+**
+** Description:	Convert the file status to a string.
+**
+** Parameters:	cStatus		The file status.
+**
+** Returns:		The status as a string.
+**
+*******************************************************************************
+*/
+
+CString CAppDlg::FormatStatus(char cStatus) const
+{
+	switch (cStatus)
+	{
+		case NEW_FILE :	return "New";
+		case OLD_FILE :	return "Old";
+	}
+
+	ASSERT(false);
+
+	return "";
 }
 
 /******************************************************************************
