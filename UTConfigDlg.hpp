@@ -32,10 +32,14 @@ protected:
 	// Members.
 	//
 	CIniFile	m_oIniFile;
+	CEditBox	m_ebFolder;
+	CEditBox	m_ebExpiry;
 
 	//
 	// Message processors.
 	//
+	virtual void OnInitDialog();
+	virtual bool OnOk();
 };
 
 /******************************************************************************

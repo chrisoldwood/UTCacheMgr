@@ -35,15 +35,15 @@ CAppCmds::CAppCmds()
 	// Define the command table.
 	DEFINE_CMD_TABLE
 		// File menu.
-		CMD_ENTRY(ID_CACHE_PROFILE,		OnCacheProfile,		NULL,	-1)
-		CMD_ENTRY(ID_CACHE_RESCAN,		OnCacheRescan,		NULL,	 9)
+		CMD_ENTRY(ID_CACHE_PROFILE,		OnCacheProfile,		NULL,	 3)
+		CMD_ENTRY(ID_CACHE_RESCAN,		OnCacheRescan,		NULL,	 0)
 		CMD_ENTRY(ID_CACHE_EXIT,		OnCacheExit,		NULL,	-1)
 		// Edit menu.
-		CMD_ENTRY(ID_EDIT_MOVE,			OnEditMove,			NULL,	-1)
-		CMD_ENTRY(ID_EDIT_COPY,			OnEditCopy,			NULL,	-1)
-		CMD_ENTRY(ID_EDIT_DELETE,		OnEditDelete,		NULL,	-1)
-		CMD_ENTRY(ID_EDIT_MOVE_TO,		OnEditMoveTo,		NULL,	-1)
-		CMD_ENTRY(ID_EDIT_COPY_TO,		OnEditCopyTo,		NULL,	-1)
+		CMD_ENTRY(ID_EDIT_MOVE,			OnEditMove,			NULL,	 5)
+		CMD_ENTRY(ID_EDIT_COPY,			OnEditCopy,			NULL,	 6)
+		CMD_ENTRY(ID_EDIT_DELETE,		OnEditDelete,		NULL,	 7)
+		CMD_ENTRY(ID_EDIT_MOVE_TO,		OnEditMoveTo,		NULL,	 8)
+		CMD_ENTRY(ID_EDIT_COPY_TO,		OnEditCopyTo,		NULL,	 9)
 		// View menu.
 		CMD_ENTRY(ID_VIEW_SELECT_ALL,	OnViewSelectAll,	NULL,	-1)
 		CMD_ENTRY(ID_VIEW_SORT_NAME,	OnViewSortByName,	NULL,	-1)
@@ -55,7 +55,7 @@ CAppCmds::CAppCmds()
 		CMD_ENTRY(ID_OPTIONS_PREFS,		OnOptionsPrefs,		NULL,	-1)
 		CMD_ENTRY(ID_OPTIONS_UT_CONFIG,	OnOptionsUTConfig,	NULL,	-1)
 		// Help menu.
-		CMD_ENTRY(ID_HELP_ABOUT,		OnHelpAbout,		NULL,	10)
+		CMD_ENTRY(ID_HELP_ABOUT,		OnHelpAbout,		NULL,	 1)
 	END_CMD_TABLE
 }
 
@@ -496,7 +496,54 @@ void CAppCmds::OnEditCopy()
 
 void CAppCmds::OnEditDelete()
 {
-	App.AlertMsg("Not implemented.");
+	ASSERT(App.m_pProfile != NULL);
+
+	CResultSet oRS(App.m_oCache);
+
+	// Get the current selection.
+	App.m_AppWnd.m_AppDlg.GetSelectedFiles(oRS);
+
+	int   nFiles      = oRS.Count();
+	int   nErrors     = 0;
+	DWORD dwLastError = 0;
+
+	// Ignore if nothing to copy.
+	if (nFiles == 0)
+		return;
+
+	// Get cache + index file full paths.
+	CPath    strCacheDir  = App.m_pProfile->m_strCacheDir;
+	CPath    strCacheFile = strCacheDir + App.m_strCacheIndex;
+	CIniFile oIdxFile(strCacheFile);
+
+	// For all rows...
+	for (int i = 0; i < nFiles; ++i)
+	{
+		CRow&	oRow       = oRS[i];
+		CPath	strSrcDir  = App.m_pProfile->m_strCacheDir;
+		CString	strSrcFile = strSrcDir + oRow[CCache::CACHE_FILENAME];
+
+		// Delete it...
+		if (::DeleteFile(strSrcFile) == 0)
+		{
+			nErrors++;
+			dwLastError = ::GetLastError();
+			continue;
+		}
+
+		// Delete from index.
+		oIdxFile.DeleteKey("Cache", oRow[CCache::INDEX_KEY]);
+
+		// Delete from cache table.
+		App.m_oCache.DeleteRow(oRow);
+	}
+
+	// Report any errors.
+	if (nErrors > 0)
+		App.AlertMsg("Failed to delete %d of %d file(s).", nErrors, nFiles);
+
+	// Update UI.
+	App.m_AppWnd.m_AppDlg.RefreshView();
 }
 
 /******************************************************************************
@@ -656,8 +703,6 @@ void CAppCmds::OnOptionsPrefs()
 void CAppCmds::OnOptionsUTConfig()
 {
 	ASSERT(App.m_pProfile != NULL);
-
-	App.AlertMsg("Not implemented.");
 
 	// Check config file exists.
 	if (!App.m_pProfile->m_strConfigFile.Exists())
