@@ -118,6 +118,10 @@ SOURCE=.\Cache.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\ConflictDlg.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\EditProfileDlg.cpp
 # End Source File
 # Begin Source File
@@ -194,6 +198,10 @@ SOURCE=.\Cache.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\ConflictDlg.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\EditProfileDlg.hpp
 # End Source File
 # Begin Source File
@@ -258,6 +266,10 @@ SOURCE=.\App.rcv
 # End Source File
 # Begin Source File
 
+SOURCE=.\karma.ico
+# End Source File
+# Begin Source File
+
 SOURCE=.\ListIcons.bmp
 # End Source File
 # Begin Source File
@@ -271,6 +283,10 @@ SOURCE=.\Mesh.ico
 # Begin Source File
 
 SOURCE=.\Music.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Setup.ico
 # End Source File
 # Begin Source File
 
