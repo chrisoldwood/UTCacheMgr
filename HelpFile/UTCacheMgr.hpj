@@ -6,7 +6,7 @@ LCID=0x809 0x0 0x0 ; English (United Kingdom)
 REPORT=Yes
 CONTENTS=IDH_CONTENTS
 TITLE=UT Cache Manager
-COPYRIGHT=(C) Chris Oldwood 2002
+COPYRIGHT=(C) Chris Oldwood 2003
 HLP=UTCacheMgr.hlp
 
 [FILES]
