@@ -53,6 +53,8 @@ public:
 
 	CPath	m_strConfigFile;	// UT Config file.
 
+	CPath	m_strLastCopyTo;	// Last "Copy To..." path.
+
 	//
 	// Constants.
 	//

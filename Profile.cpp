@@ -31,7 +31,7 @@ const char* CProfile::DEF_SOUNDS_DIR     = "Sounds";
 const char* CProfile::DEF_MUSIC_DIR      = "Music";
 const char* CProfile::DEF_CONFIG_FILE    = "UnrealTournament.ini";
 const char* CProfile::DEF_CACHE_TMP_DIR  = "..\\.";
-const char* CProfile::DEF_CACHE_TMP_MASK = "Cache????.tmp";
+const char* CProfile::DEF_CACHE_TMP_MASK = "????.tmp";
 
 const char* CProfile::DEF_MESH_DIR         = "StaticMeshes";
 const char* CProfile::DEF_ANIM_DIR         = "Animations";
@@ -117,7 +117,7 @@ char CProfile::GetFileType(const CString& strExt)
 		return ANIM_FILE;
 	}
 
-	ASSERT(false);
+	ASSERT_FALSE();
 
 	return NULL;
 }
@@ -147,7 +147,7 @@ CPath CProfile::GetTypeDir(char cType)
 		case ANIM_FILE:		return m_strAnimDir;
 	}
 
-	ASSERT(false);
+	ASSERT_FALSE();
 
 	return "";
 }
