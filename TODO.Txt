@@ -11,3 +11,9 @@
 - Support .ucl and .upl system files.
 
 - Add Move/Copy options when installing.
+
+- Auto-pinning by regex.
+
+- Separate edit logs for each profile.
+
+- Backing up of cache.
