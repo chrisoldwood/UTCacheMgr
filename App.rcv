@@ -34,13 +34,16 @@ BEGIN
 	BEGIN
 		BLOCK "040904E4"
 		BEGIN
-			VALUE "FileDescription", "UT Cache Manager\0"
-			VALUE "FileVersion", "1.0\0"
-			VALUE "InternalName", "UTCacheMgr.exe\0"
-			VALUE "LegalCopyright", "(C) Chris Oldwood 2002\0"
+			VALUE "FileDescription",  "UT Cache Manager\0"
+			VALUE "FileVersion",      "1.0\0"
+			VALUE "InternalName",     "UTCacheMgr.exe\0"
+			VALUE "LegalCopyright",   "(C) Chris Oldwood 2002\0"
 			VALUE "OriginalFilename", "UTCacheMgr.exe\0"
-			VALUE "ProductName", "UT Cache Manager\0"
-			VALUE "ProductVersion", "1.0\0"
+			VALUE "ProductName",      "UT Cache Manager\0"
+			VALUE "ProductVersion",   "1.0\0"
+#ifdef _DEBUG
+			VALUE "Comments",         "Debug Build\0"
+#endif
 		END
 	END
 	BLOCK "VarFileInfo"
