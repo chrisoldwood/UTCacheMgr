@@ -1,3 +1,5 @@
 - Update helpfile.
 
-- Detect installations (Mods .ini file).
+- Detect MOD installations.
+
+- Don't import to cache if file exists in appropariate folders.
