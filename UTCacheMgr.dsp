@@ -233,6 +233,58 @@ SOURCE=.\App.rcv
 SOURCE=.\Toolbar.bmp
 # End Source File
 # End Group
+# Begin Group "HelpFile"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\HelpFile\CacheMenu.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\HelpFile\EditMenu.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\HelpFile\EditProfDlg.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\HelpFile\HelpMenu.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\HelpFile\OptionsMenu.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\HelpFile\PrefsDlg.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\HelpFile\ProfDlg.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\HelpFile\SelProfDlg.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\HelpFile\UTCacheMgr.hpj
+# End Source File
+# Begin Source File
+
+SOURCE=.\HelpFile\UTCacheMgr.rtf
+# End Source File
+# Begin Source File
+
+SOURCE=.\HelpFile\UTCfgDlg.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\HelpFile\ViewMenu.bmp
+# End Source File
+# End Group
 # Begin Source File
 
 SOURCE=.\ReadMe.txt
