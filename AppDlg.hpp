@@ -43,11 +43,24 @@ public:
 	CSortColumns::Dir	m_eSortOrder;
 	bool				m_bShowAllFiles;
 
+	// Column indices.
+	enum Column
+	{
+		FILE_COLUMN,
+		TYPE_COLUMN,
+		DATE_COLUMN,
+		SIZE_COLUMN,
+		STATUS_COLUMN,
+	};
+
 protected:
 	//
 	// Message processors.
 	//
 	virtual void OnInitDialog();
+	LRESULT OnGridSelchange(NMHDR&);
+	LRESULT OnGridRightClick(NMHDR&);
+	LRESULT OnGridClickColumn(NMHDR&);
 
 	//
 	// Internal methods.
