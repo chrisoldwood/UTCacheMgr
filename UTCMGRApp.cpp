@@ -254,7 +254,7 @@ void CUTCMGRApp::LoadConfig()
 		if (m_aoProfiles.Size() == 0)
 		{
 			// Warn user.
-			AlertMsg("Your UT/UT2003 installation could not be detected.\n\n"
+			AlertMsg("No UT/TO/UT2003/UT2004 installation could not be detected.\n\n"
 					 "The inital cache scan may fail as it is performed on\n"
 					 "the default UT installation folder.");
 
