@@ -62,6 +62,13 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDR_APPICON             ICON    DISCARDABLE     "App.ico"
+IDI_SYSTEM              ICON    DISCARDABLE     "System.ico"
+IDI_MAP                 ICON    DISCARDABLE     "Map.ico"
+IDI_TEXTURE             ICON    DISCARDABLE     "Texture.ico"
+IDI_SOUND               ICON    DISCARDABLE     "Sound.ico"
+IDI_MUSIC               ICON    DISCARDABLE     "Music.ico"
+IDI_ANIM                ICON    DISCARDABLE     "Anim.ico"
+IDI_MESH                ICON    DISCARDABLE     "Mesh.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -74,8 +81,11 @@ BEGIN
     BEGIN
         MENUITEM "&Profile...\tCtrl+P",         ID_CACHE_PROFILE
         MENUITEM "&Rescan\tF5",                 ID_CACHE_RESCAN
-        MENUITEM SEPARATOR
         MENUITEM "Res&tore...",                 ID_CACHE_RESTORE
+        MENUITEM SEPARATOR
+        MENUITEM "UT &Settings...",             ID_CACHE_UT_CONFIG
+        MENUITEM SEPARATOR
+        MENUITEM "&Properties",                 ID_CACHE_PROPERTIES
         MENUITEM SEPARATOR
         MENUITEM "E&xit\tAlt+F4",               ID_CACHE_EXIT
     END
@@ -105,8 +115,6 @@ BEGIN
     BEGIN
         MENUITEM "&Profiles...",                ID_OPTIONS_PROFILES
         MENUITEM "P&references...",             ID_OPTIONS_PREFS
-        MENUITEM SEPARATOR
-        MENUITEM "UT &Settings...",             ID_OPTIONS_UT_CONFIG
     END
     POPUP "&Help"
     BEGIN
@@ -128,7 +136,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Copy &To...",                 ID_EDIT_COPY_TO
         MENUITEM SEPARATOR
-        MENUITEM "&Properties",                 ID_VIEW_PROPERTIES
+        MENUITEM "&Properties",                 ID_CACHE_PROPERTIES
     END
 END
 
@@ -140,7 +148,7 @@ END
 
 IDD_MAIN DIALOGEX 0, 0, 301, 201
 STYLE WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     CONTROL         "List1",IDC_GRID,"SysListView32",LVS_REPORT | 
                     LVS_SHOWSELALWAYS | LVS_ALIGNLEFT | WS_BORDER | 
@@ -157,7 +165,7 @@ BEGIN
     CTEXT           "v%s",IDC_VERSION,40,20,70,8,SS_CENTERIMAGE
     CTEXT           "Freeware",IDC_STATIC,40,30,70,8,SS_CENTERIMAGE
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,50,99,1
-    CTEXT           "(C) Chris Oldwood 2002",IDC_STATIC,10,60,100,10,
+    CTEXT           "(C) Chris Oldwood 2001-2003",IDC_STATIC,10,60,100,10,
                     SS_CENTERIMAGE
     CTEXT           "gort@cix.co.uk",IDC_EMAIL,10,70,100,10,SS_NOTIFY | 
                     SS_CENTERIMAGE
@@ -166,13 +174,16 @@ BEGIN
     DEFPUSHBUTTON   "OK",IDOK,35,100,50,15
 END
 
-IDD_SEL_PROFILE DIALOG DISCARDABLE  0, 0, 307, 255
+IDD_SEL_PROFILE DIALOG DISCARDABLE  0, 0, 307, 295
 STYLE DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Select Profile"
 FONT 8, "MS Sans Serif"
 BEGIN
     LTEXT           "&Profile Name:",IDC_STATIC,10,12,60,8
-    COMBOBOX        IDC_PROFILES,70,10,100,75,CBS_DROPDOWNLIST | CBS_SORT | 
+    COMBOBOX        IDC_PROFILES,70,10,75,75,CBS_DROPDOWNLIST | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Format:",IDC_STATIC,160,12,30,8
+    COMBOBOX        IDC_FORMAT,190,10,50,50,CBS_DROPDOWNLIST | WS_DISABLED | 
                     WS_VSCROLL | WS_TABSTOP
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,35,285,1
     LTEXT           "Cache Folder:",IDC_STATIC,10,48,60,8
@@ -192,12 +203,16 @@ BEGIN
                     ES_READONLY
     LTEXT           "Music Folder:",IDC_STATIC,10,173,60,8
     EDITTEXT        IDC_MUSIC_DIR,70,170,225,14,ES_AUTOHSCROLL | ES_READONLY
-    LTEXT           "Config File:",IDC_STATIC,10,193,60,8
-    EDITTEXT        IDC_CONFIG_FILE,70,190,225,14,ES_AUTOHSCROLL | 
+    LTEXT           "Mes&hes Folder:",IDC_STATIC,10,193,60,8
+    EDITTEXT        IDC_MESH_DIR,70,190,225,14,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "&Anims Folder:",IDC_STATIC,10,213,60,8
+    EDITTEXT        IDC_ANIM_DIR,70,210,225,14,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Config File:",IDC_STATIC,10,233,60,8
+    EDITTEXT        IDC_CONFIG_FILE,70,230,225,14,ES_AUTOHSCROLL | 
                     ES_READONLY
-    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,215,284,1
-    DEFPUSHBUTTON   "OK",IDOK,100,230,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,155,230,50,14
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,255,283,1
+    DEFPUSHBUTTON   "OK",IDOK,100,270,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,155,270,50,14
     LTEXT           "&Read Only?",IDC_STATIC,10,65,38,8
 END
 
@@ -241,13 +256,16 @@ BEGIN
     DEFPUSHBUTTON   "Close",IDCANCEL,120,95,50,14
 END
 
-IDD_EDIT_PROFILE DIALOG DISCARDABLE  0, 0, 327, 261
+IDD_EDIT_PROFILE DIALOG DISCARDABLE  0, 0, 327, 295
 STYLE DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Edit Profile"
 FONT 8, "MS Sans Serif"
 BEGIN
     LTEXT           "&Profile Name:",IDC_STATIC,10,12,60,8
-    EDITTEXT        IDC_NAME,70,10,100,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_NAME,70,10,75,14,ES_AUTOHSCROLL
+    LTEXT           "Format:",IDC_STATIC,160,12,30,8
+    COMBOBOX        IDC_FORMAT,190,10,50,50,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
     PUSHBUTTON      "&Quick Setup...",IDC_QUICK_SETUP,255,10,60,14
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,35,305,1
     LTEXT           "&Cache Folder:",IDC_STATIC,10,48,60,8
@@ -255,28 +273,34 @@ BEGIN
     PUSHBUTTON      "...",IDC_BROWSE_CACHE,300,45,15,14
     CONTROL         "&Read Only?",IDC_READ_ONLY,"Button",BS_AUTOCHECKBOX | 
                     BS_LEFTTEXT | WS_TABSTOP,10,65,70,10
-    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,85,304,1
-    LTEXT           "&System Folder:",IDC_STATIC,10,98,60,8
-    EDITTEXT        IDC_SYSTEM_DIR,70,95,225,14,ES_AUTOHSCROLL
-    PUSHBUTTON      "...",IDC_BROWSE_SYSTEM,300,95,15,14
-    LTEXT           "&Maps Folder:",IDC_STATIC,10,118,60,8
-    EDITTEXT        IDC_MAPS_DIR,70,115,225,14,ES_AUTOHSCROLL
-    PUSHBUTTON      "...",IDC_BROWSE_MAPS,300,115,15,14
-    LTEXT           "&Textures Folder:",IDC_STATIC,10,138,60,8
-    EDITTEXT        IDC_TEXTURES_DIR,70,135,225,14,ES_AUTOHSCROLL
-    PUSHBUTTON      "...",IDC_BROWSE_TEXTURES,300,135,15,14
-    LTEXT           "S&ounds Folder:",IDC_STATIC,10,158,60,8
-    EDITTEXT        IDC_SOUNDS_DIR,70,155,225,14,ES_AUTOHSCROLL
-    PUSHBUTTON      "...",IDC_BROWSE_SOUNDS,300,155,15,14
-    LTEXT           "M&usic Folder:",IDC_STATIC,10,178,60,8
-    EDITTEXT        IDC_MUSIC_DIR,70,175,225,14,ES_AUTOHSCROLL
-    PUSHBUTTON      "...",IDC_BROWSE_MUSIC,300,175,15,14
-    LTEXT           "Con&fig File:",IDC_STATIC,10,198,60,8
-    EDITTEXT        IDC_CONFIG_FILE,70,195,225,14,ES_AUTOHSCROLL
-    PUSHBUTTON      "...",IDC_BROWSE_CONFIG,300,195,15,14
-    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,220,304,1
-    DEFPUSHBUTTON   "OK",IDOK,110,235,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,165,235,50,14
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,80,303,1
+    LTEXT           "&System Folder:",IDC_STATIC,10,93,60,8
+    EDITTEXT        IDC_SYSTEM_DIR,70,90,225,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_BROWSE_SYSTEM,300,90,15,14
+    LTEXT           "&Maps Folder:",IDC_STATIC,10,113,60,8
+    EDITTEXT        IDC_MAPS_DIR,70,110,225,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_BROWSE_MAPS,300,110,15,14
+    LTEXT           "&Textures Folder:",IDC_STATIC,10,133,60,8
+    EDITTEXT        IDC_TEXTURES_DIR,70,130,225,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_BROWSE_TEXTURES,300,130,15,14
+    LTEXT           "S&ounds Folder:",IDC_STATIC,10,153,60,8
+    EDITTEXT        IDC_SOUNDS_DIR,70,150,225,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_BROWSE_SOUNDS,300,150,15,14
+    LTEXT           "M&usic Folder:",IDC_STATIC,10,173,60,8
+    EDITTEXT        IDC_MUSIC_DIR,70,170,225,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_BROWSE_MUSIC,300,170,15,14
+    LTEXT           "Mes&hes Folder:",IDC_STATIC,10,193,60,8
+    EDITTEXT        IDC_MESH_DIR,70,190,225,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_BROWSE_MESHS,300,190,15,14
+    LTEXT           "&Anims Folder:",IDC_STATIC,10,213,60,8
+    EDITTEXT        IDC_ANIM_DIR,70,210,225,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_BROWSE_ANIMS,300,210,15,14
+    LTEXT           "Con&fig File:",IDC_STATIC,10,233,60,8
+    EDITTEXT        IDC_CONFIG_FILE,70,230,225,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_BROWSE_CONFIG,300,230,15,14
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,255,303,1
+    DEFPUSHBUTTON   "OK",IDOK,110,270,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,165,270,50,14
 END
 
 IDD_PROGRESS DIALOG DISCARDABLE  0, 0, 202, 41
@@ -305,13 +329,14 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,90,60,50,14
 END
 
-IDD_RESTORE DIALOGEX 0, 0, 262, 241
-STYLE DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_RESTORE DIALOGEX 0, 0, 261, 234
+STYLE DS_CONTEXTHELP | WS_POPUP | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | 
+    WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
 CAPTION "Restore Files To Cache"
 FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,80,220,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,135,220,50,14
+    DEFPUSHBUTTON   "OK",IDOK,150,215,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,205,215,50,14
     CONTROL         "List1",IDC_GRID,"SysListView32",LVS_REPORT | 
                     LVS_SHOWSELALWAYS | LVS_ALIGNLEFT | LVS_NOSORTHEADER | 
                     WS_BORDER | WS_TABSTOP,5,5,250,200,WS_EX_CLIENTEDGE
@@ -330,6 +355,24 @@ BEGIN
     DEFPUSHBUTTON   "Close",IDCANCEL,115,180,50,14
 END
 
+IDD_PROPERTIES DIALOG DISCARDABLE  0, 0, 242, 130
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "File Properties"
+FONT 8, "MS Sans Serif"
+BEGIN
+    ICON            IDR_APPICON,IDC_FILE_ICON,10,10,20,20
+    LTEXT           "%s",IDC_REAL_NAME,60,15,175,8
+    LTEXT           "Cache Name:",IDC_STATIC,10,40,50,8
+    LTEXT           "%s",IDC_CACHE_NAME,60,40,175,8
+    LTEXT           "File Date:",IDC_STATIC,10,55,50,8
+    LTEXT           "%s",IDC_FILE_DATE,60,55,175,8
+    LTEXT           "File Type:",IDC_STATIC,10,70,50,8
+    LTEXT           "%s",IDC_FILE_TYPE,60,70,175,8
+    LTEXT           "File Size:",IDC_STATIC,10,85,50,8
+    LTEXT           "%s",IDC_FILE_SIZE,60,85,175,8
+    DEFPUSHBUTTON   "Close",IDCANCEL,95,105,50,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -337,6 +380,7 @@ END
 //
 
 IDR_APPTOOLBAR          BITMAP  DISCARDABLE     "Toolbar.bmp"
+IDB_LIST_ICONS          BITMAP  DISCARDABLE     "ListIcons.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -371,7 +415,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 300
         TOPMARGIN, 7
-        BOTTOMMARGIN, 248
+        BOTTOMMARGIN, 288
     END
 
     IDD_PREFS, DIALOG
@@ -395,7 +439,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 320
         TOPMARGIN, 7
-        BOTTOMMARGIN, 254
+        BOTTOMMARGIN, 288
     END
 
     IDD_PROGRESS, DIALOG
@@ -417,9 +461,9 @@ BEGIN
     IDD_RESTORE, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 255
+        RIGHTMARGIN, 254
         TOPMARGIN, 7
-        BOTTOMMARGIN, 234
+        BOTTOMMARGIN, 227
     END
 
     IDD_ERRORS, DIALOG
@@ -428,6 +472,14 @@ BEGIN
         RIGHTMARGIN, 280
         TOPMARGIN, 7
         BOTTOMMARGIN, 194
+    END
+
+    IDD_PROPERTIES, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 235
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 123
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -479,6 +531,8 @@ BEGIN
     ID_CACHE_PROFILE        "Select a different cache profile\nSelect Profile (Ctrl+P)"
     ID_CACHE_RESCAN         "Rescan the cache\nRescan Cache (F5)"
     ID_CACHE_RESTORE        "Restore previously extracted files to the cache\nRestore"
+    ID_CACHE_UT_CONFIG      "Configure the UT cache settings\nEdit UT Settings"
+    ID_CACHE_PROPERTIES     "Displays the selected files' properties\nProperties"
     ID_CACHE_EXIT           "Exit UT Cache Manager\nExit"
 END
 
@@ -494,7 +548,6 @@ BEGIN
     ID_OPTIONS_POPUP        "Settings"
     ID_OPTIONS_PROFILES     "Configure the cache profiles\nEdit Profiles"
     ID_OPTIONS_PREFS        "Configure the UT Cache Manager global options\nEdit Preferences"
-    ID_OPTIONS_UT_CONFIG    "Configure the UT cache settings\nEdit UT Settings"
 END
 
 STRINGTABLE DISCARDABLE 
@@ -511,7 +564,6 @@ BEGIN
     ID_VIEW_SORT_SIZE       "Sort the files by size\nSort By Size"
     ID_VIEW_SORT_TYPE       "Sort the files by type\nSort By Type"
     ID_VIEW_SHOW_ALL        "Show files which already exist in the UT directories as well\nShow All"
-    ID_VIEW_PROPERTIES      "Displays the files properties\nProperties"
 END
 
 STRINGTABLE DISCARDABLE 

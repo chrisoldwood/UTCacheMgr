@@ -7,10 +7,20 @@
 #define IDR_APPACCEL                    4
 #define IDR_APPTOOLBAR                  5
 #define IDR_GRIDMENU                    6
+#define IDB_LIST_ICONS                  7
+#define IDI_SYSTEM                      50
+#define IDI_MAP                         51
+#define IDI_TEXTURE                     52
+#define IDI_SOUND                       53
+#define IDI_MUSIC                       54
+#define IDI_ANIM                        55
+#define IDI_MESH                        56
 #define ID_CACHE_POPUP                  100
 #define ID_CACHE_PROFILE                101
 #define ID_CACHE_RESCAN                 102
 #define ID_CACHE_RESTORE                103
+#define ID_CACHE_UT_CONFIG              104
+#define ID_CACHE_PROPERTIES             105
 #define ID_CACHE_EXIT                   109
 #define ID_EDIT_POPUP                   200
 #define ID_EDIT_PIN                     201
@@ -26,11 +36,9 @@
 #define ID_VIEW_SORT_SIZE               305
 #define ID_VIEW_SORT_TYPE               306
 #define ID_VIEW_SHOW_ALL                307
-#define ID_VIEW_PROPERTIES              308
 #define ID_OPTIONS_POPUP                800
 #define ID_OPTIONS_PROFILES             801
 #define ID_OPTIONS_PREFS                802
-#define ID_OPTIONS_UT_CONFIG            803
 #define ID_HELP_POPUP                   900
 #define ID_HELP_CONTENTS                901
 #define ID_HELP_ABOUT                   902
@@ -70,6 +78,17 @@
 #define IDC_BROWSE_CONFIG               1086
 #define IDC_QUICK_SETUP                 1087
 #define IDC_READ_ONLY                   1088
+#define IDC_MESH_DIR                    1089
+#define IDC_BROWSE_MESHS                1090
+#define IDC_ANIM_DIR                    1091
+#define IDC_BROWSE_ANIMS                1092
+#define IDC_FORMAT                      1093
+#define IDC_FILE_ICON                   1094
+#define IDC_REAL_NAME                   1095
+#define IDC_CACHE_NAME                  1096
+#define IDC_FILE_DATE                   1097
+#define IDC_FILE_SIZE                   1098
+#define IDC_FILE_TYPE                   1099
 #define IDD_MAIN                        5000
 #define IDD_ABOUT                       5001
 #define IDD_SEL_PROFILE                 5002
@@ -80,6 +99,7 @@
 #define IDD_UT_CONFIG                   5008
 #define IDD_RESTORE                     5009
 #define IDD_ERRORS                      5010
+#define IDD_PROPERTIES                  5011
 #define IDC_STATIC                      -1
 
 // Next default values for new objects
@@ -87,9 +107,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        133
-#define _APS_NEXT_COMMAND_VALUE         164
-#define _APS_NEXT_CONTROL_VALUE         1089
+#define _APS_NEXT_RESOURCE_VALUE        136
+#define _APS_NEXT_COMMAND_VALUE         166
+#define _APS_NEXT_CONTROL_VALUE         1099
 #define _APS_NEXT_SYMED_VALUE           104
 #endif
 #endif
