@@ -47,6 +47,9 @@ CUTCMGRApp::CUTCMGRApp()
 	, m_pProfile(NULL)
 	, m_bScanOnStart(false)
 	, m_bScanOnSwitch(false)
+	, m_bScanForTmp(true)
+	, m_bScanIndex(true)
+	, m_bShowAllFiles(false)
 {
 	// Create the MDB.
 	m_oMDB.AddTable(m_oCache);
@@ -154,6 +157,10 @@ void CUTCMGRApp::LoadConfig()
 	m_strCacheExt   = m_oIniFile.ReadString("Cache", "Ext",          CProfile::DEF_CACHE_FILE_EXT);
 	m_bScanOnStart  = m_oIniFile.ReadBool  ("Cache", "ScanOnStart",  m_bScanOnStart);
 	m_bScanOnSwitch = m_oIniFile.ReadBool  ("Cache", "ScanOnSwitch", m_bScanOnSwitch);
+	m_bScanForTmp   = m_oIniFile.ReadBool  ("Cache", "ScanForTmp",   m_bScanForTmp);
+	m_bScanIndex    = m_oIniFile.ReadBool  ("Cache", "ScanIndex",    m_bScanIndex);
+	m_bShowAllFiles = m_oIniFile.ReadBool  ("Cache", "ShowAllFiles", m_bShowAllFiles);
+	m_strLastCopyTo = m_oIniFile.ReadString("Cache", "LastCopyTo",   "");
 
 	// Read the number of profiles.
 	uint nProfiles  = m_oIniFile.ReadInt("Profiles", "Count",   0);
@@ -266,6 +273,10 @@ void CUTCMGRApp::SaveConfig()
 	m_oIniFile.WriteString("Cache", "Ext",          m_strCacheExt);
 	m_oIniFile.WriteBool  ("Cache", "ScanOnStart",  m_bScanOnStart);
 	m_oIniFile.WriteBool  ("Cache", "ScanOnSwitch", m_bScanOnSwitch);
+	m_oIniFile.WriteBool  ("Cache", "ScanForTmp",   m_bScanForTmp);
+	m_oIniFile.WriteBool  ("Cache", "ScanIndex",    m_bScanIndex);
+	m_oIniFile.WriteBool  ("Cache", "ShowAllFiles", m_bShowAllFiles);
+	m_oIniFile.WriteString("Cache", "LastCopyTo",   m_strLastCopyTo);
 
 	// Write the profiles.
 	m_oIniFile.WriteString("Profiles", "Default", m_strDefProfile    );

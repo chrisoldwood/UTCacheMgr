@@ -49,6 +49,10 @@ public:
 
 	bool		m_bScanOnStart;		// Scan on startup?
 	bool		m_bScanOnSwitch;	// Scan when switching profiles?
+	bool		m_bScanForTmp;		// Scan for old .tmp files?
+	bool		m_bScanIndex;		// Scan index for old entries?
+	bool		m_bShowAllFiles;	// Show all files?
+	CPath		m_strLastCopyTo;	// Last "Copy To..." path.
 
 	CRect		m_rcLastPos;		// Main window position.
 
