@@ -122,6 +122,10 @@ SOURCE=.\EditProfileDlg.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\ErrorsDlg.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\PrefsDlg.cpp
 # End Source File
 # Begin Source File
@@ -187,6 +191,10 @@ SOURCE=.\Cache.hpp
 # Begin Source File
 
 SOURCE=.\EditProfileDlg.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ErrorsDlg.hpp
 # End Source File
 # Begin Source File
 
@@ -304,6 +312,10 @@ SOURCE=.\HelpFile\ViewMenu.bmp
 # Begin Source File
 
 SOURCE=.\ReadMe.txt
+# End Source File
+# Begin Source File
+
+SOURCE=.\RelNotes.txt
 # End Source File
 # Begin Source File
 
