@@ -94,10 +94,6 @@ SOURCE=.\AboutDlg.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\App.rc
-# End Source File
-# Begin Source File
-
 SOURCE=.\AppCmds.cpp
 # End Source File
 # Begin Source File
@@ -159,6 +155,10 @@ SOURCE=.\SelFilesDlg.cpp
 # Begin Source File
 
 SOURCE=.\SelProfileDlg.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\UTCMGR.rc
 # End Source File
 # Begin Source File
 
