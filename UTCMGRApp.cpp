@@ -119,7 +119,7 @@ bool CUTCMGRApp::OnOpen()
 		return false;
 
 	// Show it.
-	if (ShowNormal() && !m_rcLastPos.Empty())
+	if (ShowNormal() && !m_rcLastWndPos.Empty())
 		m_AppWnd.Move(m_rcLastWndPos);
 
 	m_AppWnd.Show(m_iCmdShow);
