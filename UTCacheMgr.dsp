@@ -122,6 +122,10 @@ SOURCE=.\ConflictDlg.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DetectedDlg.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\EditProfileDlg.cpp
 # End Source File
 # Begin Source File
@@ -199,6 +203,10 @@ SOURCE=.\Cache.hpp
 # Begin Source File
 
 SOURCE=.\ConflictDlg.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DetectedDlg.hpp
 # End Source File
 # Begin Source File
 
