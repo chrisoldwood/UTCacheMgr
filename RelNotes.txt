@@ -1,3 +1,16 @@
+Version 2.5
+===========
+
+- Added UT2004 support (Profile format).
+- Added Tactical Ops support (Installation detected).
+- Added option to install  map packs.
+- Added option to import into the cache from another cache.
+- Added ability to detect new UT installations (For upgraders).
+- Changed profile selection to a popup menu.
+- Fixed bug where the last "Copy To.. " folder was not persisted.
+- Various other minor UI tweaks and fixes.
+
+
 Version 2.0
 ===========
 
@@ -21,4 +34,4 @@ Version 1.0
 Chris Oldwood 
 (gort@cix.co.uk)
 
-19th June 2003
+31st March 2004
