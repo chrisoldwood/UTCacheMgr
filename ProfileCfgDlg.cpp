@@ -102,6 +102,9 @@ void CProfileCfgDlg::OnAdd()
 		m_lbProfiles.ItemPtr(n, pProfile);
 
 		m_lbProfiles.CurSel(n);
+
+		// Mark profiles as modified.
+		App.m_nModified |= App.PROFILES;
 	}
 }
 
@@ -140,6 +143,9 @@ void CProfileCfgDlg::OnEdit()
 		// Rescan, if the active one.
 		if (pProfile == App.m_pProfile)
 			m_bReScan = true;
+
+		// Mark profiles as modified.
+		App.m_nModified |= App.PROFILES;
 	}
 }
 
@@ -190,6 +196,9 @@ void CProfileCfgDlg::OnRemove()
 		nSel--;
 
 	m_lbProfiles.CurSel(nSel);
+
+	// Mark profiles as modified.
+	App.m_nModified |= App.PROFILES;
 }
 
 /******************************************************************************
