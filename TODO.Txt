@@ -1,7 +1,5 @@
-- Install Maps from a folder.
+- Detect package dependencies.
 
-- Auto-detect of TO/SF (Mod and retail).
-
-- Attempt to detect package dependencies.
+- Map preview on Properties dialog.
 
 - Update helpfile.
