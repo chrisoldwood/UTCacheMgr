@@ -63,7 +63,7 @@ CProfileCfgDlg::CProfileCfgDlg()
 void CProfileCfgDlg::OnInitDialog()
 {
 	// Load the profiles listbox.
-	for (int i = 0; i < App.m_aoProfiles.Size(); ++i)
+	for (uint i = 0; i < App.m_aoProfiles.size(); ++i)
 	{
 		CProfile* pProfile = App.m_aoProfiles[i];
 
@@ -97,7 +97,7 @@ void CProfileCfgDlg::OnAdd()
 		CProfile* pProfile = new CProfile(Dlg.m_oProfile);
 
 		// Add to collection.
-		App.m_aoProfiles.Add(pProfile);
+		App.m_aoProfiles.push_back(pProfile);
 
 		// Add to view.
 		int n = m_lbProfiles.Add(pProfile->m_strName);
@@ -189,7 +189,7 @@ void CProfileCfgDlg::OnRemove()
 	}
 
 	// Remove from collection.
-	App.m_aoProfiles.Delete(App.m_aoProfiles.Find(pProfile));
+	Delete(App.m_aoProfiles, FindIndexOf(App.m_aoProfiles, pProfile));
 
 	// Remove from view.
 	m_lbProfiles.Delete(nSel);
@@ -236,43 +236,43 @@ void CProfileCfgDlg::OnDetect()
 {
 	CBusyCursor oBusyCursor;
 
-	// Template shorthands.
-	typedef TPtrArray<CProfile> CProfiles;
-
 	CProfile* pProfile = NULL;
 	CProfiles aoProfiles;
 
 	// Look for a UT installation.
 	if ((pProfile = CProfile::DetectUT()) != NULL)
-		aoProfiles.Add(pProfile);
+		aoProfiles.push_back(pProfile);
 
 	// Look for a UT2003 installation.
 	if ((pProfile = CProfile::DetectUT2003()) != NULL)
-		aoProfiles.Add(pProfile);
+		aoProfiles.push_back(pProfile);
 
 	// Look for a UT2004 installation.
 	if ((pProfile = CProfile::DetectUT2004()) != NULL)
-		aoProfiles.Add(pProfile);
+		aoProfiles.push_back(pProfile);
 
 	// Look for a Tactical Ops installation.
 	if ((pProfile = CProfile::DetectTacOps()) != NULL)
-		aoProfiles.Add(pProfile);
+		aoProfiles.push_back(pProfile);
 
 	// Remove any duplicates.
-	for (int i = aoProfiles.Size()-1; i >= 0; --i)
+	for (CProfiles::reverse_iterator oIter = aoProfiles.rbegin(); oIter != aoProfiles.rend(); ++oIter)
 	{
-		CProfile* pProfile = aoProfiles[i];
+		CProfile* pProfile = *oIter;
 
 		// Profile name already used OR already configured?
 		if ( (App.FindProfile(pProfile->m_strName) != NULL)
 		  || (App.FindProfileByCfgFile(pProfile->m_strConfigFile) != NULL) )
 		{
-			aoProfiles.Delete(i);
+			CProfiles::iterator oPos = (oIter+1).base();
+
+			delete *oPos;
+			aoProfiles.erase(oPos);
 		}
 	}
 
 	// Nothing new detected?
-	if (aoProfiles.Size() == 0)
+	if (aoProfiles.empty())
 	{
 		NotifyMsg("No new installations were detected.");
 		return;
@@ -281,7 +281,7 @@ void CProfileCfgDlg::OnDetect()
 	CDetectedDlg Dlg;
 
 	// App profiles to dialog.
-	for (int i = 0; i < aoProfiles.Size(); ++i)
+	for (uint i = 0; i < aoProfiles.size(); ++i)
 	{
 		CProfile* pProfile = aoProfiles[i];
 
@@ -293,12 +293,12 @@ void CProfileCfgDlg::OnDetect()
 	if (Dlg.RunModal(*this) == IDOK)
 	{
 		// Copy to main profiles array.
-		for (int i = aoProfiles.Size()-1; i >= 0; --i)
+		for (CProfiles::reverse_iterator oIter = aoProfiles.rbegin(); oIter != aoProfiles.rend(); ++oIter)
 		{
-			CProfile* pProfile = aoProfiles[i];
+			CProfile* pProfile = *oIter;
 
 			// Add to collection.
-			App.m_aoProfiles.Add(pProfile);
+			App.m_aoProfiles.push_back(pProfile);
 
 			// Add to view.
 			int n = m_lbProfiles.Add(pProfile->m_strName);
@@ -308,14 +308,14 @@ void CProfileCfgDlg::OnDetect()
 		}
 
 		// Detach from temporary array.
-		aoProfiles.RemoveAll();
+		aoProfiles.clear();
 
 		// Mark profiles as modified.
 		App.m_nModified |= App.PROFILES;
 	}
 
 	// Cleanup.
-	aoProfiles.DeleteAll();
+	DeleteAll(aoProfiles);
 }
 
 /******************************************************************************

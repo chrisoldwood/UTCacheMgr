@@ -39,7 +39,7 @@ public:
 	//
 	// Helper methods.
 	//
-	static int Compare(const CProfile** ppProfile1, const CProfile** ppProfile2);
+	static bool Compare(const CProfile* pProfile1, const CProfile* pProfile2);
 
 	static CProfile* DetectUT();
 	static CProfile* DetectUT2003();

@@ -10,6 +10,11 @@
 
 #include "AppHeaders.hpp"
 
+#ifdef _DEBUG
+// For memory leak detection.
+#define new DBGCRT_NEW
+#endif
+
 /******************************************************************************
 **
 ** Class constants.
@@ -197,12 +202,11 @@ CPath CProfile::GetTypeDir(char cType)
 *******************************************************************************
 */
 
-int CProfile::Compare(const CProfile** ppProfile1, const CProfile** ppProfile2)
+bool CProfile::Compare(const CProfile* pProfile1, const CProfile* pProfile2)
 {
-	ASSERT((ppProfile1  != NULL) && (ppProfile2  != NULL));
-	ASSERT((*ppProfile1 != NULL) && (*ppProfile2 != NULL));
+	ASSERT((pProfile1 != NULL) && (pProfile2 != NULL));
 
-	return strcmp((*ppProfile1)->m_strName, (*ppProfile2)->m_strName);
+	return (strcmp((pProfile1)->m_strName, (pProfile2)->m_strName) < 0);
 }
 
 /******************************************************************************

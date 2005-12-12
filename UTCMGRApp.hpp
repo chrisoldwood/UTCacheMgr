@@ -13,7 +13,7 @@
 #define UTCMGR_HPP
 
 // Template shorthands.
-typedef TPtrArray<CProfile> CProfiles;
+typedef std::vector<CProfile*> CProfiles;
 
 /******************************************************************************
 ** 

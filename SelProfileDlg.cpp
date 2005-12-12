@@ -68,9 +68,9 @@ void CSelProfileDlg::OnInitDialog()
 	ASSERT(m_pChoice   != NULL);
 
 	// Load the names combo.
-	for (int i = 0; i < m_pProfiles->Size(); ++i)
+	for (uint i = 0; i < m_pProfiles->size(); ++i)
 	{
-		CProfile* pProfile = m_pProfiles->At(i);
+		CProfile* pProfile = m_pProfiles->at(i);
 
 		int n = m_cbProfiles.Add(pProfile->m_strName);
 		m_cbProfiles.ItemPtr(n, pProfile);

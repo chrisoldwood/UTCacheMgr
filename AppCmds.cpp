@@ -1765,7 +1765,7 @@ void CAppCmds::OnUICacheProfile()
 //	CAppDlg&     oAppDlg  = App.m_AppWnd.m_AppDlg;
 
 	// Remove all check marks.
-	for (int i = 0; i < App.m_aoProfiles.Size(); ++i)
+	for (uint i = 0; i < App.m_aoProfiles.size(); ++i)
 		oMenu.CheckCmd(i + ID_CACHE_FIRST_PROFILE, false);
 
 	ASSERT(App.GetProfileIndex(App.m_pProfile) != -1);

@@ -88,7 +88,7 @@ CUTCMGRApp::CUTCMGRApp()
 
 CUTCMGRApp::~CUTCMGRApp()
 {
-	m_aoProfiles.DeleteAll();
+	DeleteAll(m_aoProfiles);
 }
 
 /******************************************************************************
@@ -219,7 +219,7 @@ void CUTCMGRApp::LoadConfig()
 
 		// If valid, add to collection.
 		if (oProfile.m_strName.Length() > 0)
-			m_aoProfiles.Add(new CProfile(oProfile));
+			m_aoProfiles.push_back(new CProfile(oProfile));
 	}
 
 	// Read the default profile.
@@ -236,22 +236,22 @@ void CUTCMGRApp::LoadConfig()
 
 		// Look for a UT installation.
 		if ((pProfile = CProfile::DetectUT()) != NULL)
-			m_aoProfiles.Add(pProfile);
+			m_aoProfiles.push_back(pProfile);
 
 		// Look for a UT2003 installation.
 		if ((pProfile = CProfile::DetectUT2003()) != NULL)
-			m_aoProfiles.Add(pProfile);
+			m_aoProfiles.push_back(pProfile);
 
 		// Look for a UT2004 installation.
 		if ((pProfile = CProfile::DetectUT2004()) != NULL)
-			m_aoProfiles.Add(pProfile);
+			m_aoProfiles.push_back(pProfile);
 
 		// Look for a Tactical Ops installation.
 		if ((pProfile = CProfile::DetectTacOps()) != NULL)
-			m_aoProfiles.Add(pProfile);
+			m_aoProfiles.push_back(pProfile);
 
 		// If nothing detected, create a default UT one.
-		if (m_aoProfiles.Size() == 0)
+		if (m_aoProfiles.empty())
 		{
 			// Warn user.
 			AlertMsg("No UT/TO/UT2003/UT2004 installation could not be detected.\n\n"
@@ -272,10 +272,10 @@ void CUTCMGRApp::LoadConfig()
 			m_pProfile->m_strMusicDir   = CPath(CProfile::DEF_ROOT_DIR,     CProfile::DEF_MUSIC_DIR   );
 			m_pProfile->m_strConfigFile = CPath(m_pProfile->m_strSystemDir, CProfile::DEF_CONFIG_FILE );
 
-			m_aoProfiles.Add(m_pProfile);
+			m_aoProfiles.push_back(m_pProfile);
 		}
 
-		ASSERT(m_aoProfiles.Size() > 0);
+		ASSERT(!m_aoProfiles.empty());
 
 		// Set the default profile.
 		m_pProfile      = m_aoProfiles[0];
@@ -353,9 +353,9 @@ void CUTCMGRApp::SaveConfig()
 	if (m_nModified & PROFILES)
 	{
 		// Write the profiles.
-		m_oIniFile.WriteInt("Profiles", "Count", m_aoProfiles.Size());
+		m_oIniFile.WriteInt("Profiles", "Count", m_aoProfiles.size());
 
-		for (int i = 0; i < m_aoProfiles.Size(); ++i)
+		for (uint i = 0; i < m_aoProfiles.size(); ++i)
 		{
 			CString   strSection;
 			CProfile* pProfile = m_aoProfiles[i];
@@ -423,7 +423,7 @@ CProfile* CUTCMGRApp::FindProfile(const char* pszName) const
 	ASSERT(pszName != NULL);
 
 	// For all profiles...
-	for (int i = 0; i < m_aoProfiles.Size(); ++i)
+	for (uint i = 0; i < m_aoProfiles.size(); ++i)
 	{
 		if (m_aoProfiles[i]->m_strName.Compare(pszName, true) == 0)
 			return m_aoProfiles[i];
@@ -447,7 +447,7 @@ CProfile* CUTCMGRApp::FindProfile(const char* pszName) const
 CProfile* CUTCMGRApp::FindProfileByCfgFile(const CPath& strCfgFile) const
 {
 	// For all profiles...
-	for (int i = 0; i < m_aoProfiles.Size(); ++i)
+	for (uint i = 0; i < m_aoProfiles.size(); ++i)
 	{
 		if (m_aoProfiles[i]->m_strConfigFile.Compare(strCfgFile, true) == 0)
 			return m_aoProfiles[i];
@@ -473,7 +473,7 @@ int CUTCMGRApp::GetProfileIndex(CProfile* pProfile) const
 	ASSERT(pProfile != NULL);
 
 	// For all profiles...
-	for (int i = 0; i < m_aoProfiles.Size(); ++i)
+	for (uint i = 0; i < m_aoProfiles.size(); ++i)
 	{
 		if (m_aoProfiles[i] == pProfile)
 			return i;
@@ -497,7 +497,7 @@ int CUTCMGRApp::GetProfileIndex(CProfile* pProfile) const
 void CUTCMGRApp::BuildProfileMenu()
 {
 	// Ensure profile list is sorted.
-	m_aoProfiles.Sort((TPtrArray<CProfile>::PFNCOMPARE)CProfile::Compare);
+	std::sort(m_aoProfiles.begin(), m_aoProfiles.end(), CProfile::Compare);
 
 	// Delete old menu.
 	for (int i = ID_CACHE_FIRST_PROFILE; i <= ID_CACHE_LAST_PROFILE; ++i)
@@ -506,7 +506,7 @@ void CUTCMGRApp::BuildProfileMenu()
 	CPopupMenu oCacheMenu = App.m_AppWnd.m_Menu.GetItemPopup(0).GetItemPopup(0);
 
 	// Build new menu.
-	for (int i = 0; i < m_aoProfiles.Size(); ++i)
+	for (uint i = 0; i < m_aoProfiles.size(); ++i)
 		oCacheMenu.InsertCmd(i, ID_CACHE_FIRST_PROFILE + i, m_aoProfiles[i]->m_strName);
 }
 

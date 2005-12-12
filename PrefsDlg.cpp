@@ -54,7 +54,7 @@ CPrefsDlg::CPrefsDlg()
 void CPrefsDlg::OnInitDialog()
 {
 	// Load the default profile combo.
-	for (int i = 0; i < App.m_aoProfiles.Size(); ++i)
+	for (uint i = 0; i < App.m_aoProfiles.size(); ++i)
 	{
 		CProfile* pProfile = App.m_aoProfiles[i];
 
