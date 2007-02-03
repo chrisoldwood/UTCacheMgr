@@ -377,9 +377,9 @@ CProfile* CProfile::DetectTacOps()
 	pProfile->m_nFormat       = UT_FORMAT;
 	pProfile->m_strCacheDir   = CPath(strBaseDir, DEF_CACHE_DIR   );
 	pProfile->m_bReadOnly     = false;
-	pProfile->m_strConfigFile = CPath(strBaseDir + DEF_SYSTEM_DIR, DEF_TO_CONFIG_FILE);
+	pProfile->m_strConfigFile = CPath(strBaseDir / DEF_SYSTEM_DIR, DEF_TO_CONFIG_FILE);
 
-	strBaseDir += "TacticalOps";
+	strBaseDir /= "TacticalOps";
 
 	pProfile->m_strSystemDir  = CPath(strBaseDir, DEF_SYSTEM_DIR  );
 	pProfile->m_strMapDir     = CPath(strBaseDir, DEF_MAPS_DIR    );

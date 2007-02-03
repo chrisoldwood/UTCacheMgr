@@ -198,7 +198,7 @@ void CAppCmds::OnCacheRescan()
 
 	// Get cache + index file full paths.
 	CPath   strCacheDir  = App.m_pProfile->m_strCacheDir;
-	CPath   strCacheFile = strCacheDir + App.m_strCacheIndex;
+	CPath   strCacheFile = strCacheDir / App.m_strCacheIndex;
 
 	// Check the cache path exists.
 	if (!strCacheDir.Exists())
@@ -284,14 +284,14 @@ void CAppCmds::OnCacheRescan()
 
 		// File already in relevant UT folder?
 		CPath strUTDir  = App.m_pProfile->GetTypeDir(cType);
-		CPath strUTFile = strUTDir + strRealName;
+		CPath strUTFile = strUTDir / strRealName;
 		bool  bExists   = strUTFile.Exists();
 
 		// File pinned in cache?
 		bool bPinned = (App.m_astrPinned.Find(strRealName, true) != -1);
 
 		// Get other file details.
-		CPath strFile = strCacheDir + strCacheName;
+		CPath strFile = strCacheDir / strCacheName;
 		struct _stat oInfo;
 
 		if (!CFile::QueryInfo(strFile, oInfo))
@@ -332,7 +332,7 @@ void CAppCmds::OnCacheRescan()
 	// Search for old .tmp files?
 	if (App.m_bScanForTmp)
 	{
-		CPath     strTmpDir = strCacheDir + CProfile::DEF_CACHE_TMP_DIR;
+		CPath     strTmpDir = strCacheDir / CProfile::DEF_CACHE_TMP_DIR;
 		CString   strMask   = strCacheDir.FileTitle() + CProfile::DEF_CACHE_TMP_MASK;
 		CFileTree oTmpFiles;
 
@@ -350,7 +350,7 @@ void CAppCmds::OnCacheRescan()
 			// Delete all files found...
 			for (int i = 0; i < astrFiles.Size(); ++i)
 			{
-				CPath strTmpFile = strTmpDir + astrFiles[i];
+				CPath strTmpFile = strTmpDir / astrFiles[i];
 
 				if (!CFile::Delete(strTmpFile))
 					nErrors++;
@@ -374,11 +374,11 @@ void CAppCmds::OnCacheRescan()
 		// Find invalid entries.
 		for (int i = 0; i < astrKeys.Size(); ++i)
 		{
-			CPath strFile = strCacheDir + (astrKeys[i] + "." + CProfile::DEF_CACHE_FILE_EXT);
+			CPath strFile = strCacheDir / (astrKeys[i] + "." + CProfile::DEF_CACHE_FILE_EXT);
 
 			// Workaround for UT2003 v2166/86 patch bug which appends a "-1"
 			// after the 32 char file name, but the index entry remains the same.
-			CPath strAltFile = strCacheDir + (astrKeys[i] + "-1." + CProfile::DEF_CACHE_FILE_EXT);
+			CPath strAltFile = strCacheDir / (astrKeys[i] + "-1." + CProfile::DEF_CACHE_FILE_EXT);
 
 			if ( (!strFile.Exists()) && (!strAltFile.Exists()) )
 				astrInvalid.Add(astrKeys[i]);
@@ -479,7 +479,7 @@ void CAppCmds::OnCacheRestore()
 				continue;
 
 			CPath strUTDir  = App.m_pProfile->GetTypeDir(cType);
-			CPath strUTFile = strUTDir + strRealName;
+			CPath strUTFile = strUTDir / strRealName;
 
 			// File missing from relevant UT folder?
 			if (!strUTFile.Exists())
@@ -549,7 +549,7 @@ void CAppCmds::OnCacheRestore()
 
 	// Get cache + index file full paths.
 	CPath    strCacheDir  = App.m_pProfile->m_strCacheDir;
-	CPath    strCacheFile = strCacheDir + App.m_strCacheIndex;
+	CPath    strCacheFile = strCacheDir / App.m_strCacheIndex;
 	CIniFile oIdxFile(strCacheFile);
 
 	// Show the progress dialog.
@@ -573,8 +573,8 @@ void CAppCmds::OnCacheRestore()
 		CPath strSrcDir = App.m_pProfile->GetTypeDir(oRow[CCache::FILE_TYPE]);
 
 		// Create the src and dst full paths.
-		CString	strSrcFile = strSrcDir + oRow[CCache::REAL_FILENAME];
-		CString	strDstFile = strDstDir + oRow[CCache::CACHE_FILENAME];
+		CString	strSrcFile = strSrcDir / oRow[CCache::REAL_FILENAME];
+		CString	strDstFile = strDstDir / oRow[CCache::CACHE_FILENAME];
 
 		// Move it...
 		if (::MoveFile(strSrcFile, strDstFile) == 0)
@@ -634,7 +634,7 @@ void CAppCmds::OnCacheImport()
 
 	// Get cache + index file full paths.
 	CPath strSrcCacheDir  = strSrcDir;
-	CPath strSrcCacheFile = strSrcCacheDir + App.m_strCacheIndex;
+	CPath strSrcCacheFile = strSrcCacheDir / App.m_strCacheIndex;
 
 	// Check the cache index file exists.
 	if (!strSrcCacheFile.Exists())
@@ -707,7 +707,7 @@ void CAppCmds::OnCacheImport()
 			continue;
 
 		// Get other file details.
-		CPath strFile = strSrcCacheDir + strCacheName;
+		CPath strFile = strSrcCacheDir / strCacheName;
 		struct _stat oInfo;
 
 		if (!CFile::QueryInfo(strFile, oInfo))
@@ -756,7 +756,7 @@ void CAppCmds::OnCacheImport()
 
 	// Get cache + index file full paths.
 	CPath    strDstCacheDir  = App.m_pProfile->m_strCacheDir;
-	CPath    strDstCacheFile = strDstCacheDir + App.m_strCacheIndex;
+	CPath    strDstCacheFile = strDstCacheDir / App.m_strCacheIndex;
 	CIniFile oDstIdxFile(strDstCacheFile);
 
 	// Show the progress dialog.
@@ -777,8 +777,8 @@ void CAppCmds::OnCacheImport()
 		Dlg.UpdateLabelAndMeter("Importing file: " + (CString)strRealName, i);
 
 		// Create the src and dst full paths.
-		CString	strSrcFile = strSrcCacheDir + strCacheName;
-		CString	strDstFile = strDstCacheDir + strCacheName;
+		CString	strSrcFile = strSrcCacheDir / strCacheName;
+		CString	strDstFile = strDstCacheDir / strCacheName;
 
 		// Copy it...
 		if (!CFile::Copy(strSrcFile, strDstFile))
@@ -1001,7 +1001,7 @@ void CAppCmds::OnEditMove()
 
 	// Get cache + index file full paths.
 	CPath    strCacheDir  = App.m_pProfile->m_strCacheDir;
-	CPath    strCacheFile = strCacheDir + App.m_strCacheIndex;
+	CPath    strCacheFile = strCacheDir / App.m_strCacheIndex;
 	CIniFile oIdxFile(strCacheFile);
 
 	// Show the progress dialog.
@@ -1032,8 +1032,8 @@ void CAppCmds::OnEditMove()
 		CPath strDstDir = App.m_pProfile->GetTypeDir(oRow[CCache::FILE_TYPE]);
 
 		// Create the src and dst full paths.
-		CString	strSrcFile = strSrcDir + oRow[CCache::CACHE_FILENAME];
-		CString	strDstFile = strDstDir + oRow[CCache::REAL_FILENAME];
+		CString	strSrcFile = strSrcDir / oRow[CCache::CACHE_FILENAME];
+		CString	strDstFile = strDstDir / oRow[CCache::REAL_FILENAME];
 
 		// Move it...
 		if (::MoveFile(strSrcFile, strDstFile) == 0)
@@ -1104,7 +1104,7 @@ void CAppCmds::OnEditCopy()
 
 	// Get cache + index file full paths.
 	CPath    strCacheDir  = App.m_pProfile->m_strCacheDir;
-	CPath    strCacheFile = strCacheDir + App.m_strCacheIndex;
+	CPath    strCacheFile = strCacheDir / App.m_strCacheIndex;
 	CIniFile oIdxFile(strCacheFile);
 
 	// Show the progress dialog.
@@ -1135,8 +1135,8 @@ void CAppCmds::OnEditCopy()
 		CPath strDstDir = App.m_pProfile->GetTypeDir(oRow[CCache::FILE_TYPE]);
 
 		// Create the src and dst full paths.
-		CString	strSrcFile = strSrcDir + oRow[CCache::CACHE_FILENAME];
-		CString	strDstFile = strDstDir + oRow[CCache::REAL_FILENAME];
+		CString	strSrcFile = strSrcDir / oRow[CCache::CACHE_FILENAME];
+		CString	strDstFile = strDstDir / oRow[CCache::REAL_FILENAME];
 
 		// Copy it...
 		if (::CopyFile(strSrcFile, strDstFile, TRUE) == 0)
@@ -1204,7 +1204,7 @@ void CAppCmds::OnEditDelete()
 
 	// Get cache + index file full paths.
 	CPath    strCacheDir  = App.m_pProfile->m_strCacheDir;
-	CPath    strCacheFile = strCacheDir + App.m_strCacheIndex;
+	CPath    strCacheFile = strCacheDir / App.m_strCacheIndex;
 	CIniFile oIdxFile(strCacheFile);
 
 	// Create errors dialog.
@@ -1215,7 +1215,7 @@ void CAppCmds::OnEditDelete()
 	{
 		CRow&	oRow       = oRS[i];
 		CPath	strSrcDir  = App.m_pProfile->m_strCacheDir;
-		CString	strSrcFile = strSrcDir + oRow[CCache::CACHE_FILENAME];
+		CString	strSrcFile = strSrcDir / oRow[CCache::CACHE_FILENAME];
 
 		// Delete it...
 		if (::DeleteFile(strSrcFile) == 0)
@@ -1291,7 +1291,7 @@ void CAppCmds::OnEditCopyTo()
 
 	// Get cache + index file full paths.
 	CPath    strCacheDir  = App.m_pProfile->m_strCacheDir;
-	CPath    strCacheFile = strCacheDir + App.m_strCacheIndex;
+	CPath    strCacheFile = strCacheDir / App.m_strCacheIndex;
 	CIniFile oIdxFile(strCacheFile);
 
 	// Show the progress dialog.
@@ -1315,8 +1315,8 @@ void CAppCmds::OnEditCopyTo()
 		Dlg.UpdateLabelAndMeter("Copying file: " + (CString)strRealName, i);
 
 		// Create the src and dst full paths.
-		CPath strSrcFile = strSrcDir + oRow[CCache::CACHE_FILENAME];
-		CPath strDstFile = strDstDir + oRow[CCache::REAL_FILENAME];
+		CPath strSrcFile = strSrcDir / oRow[CCache::CACHE_FILENAME];
+		CPath strDstFile = strDstDir / oRow[CCache::REAL_FILENAME];
 
 		// Ignore if destination already exists.
 		if (strDstFile.Exists())
@@ -1575,8 +1575,8 @@ void CAppCmds::OnToolsInstall()
 			CPath strDstDir = App.m_pProfile->GetTypeDir(cType);
 
 			// Create the src and dst full paths.
-			CPath   strSrcFile = strSrcDir + strFileName;
-			CPath   strDstFile = strDstDir + strFileName;
+			CPath   strSrcFile = strSrcDir / strFileName;
+			CPath   strDstFile = strDstDir / strFileName;
 
 			// File already installed?
 			if (strDstFile.Exists())
