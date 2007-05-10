@@ -223,14 +223,16 @@ bool CProfile::Compare(const CProfile* pProfile1, const CProfile* pProfile2)
 
 CProfile* CProfile::DetectUT()
 {
-	CRegKey oKey;
+	WCL::RegKey oKey;
 
 	// Try and find the regkey that contains the UT base path.
-	if (!oKey.Open(HKEY_LOCAL_MACHINE, "SOFTWARE\\Unreal Technology\\Installed Apps\\UnrealTournament"))
+	if (!WCL::RegKey::Exists(HKEY_LOCAL_MACHINE, "SOFTWARE\\Unreal Technology\\Installed Apps\\UnrealTournament"))
 		return NULL;
 
+	oKey.Open(HKEY_LOCAL_MACHINE, "SOFTWARE\\Unreal Technology\\Installed Apps\\UnrealTournament", KEY_READ);
+
 	// Get the UT base path.
-	CPath strBaseDir = oKey.QueryString("Folder", "");
+	CPath strBaseDir = oKey.ReadStringValue("Folder", "");
 
 	if (strBaseDir == "")
 		return NULL;
@@ -266,14 +268,16 @@ CProfile* CProfile::DetectUT()
 
 CProfile* CProfile::DetectUT2003()
 {
-	CRegKey oKey;
+	WCL::RegKey oKey;
 
 	// Try and find the regkey that contains the UT2003 base path.
-	if (!oKey.Open(HKEY_LOCAL_MACHINE, "SOFTWARE\\Unreal Technology\\Installed Apps\\UT2003"))
+	if (!WCL::RegKey::Exists(HKEY_LOCAL_MACHINE, "SOFTWARE\\Unreal Technology\\Installed Apps\\UT2003"))
 		return NULL;
 
+	oKey.Open(HKEY_LOCAL_MACHINE, "SOFTWARE\\Unreal Technology\\Installed Apps\\UT2003", KEY_READ);
+
 	// Get the UT2003 base path.
-	CPath strBaseDir = oKey.QueryString("Folder", "");
+	CPath strBaseDir = oKey.ReadStringValue("Folder", "");
 
 	if (strBaseDir == "")
 		return NULL;
@@ -312,14 +316,16 @@ CProfile* CProfile::DetectUT2003()
 
 CProfile* CProfile::DetectUT2004()
 {
-	CRegKey oKey;
+	WCL::RegKey oKey;
 
 	// Try and find the regkey that contains the UT2004 base path.
-	if (!oKey.Open(HKEY_LOCAL_MACHINE, "SOFTWARE\\Unreal Technology\\Installed Apps\\UT2004"))
+	if (!WCL::RegKey::Exists(HKEY_LOCAL_MACHINE, "SOFTWARE\\Unreal Technology\\Installed Apps\\UT2004"))
 		return NULL;
 
+	oKey.Open(HKEY_LOCAL_MACHINE, "SOFTWARE\\Unreal Technology\\Installed Apps\\UT2004", KEY_READ);
+
 	// Get the UT2004 base path.
-	CPath strBaseDir = oKey.QueryString("Folder", "");
+	CPath strBaseDir = oKey.ReadStringValue("Folder", "");
 
 	if (strBaseDir == "")
 		return NULL;
@@ -358,14 +364,16 @@ CProfile* CProfile::DetectUT2004()
 
 CProfile* CProfile::DetectTacOps()
 {
-	CRegKey oKey;
+	WCL::RegKey oKey;
 
 	// Try and find the regkey that contains the TO base path.
-	if (!oKey.Open(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Tactical Ops"))
+	if (!WCL::RegKey::Exists(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Tactical Ops"))
 		return NULL;
 
+	oKey.Open(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Tactical Ops", KEY_READ);
+
 	// Get the TO base path.
-	CPath strBaseDir = oKey.QueryString("InstallLocation", "");
+	CPath strBaseDir = oKey.ReadStringValue("InstallLocation", "");
 
 	if (strBaseDir == "")
 		return NULL;
