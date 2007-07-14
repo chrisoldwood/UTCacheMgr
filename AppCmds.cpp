@@ -580,7 +580,7 @@ void CAppCmds::OnCacheRestore()
 		if (::MoveFile(strSrcFile, strDstFile) == 0)
 		{
 			dlgErrors.m_astrFiles.Add(oRow[CCache::REAL_FILENAME].GetString());
-			dlgErrors.m_astrErrors.Add(App.FormatError());
+			dlgErrors.m_astrErrors.Add(CStrCvt::FormatError());
 			continue;
 		}
 
@@ -784,7 +784,7 @@ void CAppCmds::OnCacheImport()
 		if (!CFile::Copy(strSrcFile, strDstFile))
 		{
 			dlgErrors.m_astrFiles.Add(oRow[CCache::REAL_FILENAME].GetString());
-			dlgErrors.m_astrErrors.Add(App.FormatError());
+			dlgErrors.m_astrErrors.Add(CStrCvt::FormatError());
 			continue;
 		}
 
@@ -1039,7 +1039,7 @@ void CAppCmds::OnEditMove()
 		if (::MoveFile(strSrcFile, strDstFile) == 0)
 		{
 			dlgErrors.m_astrFiles.Add(oRow[CCache::REAL_FILENAME].GetString());
-			dlgErrors.m_astrErrors.Add(App.FormatError());
+			dlgErrors.m_astrErrors.Add(CStrCvt::FormatError());
 			continue;
 		}
 
@@ -1142,7 +1142,7 @@ void CAppCmds::OnEditCopy()
 		if (::CopyFile(strSrcFile, strDstFile, TRUE) == 0)
 		{
 			dlgErrors.m_astrFiles.Add(oRow[CCache::REAL_FILENAME].GetString());
-			dlgErrors.m_astrErrors.Add(App.FormatError());
+			dlgErrors.m_astrErrors.Add(CStrCvt::FormatError());
 			continue;
 		}
 
@@ -1221,7 +1221,7 @@ void CAppCmds::OnEditDelete()
 		if (::DeleteFile(strSrcFile) == 0)
 		{
 			dlgErrors.m_astrFiles.Add(oRow[CCache::REAL_FILENAME].GetString());
-			dlgErrors.m_astrErrors.Add(App.FormatError());
+			dlgErrors.m_astrErrors.Add(CStrCvt::FormatError());
 			continue;
 		}
 
@@ -1326,7 +1326,7 @@ void CAppCmds::OnEditCopyTo()
 		if (::CopyFile(strSrcFile, strDstFile, TRUE) == 0)
 		{
 			dlgErrors.m_astrFiles.Add(oRow[CCache::REAL_FILENAME].GetString());
-			dlgErrors.m_astrErrors.Add(App.FormatError());
+			dlgErrors.m_astrErrors.Add(CStrCvt::FormatError());
 			continue;
 		}
 	}
@@ -1643,7 +1643,7 @@ void CAppCmds::OnToolsInstall()
 			// Install it.
 			if (CFile::Copy(strSrcFile, strDstFile, true) == 0)
 			{
-				dlgErrors.m_astrErrors.Add(App.FormatError());
+				dlgErrors.m_astrErrors.Add(CStrCvt::FormatError());
 				continue;
 			}
 
