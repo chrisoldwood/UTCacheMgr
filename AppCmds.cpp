@@ -22,6 +22,7 @@
 #include "FilePropsDlg.hpp"
 #include "ConflictDlg.hpp"
 #include "HelpTopics.h"
+#include <Legacy/FileFinder.hpp>
 
 /******************************************************************************
 ** Method:		Constructor.

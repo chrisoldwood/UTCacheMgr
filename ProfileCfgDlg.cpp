@@ -13,6 +13,7 @@
 #include "EditProfileDlg.hpp"
 #include "HelpTopics.h"
 #include "DetectedDlg.hpp"
+#include <Legacy/STLUtils.hpp>
 
 #ifdef _DEBUG
 // For memory leak detection.

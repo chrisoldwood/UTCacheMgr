@@ -9,6 +9,7 @@
 */
 
 #include "AppHeaders.hpp"
+#include <Legacy/STLUtils.hpp>
 
 #ifdef _DEBUG
 // For memory leak detection.
