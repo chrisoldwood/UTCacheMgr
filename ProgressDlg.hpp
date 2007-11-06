@@ -12,6 +12,12 @@
 #ifndef PROGRESSDLG_HPP
 #define PROGRESSDLG_HPP
 
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
+#include <WCL/CommonUI.hpp>
+
 /******************************************************************************
 ** 
 ** This is the dialog to display the scanning progress.

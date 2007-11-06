@@ -8,7 +8,10 @@
 *******************************************************************************
 */
 
-#include "AppHeaders.hpp"
+#include "Common.hpp"
+#include "AppDlg.hpp"
+#include "UTCMGRApp.hpp"
+#include <MDBL/ResultSet.hpp>
 
 /******************************************************************************
 ** Method:		Default constructor.

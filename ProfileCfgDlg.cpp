@@ -8,17 +8,14 @@
 *******************************************************************************
 */
 
-#include "AppHeaders.hpp"
+#include "Common.hpp"
 #include "ProfileCfgDlg.hpp"
 #include "EditProfileDlg.hpp"
 #include "HelpTopics.h"
 #include "DetectedDlg.hpp"
 #include <Legacy/STLUtils.hpp>
-
-#ifdef _DEBUG
-// For memory leak detection.
-#define new DBGCRT_NEW
-#endif
+#include "UTCMGRApp.hpp"
+#include <WCL/BusyCursor.hpp>
 
 /******************************************************************************
 ** Method:		Default constructor.

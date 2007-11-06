@@ -12,6 +12,15 @@
 #ifndef APPDLG_HPP
 #define APPDLG_HPP
 
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
+#include <WCL/MainDlg.hpp>
+#include <WCL/ListView.hpp>
+#include <MDBL/FwdDecls.hpp>
+#include <MDBL/SortColumns.hpp>
+
 /******************************************************************************
 ** 
 ** This is the main application dialog.

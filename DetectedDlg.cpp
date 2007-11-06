@@ -8,14 +8,10 @@
 *******************************************************************************
 */
 
-#include "AppHeaders.hpp"
+#include "Common.hpp"
 #include "DetectedDlg.hpp"
+#include "UTCMGRApp.hpp"
 #include "HelpTopics.h"
-
-#ifdef _DEBUG
-// For memory leak detection.
-#define new DBGCRT_NEW
-#endif
 
 /******************************************************************************
 ** Method:		Default constructor.

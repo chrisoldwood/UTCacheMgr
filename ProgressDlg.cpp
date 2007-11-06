@@ -8,8 +8,9 @@
 *******************************************************************************
 */
 
-#include "AppHeaders.hpp"
+#include "Common.hpp"
 #include "ProgressDlg.hpp"
+#include "UTCMGRApp.hpp"
 
 /******************************************************************************
 ** Method:		Default constructor.

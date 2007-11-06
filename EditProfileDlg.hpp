@@ -12,6 +12,13 @@
 #ifndef EDITPROFILEDLG_HPP
 #define EDITPROFILEDLG_HPP
 
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
+#include <WCL/CommonUI.hpp>
+#include "Profile.hpp"
+
 /******************************************************************************
 ** 
 ** This is the dialog used to create/edit a profile.

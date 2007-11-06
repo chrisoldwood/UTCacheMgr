@@ -8,8 +8,9 @@
 *******************************************************************************
 */
 
-#include "AppHeaders.hpp"
+#include "Common.hpp"
 #include "SelProfileDlg.hpp"
+#include "UTCMGRApp.hpp"
 #include "HelpTopics.h"
 
 /******************************************************************************

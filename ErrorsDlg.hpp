@@ -12,6 +12,13 @@
 #ifndef ERRORSDLG_HPP
 #define ERRORSDLG_HPP
 
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
+#include <WCL/CommonUI.hpp>
+#include <WCL/StrArray.hpp>
+
 /******************************************************************************
 ** 
 ** Dialog used to display errors that occurred during an operation.

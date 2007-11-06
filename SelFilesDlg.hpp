@@ -12,6 +12,14 @@
 #ifndef SELFILESDLG_HPP
 #define SELFILESDLG_HPP
 
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
+#include <WCL/CommonUI.hpp>
+#include <MDBL/FwdDecls.hpp>
+#include <MDBL/SortColumns.hpp>
+
 /******************************************************************************
 ** 
 ** Dialog used to select which files should be imported/restored into the cache.

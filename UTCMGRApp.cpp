@@ -8,13 +8,9 @@
 *******************************************************************************
 */
 
-#include "AppHeaders.hpp"
+#include "Common.hpp"
+#include "UTCMGRApp.hpp"
 #include <Legacy/STLUtils.hpp>
-
-#ifdef _DEBUG
-// For memory leak detection.
-#define new DBGCRT_NEW
-#endif
 
 /******************************************************************************
 **

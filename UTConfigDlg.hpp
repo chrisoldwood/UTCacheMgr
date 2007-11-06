@@ -12,6 +12,13 @@
 #ifndef UTCONFIGDLG_HPP
 #define UTCONFIGDLG_HPP
 
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
+#include <WCL/CommonUI.hpp>
+#include <WCL/IniFile.hpp>
+
 /******************************************************************************
 ** 
 ** The dialog to edit the UT cache settings.

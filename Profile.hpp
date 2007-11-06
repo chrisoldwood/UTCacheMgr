@@ -12,6 +12,12 @@
 #ifndef PROFILE_HPP
 #define PROFILE_HPP
 
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
+#include <WCL/Path.hpp>
+
 /******************************************************************************
 ** 
 ** Data class used to store a profiles details.
@@ -125,11 +131,7 @@ public:
 	static const char* s_pszFormats[3];
 };
 
-/******************************************************************************
-**
-** Implementation of inline functions.
-**
-*******************************************************************************
-*/
+// Template shorthands.
+typedef std::vector<CProfile*> CProfiles;
 
 #endif //PROFILE_HPP

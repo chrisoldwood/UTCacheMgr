@@ -12,9 +12,16 @@
 #ifndef CONFLICTDLG_HPP
 #define CONFLICTDLG_HPP
 
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
+#include <WCL/CommonUI.hpp>
+
 /******************************************************************************
 ** 
-** .
+** The dialog used to resolve a conflict when installing a file from a map
+** pack into the profile folder.
 **
 *******************************************************************************
 */

@@ -12,9 +12,16 @@
 #ifndef DETECTEDDLG_HPP
 #define DETECTEDDLG_HPP
 
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
+#include <WCL/CommonUI.hpp>
+#include <WCL/StrArray.hpp>
+
 /******************************************************************************
 ** 
-** .
+** The dialog used to display the detected new UT installations and mods.
 **
 *******************************************************************************
 */

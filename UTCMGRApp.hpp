@@ -12,8 +12,19 @@
 #ifndef UTCMGR_HPP
 #define UTCMGR_HPP
 
-// Template shorthands.
-typedef std::vector<CProfile*> CProfiles;
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
+#include <WCL/App.hpp>
+#include "AppWnd.hpp"
+#include "AppCmds.hpp"
+#include "Profile.hpp"
+#include <WCL/HelpFile.hpp>
+#include <WCL/IniFile.hpp>
+#include <MDBL/MDB.hpp>
+#include "Cache.hpp"
+#include <WCL/StrArray.hpp>
 
 /******************************************************************************
 ** 

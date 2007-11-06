@@ -8,7 +8,9 @@
 *******************************************************************************
 */
 
-#include "AppHeaders.hpp"
+#include "Common.hpp"
+#include "AppCmds.hpp"
+#include "UTCMGRApp.hpp"
 #include "AboutDlg.hpp"
 #include "SelProfileDlg.hpp"
 #include "ProfileCfgDlg.hpp"
@@ -23,6 +25,13 @@
 #include "ConflictDlg.hpp"
 #include "HelpTopics.h"
 #include <Legacy/FileFinder.hpp>
+#include <WCL/BusyCursor.hpp>
+#include <WCL/File.hpp>
+#include <WCL/StrTok.hpp>
+#include <MDBL/WhereCmp.hpp>
+#include <WCL/StreamException.hpp>
+#include <WCL/StrCvt.hpp>
+#include <MDBL/ResultSet.hpp>
 
 /******************************************************************************
 ** Method:		Constructor.
