@@ -1,4 +1,4 @@
-//Microsoft Developer Studio generated resource script.
+// Microsoft Visual C++ generated resource script.
 //
 #include "Resource.h"
 
@@ -7,10 +7,7 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#define APSTUDIO_HIDDEN_SYMBOLS
-#include "windows.h"
-#undef APSTUDIO_HIDDEN_SYMBOLS
-#include "WCL/WclRsc.h"
+#include <WCL/CommonRsc.h>
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -30,23 +27,19 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_UK
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE DISCARDABLE 
+1 TEXTINCLUDE 
 BEGIN
     "Resource.h\0"
 END
 
-2 TEXTINCLUDE DISCARDABLE 
+2 TEXTINCLUDE 
 BEGIN
-    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
-    "#include ""windows.h""\r\n"
-    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
-    "#include ""WclRsc.h""\r\n"
+    "#include <WCL/CommonRsc.h>\r\n"
     "\0"
 END
 
-3 TEXTINCLUDE DISCARDABLE 
+3 TEXTINCLUDE 
 BEGIN
-    "\r\n"
     "#include ""App.rcv""\r\n"
     "\0"
 END
@@ -61,23 +54,23 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDR_APPICON             ICON    DISCARDABLE     "App.ico"
-IDI_SYSTEM              ICON    DISCARDABLE     "System.ico"
-IDI_MAP                 ICON    DISCARDABLE     "Map.ico"
-IDI_TEXTURE             ICON    DISCARDABLE     "Texture.ico"
-IDI_SOUND               ICON    DISCARDABLE     "Sound.ico"
-IDI_MUSIC               ICON    DISCARDABLE     "Music.ico"
-IDI_ANIM                ICON    DISCARDABLE     "Anim.ico"
-IDI_MESH                ICON    DISCARDABLE     "Mesh.ico"
-IDI_KARMA               ICON    DISCARDABLE     "karma.ico"
-IDI_SETUP               ICON    DISCARDABLE     "Setup.ico"
+IDR_APPICON             ICON                    "App.ico"
+IDI_SYSTEM              ICON                    "System.ico"
+IDI_MAP                 ICON                    "Map.ico"
+IDI_TEXTURE             ICON                    "Texture.ico"
+IDI_SOUND               ICON                    "Sound.ico"
+IDI_MUSIC               ICON                    "Music.ico"
+IDI_ANIM                ICON                    "Anim.ico"
+IDI_MESH                ICON                    "Mesh.ico"
+IDI_KARMA               ICON                    "karma.ico"
+IDI_SETUP               ICON                    "Setup.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Menu
 //
 
-IDR_APPMENU MENU DISCARDABLE 
+IDR_APPMENU MENU 
 BEGIN
     POPUP "&Cache"
     BEGIN
@@ -137,7 +130,7 @@ BEGIN
     END
 END
 
-IDR_GRIDMENU MENU DISCARDABLE 
+IDR_GRIDMENU MENU 
 BEGIN
     POPUP "Grid Menu"
     BEGIN
@@ -160,7 +153,7 @@ END
 //
 
 IDD_MAIN DIALOGEX 0, 0, 301, 201
-STYLE WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN
+STYLE DS_SETFONT | WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN
 FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     CONTROL         "List1",IDC_GRID,"SysListView32",LVS_REPORT | 
@@ -168,8 +161,9 @@ BEGIN
                     WS_TABSTOP,5,5,290,190,WS_EX_CLIENTEDGE
 END
 
-IDD_ABOUT DIALOG DISCARDABLE  0, 0, 122, 126
-STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+IDD_ABOUT DIALOG  0, 0, 122, 126
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
+    WS_SYSMENU
 CAPTION "About UT Cache Manger"
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -187,8 +181,9 @@ BEGIN
     DEFPUSHBUTTON   "OK",IDOK,35,100,50,15
 END
 
-IDD_SEL_PROFILE DIALOG DISCARDABLE  0, 0, 307, 311
-STYLE DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_SEL_PROFILE DIALOG  0, 0, 307, 311
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
 CAPTION "Select Profile"
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -231,8 +226,9 @@ BEGIN
     LTEXT           "Read Only?",IDC_STATIC,10,65,38,8
 END
 
-IDD_PREFS DIALOG DISCARDABLE  0, 0, 237, 236
-STYLE DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_PREFS DIALOG  0, 0, 237, 236
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
 CAPTION "Preferences"
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -261,8 +257,9 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,121,210,50,14
 END
 
-IDD_PROFILES DIALOG DISCARDABLE  0, 0, 186, 146
-STYLE DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_PROFILES DIALOG  0, 0, 186, 146
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
 CAPTION "Profiles"
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -275,8 +272,9 @@ BEGIN
     DEFPUSHBUTTON   "Close",IDCANCEL,120,120,50,14
 END
 
-IDD_EDIT_PROFILE DIALOG DISCARDABLE  0, 0, 327, 316
-STYLE DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_EDIT_PROFILE DIALOG  0, 0, 327, 316
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
 CAPTION "Edit Profile"
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -325,9 +323,9 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,165,290,50,14
 END
 
-IDD_PROGRESS DIALOG DISCARDABLE  0, 0, 202, 41
-STYLE DS_MODALFRAME | WS_POPUP | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | 
-    WS_CAPTION
+IDD_PROGRESS DIALOG  0, 0, 202, 41
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CLIPSIBLINGS | 
+    WS_CLIPCHILDREN | WS_CAPTION
 CAPTION "Scanning Cache"
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -337,8 +335,9 @@ BEGIN
                     40,20,150,10
 END
 
-IDD_UT_CONFIG DIALOG DISCARDABLE  0, 0, 172, 86
-STYLE DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_UT_CONFIG DIALOG  0, 0, 172, 86
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
 CAPTION "UT Cache Settings"
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -352,8 +351,8 @@ BEGIN
 END
 
 IDD_SELFILES DIALOGEX 0, 0, 411, 233
-STYLE DS_CONTEXTHELP | WS_POPUP | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | 
-    WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+STYLE DS_SETFONT | DS_CONTEXTHELP | WS_POPUP | WS_CLIPSIBLINGS | 
+    WS_CLIPCHILDREN | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
 CAPTION "%s"
 FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
@@ -366,9 +365,10 @@ BEGIN
 END
 
 IDD_ERRORS DIALOGEX 0, 0, 288, 185
-STYLE DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+STYLE DS_SETFONT | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | WS_SYSMENU | 
+    WS_THICKFRAME
 CAPTION "%s Errors"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     CONTROL         "List1",IDC_GRID,"SysListView32",LVS_REPORT | 
                     LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_NOSORTHEADER | 
@@ -376,8 +376,9 @@ BEGIN
     DEFPUSHBUTTON   "Close",IDCANCEL,230,165,50,14
 END
 
-IDD_PROPERTIES DIALOG DISCARDABLE  0, 0, 242, 130
-STYLE DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_PROPERTIES DIALOG  0, 0, 242, 130
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
 CAPTION "File Properties"
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -394,8 +395,9 @@ BEGIN
     DEFPUSHBUTTON   "Close",IDCANCEL,95,105,50,14
 END
 
-IDD_CONFLICT DIALOG DISCARDABLE  0, 0, 292, 130
-STYLE DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_CONFLICT DIALOG  0, 0, 292, 130
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
 CAPTION "Install Conflict"
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -417,9 +419,10 @@ BEGIN
 END
 
 IDD_DETECTED DIALOGEX 0, 0, 247, 122
-STYLE DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | WS_SYSMENU
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
 CAPTION "New Installations Detected"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     CONTROL         "List1",IDC_PROFILES,"SysListView32",LVS_REPORT | 
                     LVS_SHOWSELALWAYS | LVS_NOSORTHEADER | WS_BORDER | 
@@ -434,15 +437,15 @@ END
 // Bitmap
 //
 
-IDR_APPTOOLBAR          BITMAP  DISCARDABLE     "Toolbar.bmp"
-IDB_LIST_ICONS          BITMAP  DISCARDABLE     "ListIcons.bmp"
+IDR_APPTOOLBAR          BITMAP                  "Toolbar.bmp"
+IDB_LIST_ICONS          BITMAP                  "ListIcons.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Accelerator
 //
 
-IDR_APPACCEL ACCELERATORS DISCARDABLE 
+IDR_APPACCEL ACCELERATORS 
 BEGIN
     "A",            ID_VIEW_SELECT_ALL,     VIRTKEY, CONTROL, NOINVERT
     "N",            ID_VIEW_SELECT_NEW,     VIRTKEY, CONTROL, NOINVERT
@@ -458,7 +461,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO DISCARDABLE 
+GUIDELINES DESIGNINFO 
 BEGIN
     IDD_ABOUT, DIALOG
     BEGIN
@@ -561,42 +564,42 @@ END
 // String Table
 //
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     IDS_SYS_RESTORE         "Restore the window size and position."
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     IDS_SYS_MOVE            "Move the window"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     IDS_SYS_SIZE            "Resize the window"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     IDS_SYS_MINIMIZE        "Minimize the window"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     IDS_SYS_MAXIMIZE        "Maximize the window"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     IDS_SYS_CLOSE           "Close the window"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     IDS_SYS_SWITCH          "Switch to another application"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     ID_CACHE_POPUP          "Scanning options"
     ID_CACHE_PROFILE        "Select a different cache profile\nSelect Profile (Ctrl+P)"
@@ -608,21 +611,21 @@ BEGIN
     ID_CACHE_EXIT           "Close UT Cache Manager\nClose"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     ID_HELP_POPUP           "Help options"
     ID_HELP_CONTENTS        "Displays the help contents page\nHelp (F1)"
     ID_HELP_ABOUT           "Show UT Cache Manager version\nAbout"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     ID_OPTIONS_POPUP        "Settings"
     ID_OPTIONS_PROFILES     "Configure the cache profiles\nEdit Profiles"
     ID_OPTIONS_PREFS        "Configure the UT Cache Manager global options\nEdit Preferences"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     ID_VIEW_POPUP           "View options"
     ID_VIEW_SELECT_NEW      "Select all new files\nSelect New"
@@ -630,7 +633,7 @@ BEGIN
     ID_VIEW_SORT_NAME       "Sort the files by name\nSort By Name"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     ID_VIEW_SORT_DATE       "Sort the files by date\nSort By Date"
     ID_VIEW_SORT_SIZE       "Sort the files by size\nSort By Size"
@@ -640,7 +643,7 @@ BEGIN
     ID_VIEW_SHOW_ALL        "Show files which are old and pinned as well\nShow All"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     ID_EDIT_POPUP           "Editing options"
     ID_EDIT_PIN             "Pin or Unpin the selected files to the cache\nPin/UnPin"
@@ -650,18 +653,18 @@ BEGIN
     ID_EDIT_COPY_TO         "Copy the selected files to another folder\nCopy Files To"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     ID_TOOLS_POPUP          "Tools"
     ID_TOOLS_INSTALL        "Install map, texture, sound files etc\nInstall"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     ID_CACHE_FIRST_PROFILE  "Select this cache profile"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     ID_CACHE_LAST_PROFILE   "Select this cache profile"
 END
@@ -676,7 +679,6 @@ END
 //
 // Generated from the TEXTINCLUDE 3 resource.
 //
-
 #include "App.rcv"
 
 /////////////////////////////////////////////////////////////////////////////

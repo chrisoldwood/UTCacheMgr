@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Developer Studio generated include file.
-// Used by App.rc
+// Microsoft Visual C++ generated include file.
+// Used by UTCMGR.rc
 //
 #define IDR_APPICON                     2
 #define IDR_APPMENU                     3
