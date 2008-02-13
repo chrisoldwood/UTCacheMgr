@@ -67,11 +67,11 @@ void CErrorsDlg::OnInitDialog()
 //	m_lvGrid.GridLines(true);
 
 	// Create grid columns.
-	m_lvGrid.InsertColumn(0, "File",   250, LVCFMT_LEFT);
-	m_lvGrid.InsertColumn(1, "Status", 125, LVCFMT_LEFT);
+	m_lvGrid.InsertColumn(0, TXT("File"),   250, LVCFMT_LEFT);
+	m_lvGrid.InsertColumn(1, TXT("Status"), 125, LVCFMT_LEFT);
 
 	// Add errors to grid.
-	for (int i = 0; i < m_astrFiles.Size(); ++i)
+	for (size_t i = 0; i < m_astrFiles.Size(); ++i)
 	{
 		int n = m_lvGrid.ItemCount();
 

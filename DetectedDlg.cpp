@@ -53,12 +53,12 @@ void CDetectedDlg::OnInitDialog()
 	ASSERT(m_astrNames.Size() == m_astrFolders.Size());
 
 	// Initialise ListView style.
-	m_lvProfiles.InsertColumn(0, "Profile", 100, LVCFMT_LEFT);
-	m_lvProfiles.InsertColumn(1, "Folder",  225, LVCFMT_LEFT);
+	m_lvProfiles.InsertColumn(0, TXT("Profile"), 100, LVCFMT_LEFT);
+	m_lvProfiles.InsertColumn(1, TXT("Folder"),  225, LVCFMT_LEFT);
 	m_lvProfiles.FullRowSelect(true);
 
 	// Add profiles to grid.
-	for (int i = 0; i < m_astrNames.Size(); ++i)
+	for (size_t i = 0; i < m_astrNames.Size(); ++i)
 	{
 		int n = m_lvProfiles.ItemCount();
 

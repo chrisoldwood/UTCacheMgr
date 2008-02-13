@@ -64,7 +64,7 @@ CSelFilesDlg::CSelFilesDlg()
 void CSelFilesDlg::OnInitDialog()
 {
 	ASSERT(m_pTable   != NULL);
-	ASSERT(m_strTitle != "");
+	ASSERT(m_strTitle != TXT(""));
 	ASSERT(m_dwHelpID != NULL);
 
 	// Restore dialog size to last time.
@@ -83,11 +83,11 @@ void CSelFilesDlg::OnInitDialog()
 	m_lvGrid.ImageList(LVSIL_SMALL, IDB_LIST_ICONS, 16, RGB(255, 0, 255));
 
 	// Create grid columns.
-	m_lvGrid.InsertColumn(FILE_COLUMN,  "File",       175, LVCFMT_LEFT );
-	m_lvGrid.InsertColumn(TYPE_COLUMN,  "Type",        50, LVCFMT_LEFT );
-	m_lvGrid.InsertColumn(DATE_COLUMN,  "Date",       115, LVCFMT_LEFT );
-	m_lvGrid.InsertColumn(SIZE_COLUMN,  "Size",        70, LVCFMT_RIGHT);
-	m_lvGrid.InsertColumn(CACHE_COLUMN, "Cache Name", 170, LVCFMT_LEFT );
+	m_lvGrid.InsertColumn(FILE_COLUMN,  TXT("File"),       175, LVCFMT_LEFT );
+	m_lvGrid.InsertColumn(TYPE_COLUMN,  TXT("Type"),        50, LVCFMT_LEFT );
+	m_lvGrid.InsertColumn(DATE_COLUMN,  TXT("Date"),       115, LVCFMT_LEFT );
+	m_lvGrid.InsertColumn(SIZE_COLUMN,  TXT("Size"),        70, LVCFMT_RIGHT);
+	m_lvGrid.InsertColumn(CACHE_COLUMN, TXT("Cache Name"), 170, LVCFMT_LEFT );
 
 	// Load grid.
 	RefreshView();
@@ -161,7 +161,7 @@ void CSelFilesDlg::RefreshView()
 	oRS.OrderBy(CSortColumns(m_nSortColumn, m_eSortOrder));
 
 	// For all rows.
-	for (int i = 0; i < oRS.Count(); ++i)
+	for (size_t i = 0; i < oRS.Count(); ++i)
 	{
 		CRow& oRow = oRS[i];
 

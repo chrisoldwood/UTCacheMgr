@@ -79,7 +79,7 @@ public:
 	//
 	// Profile methods.
 	//
-	CProfile* FindProfile(const char* pszName) const;
+	CProfile* FindProfile(const tchar* pszName) const;
 	CProfile* FindProfileByCfgFile(const CPath& strCfgFile) const;
 	int       GetProfileIndex(CProfile* pProfile) const;
 	void      BuildProfileMenu();
@@ -87,10 +87,10 @@ public:
 	//
 	// Formatting methods.
 	//
-	CString FormatType(char cType) const;
+	CString FormatType(tchar cType) const;
 	CString FormatSize(int nSize) const;
-	CString FormatStatus(char cStatus) const;
-	int     IconIndex(char cType) const;
+	CString FormatStatus(tchar cStatus) const;
+	int     IconIndex(tchar cType) const;
 
 	//
 	// Utility methods.
@@ -100,7 +100,7 @@ public:
 	//
 	// Constants.
 	//
-	static const char* VERSION;
+	static const tchar* VERSION;
 
 	//
 	// Modified flags.
@@ -129,9 +129,9 @@ protected:
 	//
 	// Constants.
 	//
-	static const char* INI_FILE_VER_10;
-	static const char* INI_FILE_VER_20;
-	static const char* INI_FILE_VER_25;
+	static const tchar* INI_FILE_VER_10;
+	static const tchar* INI_FILE_VER_20;
+	static const tchar* INI_FILE_VER_25;
 };
 
 /******************************************************************************

@@ -172,9 +172,9 @@ void CAppWnd::UpdateTitle()
 	CString strTitle = App.m_strTitle;
 
 	// Append profile
-	strTitle += " [";
+	strTitle += TXT(" [");
 	strTitle += App.m_pProfile->m_strName;
-	strTitle += "]";
+	strTitle += TXT("]");
 
 	Title(strTitle);
 }

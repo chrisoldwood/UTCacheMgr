@@ -20,34 +20,34 @@
 *******************************************************************************
 */
 
-const char* CProfile::DEF_UT_PROFILE_NAME     = "UT";
-const char* CProfile::DEF_UT2003_PROFILE_NAME = "UT2003";
-const char* CProfile::DEF_UT2004_PROFILE_NAME = "UT2004";
-const char* CProfile::DEF_TO_PROFILE_NAME     = "Tactical Ops";
+const tchar* CProfile::DEF_UT_PROFILE_NAME     = TXT("UT");
+const tchar* CProfile::DEF_UT2003_PROFILE_NAME = TXT("UT2003");
+const tchar* CProfile::DEF_UT2004_PROFILE_NAME = TXT("UT2004");
+const tchar* CProfile::DEF_TO_PROFILE_NAME     = TXT("Tactical Ops");
 
-const char* CProfile::DEF_ROOT_DIR       = "C:\\UnrealTournament";
-const char* CProfile::DEF_CACHE_DIR      = "Cache";
-const char* CProfile::DEF_CACHE_IDX_FILE = "cache.ini";
-const char* CProfile::DEF_CACHE_FILE_EXT = "uxx";
-const char* CProfile::DEF_SYSTEM_DIR     = "System";
-const char* CProfile::DEF_MAPS_DIR       = "Maps";
-const char* CProfile::DEF_TEXTURES_DIR   = "Textures";
-const char* CProfile::DEF_SOUNDS_DIR     = "Sounds";
-const char* CProfile::DEF_MUSIC_DIR      = "Music";
-const char* CProfile::DEF_CONFIG_FILE    = "UnrealTournament.ini";
-const char* CProfile::DEF_CACHE_TMP_DIR  = "..\\.";
-const char* CProfile::DEF_CACHE_TMP_MASK = "????.tmp";
+const tchar* CProfile::DEF_ROOT_DIR       = TXT("C:\\UnrealTournament");
+const tchar* CProfile::DEF_CACHE_DIR      = TXT("Cache");
+const tchar* CProfile::DEF_CACHE_IDX_FILE = TXT("cache.ini");
+const tchar* CProfile::DEF_CACHE_FILE_EXT = TXT("uxx");
+const tchar* CProfile::DEF_SYSTEM_DIR     = TXT("System");
+const tchar* CProfile::DEF_MAPS_DIR       = TXT("Maps");
+const tchar* CProfile::DEF_TEXTURES_DIR   = TXT("Textures");
+const tchar* CProfile::DEF_SOUNDS_DIR     = TXT("Sounds");
+const tchar* CProfile::DEF_MUSIC_DIR      = TXT("Music");
+const tchar* CProfile::DEF_CONFIG_FILE    = TXT("UnrealTournament.ini");
+const tchar* CProfile::DEF_CACHE_TMP_DIR  = TXT("..\\.");
+const tchar* CProfile::DEF_CACHE_TMP_MASK = TXT("????.tmp");
 
-const char* CProfile::DEF_MESH_DIR         = "StaticMeshes";
-const char* CProfile::DEF_ANIM_DIR         = "Animations";
-const char* CProfile::DEF_KARMA_DIR        = "KarmaData";
-const char* CProfile::DEF_2003_CONFIG_FILE = "UT2003.ini";
+const tchar* CProfile::DEF_MESH_DIR         = TXT("StaticMeshes");
+const tchar* CProfile::DEF_ANIM_DIR         = TXT("Animations");
+const tchar* CProfile::DEF_KARMA_DIR        = TXT("KarmaData");
+const tchar* CProfile::DEF_2003_CONFIG_FILE = TXT("UT2003.ini");
 
-const char* CProfile::DEF_2004_CONFIG_FILE = "UT2004.ini";
+const tchar* CProfile::DEF_2004_CONFIG_FILE = TXT("UT2004.ini");
 
-const char* CProfile::DEF_TO_CONFIG_FILE   = "TacticalOps.ini";
+const tchar* CProfile::DEF_TO_CONFIG_FILE   = TXT("TacticalOps.ini");
 
-const char* CProfile::s_pszFormats[3] = { "UT", "UT2003", "UT2004" };
+const tchar* CProfile::s_pszFormats[3] = { TXT("UT"), TXT("UT2003"), TXT("UT2004") };
 
 /******************************************************************************
 ** Method:		Constructor.
@@ -97,12 +97,12 @@ CProfile::~CProfile()
 
 bool CProfile::IsValidType(const CString& strExt)
 {
-	return ( (strExt == ".u"  ) || (strExt == ".int")
-		  || (strExt == ".unr") || (strExt == ".ut2")
-		  || (strExt == ".utx") || (strExt == ".uax")
-		  || (strExt == ".umx") || (strExt == ".ogg")
-		  || (strExt == ".usx") || (strExt == ".ukx")
-		  || (strExt == ".ka" )  );
+	return ( (strExt == TXT(".u")  ) || (strExt == TXT(".int"))
+		  || (strExt == TXT(".unr")) || (strExt == TXT(".ut2"))
+		  || (strExt == TXT(".utx")) || (strExt == TXT(".uax"))
+		  || (strExt == TXT(".umx")) || (strExt == TXT(".ogg"))
+		  || (strExt == TXT(".usx")) || (strExt == TXT(".ukx"))
+		  || (strExt == TXT(".ka") )  );
 }
 
 /******************************************************************************
@@ -117,37 +117,37 @@ bool CProfile::IsValidType(const CString& strExt)
 *******************************************************************************
 */
 
-char CProfile::GetFileType(const CString& strExt)
+tchar CProfile::GetFileType(const CString& strExt)
 {
-	if ((strExt == ".u") || (strExt == ".int") || (strExt == ""))
+	if ((strExt == TXT(".u")) || (strExt == TXT(".int")) || (strExt == TXT("")))
 	{
 		return SYSTEM_FILE;
 	}
-	else if ((strExt == ".unr") || (strExt == ".ut2"))
+	else if ((strExt == TXT(".unr")) || (strExt == TXT(".ut2")))
 	{
 		return MAP_FILE;
 	}
-	else if (strExt == ".utx")
+	else if (strExt == TXT(".utx"))
 	{
 		return TEXTURE_FILE;
 	}
-	else if (strExt == ".uax")
+	else if (strExt == TXT(".uax"))
 	{
 		return SOUND_FILE;
 	}
-	else if ((strExt == ".umx") || (strExt == ".ogg"))
+	else if ((strExt == TXT(".umx")) || (strExt == TXT(".ogg")))
 	{
 		return MUSIC_FILE;
 	}
-	else if (strExt == ".usx")
+	else if (strExt == TXT(".usx"))
 	{
 		return MESH_FILE;
 	}
-	else if (strExt == ".ukx")
+	else if (strExt == TXT(".ukx"))
 	{
 		return ANIM_FILE;
 	}
-	else if (strExt == ".ka")
+	else if (strExt == TXT(".ka"))
 	{
 		return KARMA_FILE;
 	}
@@ -169,7 +169,7 @@ char CProfile::GetFileType(const CString& strExt)
 *******************************************************************************
 */
 
-CPath CProfile::GetTypeDir(char cType)
+CPath CProfile::GetTypeDir(tchar cType)
 {
 	switch (cType)
 	{
@@ -185,7 +185,7 @@ CPath CProfile::GetTypeDir(char cType)
 
 	ASSERT_FALSE();
 
-	return "";
+	return TXT("");
 }
 
 /******************************************************************************
@@ -204,7 +204,7 @@ bool CProfile::Compare(const CProfile* pProfile1, const CProfile* pProfile2)
 {
 	ASSERT((pProfile1 != NULL) && (pProfile2 != NULL));
 
-	return (strcmp((pProfile1)->m_strName, (pProfile2)->m_strName) < 0);
+	return (tstrcmp((pProfile1)->m_strName, (pProfile2)->m_strName) < 0);
 }
 
 /******************************************************************************
@@ -224,15 +224,15 @@ CProfile* CProfile::DetectUT()
 	WCL::RegKey oKey;
 
 	// Try and find the regkey that contains the UT base path.
-	if (!WCL::RegKey::Exists(HKEY_LOCAL_MACHINE, "SOFTWARE\\Unreal Technology\\Installed Apps\\UnrealTournament"))
+	if (!WCL::RegKey::Exists(HKEY_LOCAL_MACHINE, TXT("SOFTWARE\\Unreal Technology\\Installed Apps\\UnrealTournament")))
 		return NULL;
 
-	oKey.Open(HKEY_LOCAL_MACHINE, "SOFTWARE\\Unreal Technology\\Installed Apps\\UnrealTournament", KEY_READ);
+	oKey.Open(HKEY_LOCAL_MACHINE, TXT("SOFTWARE\\Unreal Technology\\Installed Apps\\UnrealTournament"), KEY_READ);
 
 	// Get the UT base path.
-	CPath strBaseDir = oKey.ReadStringValue("Folder", "");
+	CPath strBaseDir = oKey.ReadStringValue(TXT("Folder"), TXT(""));
 
-	if (strBaseDir == "")
+	if (strBaseDir == TXT(""))
 		return NULL;
 
 	CProfile* pProfile = new CProfile();
@@ -269,15 +269,15 @@ CProfile* CProfile::DetectUT2003()
 	WCL::RegKey oKey;
 
 	// Try and find the regkey that contains the UT2003 base path.
-	if (!WCL::RegKey::Exists(HKEY_LOCAL_MACHINE, "SOFTWARE\\Unreal Technology\\Installed Apps\\UT2003"))
+	if (!WCL::RegKey::Exists(HKEY_LOCAL_MACHINE, TXT("SOFTWARE\\Unreal Technology\\Installed Apps\\UT2003")))
 		return NULL;
 
-	oKey.Open(HKEY_LOCAL_MACHINE, "SOFTWARE\\Unreal Technology\\Installed Apps\\UT2003", KEY_READ);
+	oKey.Open(HKEY_LOCAL_MACHINE, TXT("SOFTWARE\\Unreal Technology\\Installed Apps\\UT2003"), KEY_READ);
 
 	// Get the UT2003 base path.
-	CPath strBaseDir = oKey.ReadStringValue("Folder", "");
+	CPath strBaseDir = oKey.ReadStringValue(TXT("Folder"), TXT(""));
 
-	if (strBaseDir == "")
+	if (strBaseDir == TXT(""))
 		return NULL;
 
 	CProfile* pProfile = new CProfile();
@@ -317,15 +317,15 @@ CProfile* CProfile::DetectUT2004()
 	WCL::RegKey oKey;
 
 	// Try and find the regkey that contains the UT2004 base path.
-	if (!WCL::RegKey::Exists(HKEY_LOCAL_MACHINE, "SOFTWARE\\Unreal Technology\\Installed Apps\\UT2004"))
+	if (!WCL::RegKey::Exists(HKEY_LOCAL_MACHINE, TXT("SOFTWARE\\Unreal Technology\\Installed Apps\\UT2004")))
 		return NULL;
 
-	oKey.Open(HKEY_LOCAL_MACHINE, "SOFTWARE\\Unreal Technology\\Installed Apps\\UT2004", KEY_READ);
+	oKey.Open(HKEY_LOCAL_MACHINE, TXT("SOFTWARE\\Unreal Technology\\Installed Apps\\UT2004"), KEY_READ);
 
 	// Get the UT2004 base path.
-	CPath strBaseDir = oKey.ReadStringValue("Folder", "");
+	CPath strBaseDir = oKey.ReadStringValue(TXT("Folder"), TXT(""));
 
-	if (strBaseDir == "")
+	if (strBaseDir == TXT(""))
 		return NULL;
 
 	CProfile* pProfile = new CProfile();
@@ -365,15 +365,15 @@ CProfile* CProfile::DetectTacOps()
 	WCL::RegKey oKey;
 
 	// Try and find the regkey that contains the TO base path.
-	if (!WCL::RegKey::Exists(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Tactical Ops"))
+	if (!WCL::RegKey::Exists(HKEY_LOCAL_MACHINE, TXT("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Tactical Ops")))
 		return NULL;
 
-	oKey.Open(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Tactical Ops", KEY_READ);
+	oKey.Open(HKEY_LOCAL_MACHINE, TXT("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Tactical Ops"), KEY_READ);
 
 	// Get the TO base path.
-	CPath strBaseDir = oKey.ReadStringValue("InstallLocation", "");
+	CPath strBaseDir = oKey.ReadStringValue(TXT("InstallLocation"), TXT(""));
 
-	if (strBaseDir == "")
+	if (strBaseDir == TXT(""))
 		return NULL;
 
 	CProfile* pProfile = new CProfile();
@@ -385,7 +385,7 @@ CProfile* CProfile::DetectTacOps()
 	pProfile->m_bReadOnly     = false;
 	pProfile->m_strConfigFile = CPath(strBaseDir / DEF_SYSTEM_DIR, DEF_TO_CONFIG_FILE);
 
-	strBaseDir /= "TacticalOps";
+	strBaseDir /= TXT("TacticalOps");
 
 	pProfile->m_strSystemDir  = CPath(strBaseDir, DEF_SYSTEM_DIR  );
 	pProfile->m_strMapDir     = CPath(strBaseDir, DEF_MAPS_DIR    );

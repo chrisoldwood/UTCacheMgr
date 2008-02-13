@@ -213,14 +213,14 @@ void CAppCmds::OnCacheRescan()
 	// Check the cache path exists.
 	if (!strCacheDir.Exists())
 	{
-		App.AlertMsg("Failed to access the cache folder:\n\n%s\n\nPlease check the profile setup in Options | Profiles.", strCacheDir);
+		App.AlertMsg(TXT("Failed to access the cache folder:\n\n%s\n\nPlease check the profile setup in Options | Profiles."), strCacheDir);
 		return;
 	}
 
 	// Check the cache index file exists.
 	if (!strCacheFile.Exists())
 	{
-		App.AlertMsg("Failed to access the cache index file:\n\n%s", strCacheFile);
+		App.AlertMsg(TXT("Failed to access the cache index file:\n\n%s"), strCacheFile);
 		return;
 	}
 
@@ -231,8 +231,8 @@ void CAppCmds::OnCacheRescan()
 	CProgressDlg Dlg;
 
 	Dlg.RunModeless(App.m_AppWnd);
-	Dlg.Title("Scanning Cache");
-	Dlg.UpdateLabel("Searching cache for files...");
+	Dlg.Title(TXT("Scanning Cache"));
+	Dlg.UpdateLabel(TXT("Searching cache for files..."));
 	App.m_AppWnd.Enable(false);
 
 	// Create errors dialog.
@@ -241,7 +241,7 @@ void CAppCmds::OnCacheRescan()
 	CString	strFindMask;
 
 	// Create 'find files' mask.
-	strFindMask.Format("*.%s", App.m_strCacheExt);
+	strFindMask.Format(TXT("*.%s"), App.m_strCacheExt);
 
 	CFileFinder oFinder;
 	CFileTree	oFiles;
@@ -255,40 +255,40 @@ void CAppCmds::OnCacheRescan()
 	Dlg.InitMeter(astrFiles.Size());
 
 	// For all files found...
-	for (int i = 0; i < astrFiles.Size(); ++i)
+	for (size_t i = 0; i < astrFiles.Size(); ++i)
 	{
 		// Get file name, index key and real name.
 		CPath   strCacheName = astrFiles[i];
 		CString strIndexName = strCacheName.FileTitle();
-		CPath   strRealName  = oIdxFile.ReadString("Cache", strIndexName, "");
+		CPath   strRealName  = oIdxFile.ReadString(TXT("Cache"), strIndexName, TXT(""));
 
 		// Workaround for UT2003 v2166/86 patch bug which appends a "-1"
 		// after the 32 char file name, but the index entry remains the same.
 		if ( (strRealName.Empty()) && (strIndexName.Length() > 32) )
 		{
 			strIndexName = strIndexName.Left(32);
-			strRealName  = oIdxFile.ReadString("Cache", strIndexName, "");
+			strRealName  = oIdxFile.ReadString(TXT("Cache"), strIndexName, TXT(""));
 		}
 
 		// File not in index?
 		if (strRealName.Empty())
 		{
 			dlgErrors.m_astrFiles.Add(strCacheName);
-			dlgErrors.m_astrErrors.Add("Index entry missing");
+			dlgErrors.m_astrErrors.Add(TXT("Index entry missing"));
 			continue;
 		}
 
-		Dlg.UpdateLabelAndMeter("Processing file: " + (CString)strRealName, i);
+		Dlg.UpdateLabelAndMeter(TXT("Processing file: ") + (CString)strRealName, i);
 
 		// Get file type from extension.
 		CString strExt = strRealName.FileExt().ToLower();
-		char    cType  = App.m_pProfile->GetFileType(strExt);
+		tchar   cType  = App.m_pProfile->GetFileType(strExt);
 
 		// Unknown file type?
 		if (cType == NULL)
 		{
 			dlgErrors.m_astrFiles.Add(strRealName);
-			dlgErrors.m_astrErrors.Add("Unknown file type.");
+			dlgErrors.m_astrErrors.Add(TXT("Unknown file type."));
 			continue;
 		}
 
@@ -307,7 +307,7 @@ void CAppCmds::OnCacheRescan()
 		if (!CFile::QueryInfo(strFile, oInfo))
 		{
 			dlgErrors.m_astrFiles.Add(strCacheName);
-			dlgErrors.m_astrErrors.Add("Size query failed.");
+			dlgErrors.m_astrErrors.Add(TXT("Size query failed."));
 			continue;
 		}
 
@@ -319,7 +319,7 @@ void CAppCmds::OnCacheRescan()
 		oRow[CCache::REAL_FILENAME]  = strRealName;
 		oRow[CCache::FILE_TYPE]      = cType;
 		oRow[CCache::FILE_DATE]      = oInfo.st_mtime;
-		oRow[CCache::FILE_SIZE]      = (int)oInfo.st_size;
+		oRow[CCache::FILE_SIZE]      = static_cast<int>(oInfo.st_size);
 		oRow[CCache::STATUS]         = (bPinned) ? PIN_FILE : (bExists) ? OLD_FILE : NEW_FILE;
 
 		App.m_oCache.InsertRow(oRow);
@@ -335,7 +335,7 @@ void CAppCmds::OnCacheRescan()
 	// Report any errors.
 	if (dlgErrors.m_astrFiles.Size()  > 0)
 	{
-		dlgErrors.m_strTitle = "Cache Scan Errors";
+		dlgErrors.m_strTitle = TXT("Cache Scan Errors");
 		dlgErrors.RunModal(App.m_AppWnd);
 	}
 
@@ -352,13 +352,13 @@ void CAppCmds::OnCacheRescan()
 		int nTmpFiles = oTmpFiles.Root()->m_oData.m_astrFiles.Size();
 
 		// Found any AND user wants to delete them?
-		if ( (nTmpFiles > 0) && (App.QueryMsg("Found %d .tmp cache file(s)?\n\nDo you want to delete them?", nTmpFiles) == IDYES) )
+		if ( (nTmpFiles > 0) && (App.QueryMsg(TXT("Found %d .tmp cache file(s)?\n\nDo you want to delete them?"), nTmpFiles) == IDYES) )
 		{
 			CStrArray& astrFiles = oTmpFiles.Root()->m_oData.m_astrFiles;
 			int        nErrors   = 0;
 
 			// Delete all files found...
-			for (int i = 0; i < astrFiles.Size(); ++i)
+			for (size_t i = 0; i < astrFiles.Size(); ++i)
 			{
 				CPath strTmpFile = strTmpDir / astrFiles[i];
 
@@ -368,7 +368,7 @@ void CAppCmds::OnCacheRescan()
 
 			// Report any errors.
 			if (nErrors > 0)
-				App.AlertMsg("Failed to delete %d file(s).", nErrors);
+				App.AlertMsg(TXT("Failed to delete %d file(s)."), nErrors);
 		}
 	}
 
@@ -379,16 +379,16 @@ void CAppCmds::OnCacheRescan()
 		CStrArray astrInvalid;
 
 		// Read all cache index entries.
-		oIdxFile.ReadSection("Cache", astrKeys, astrValues);
+		oIdxFile.ReadSection(TXT("Cache"), astrKeys, astrValues);
 
 		// Find invalid entries.
-		for (int i = 0; i < astrKeys.Size(); ++i)
+		for (size_t i = 0; i < astrKeys.Size(); ++i)
 		{
-			CPath strFile = strCacheDir / (astrKeys[i] + "." + CProfile::DEF_CACHE_FILE_EXT);
+			CPath strFile = strCacheDir / (astrKeys[i] + TXT(".") + CProfile::DEF_CACHE_FILE_EXT);
 
 			// Workaround for UT2003 v2166/86 patch bug which appends a "-1"
 			// after the 32 char file name, but the index entry remains the same.
-			CPath strAltFile = strCacheDir / (astrKeys[i] + "-1." + CProfile::DEF_CACHE_FILE_EXT);
+			CPath strAltFile = strCacheDir / (astrKeys[i] + TXT("-1.") + CProfile::DEF_CACHE_FILE_EXT);
 
 			if ( (!strFile.Exists()) && (!strAltFile.Exists()) )
 				astrInvalid.Add(astrKeys[i]);
@@ -397,11 +397,11 @@ void CAppCmds::OnCacheRescan()
 		int nEntries = astrInvalid.Size();
 
 		// Found any AND user wants to delete them?
-		if ( (nEntries > 0) && (App.QueryMsg("Found %d invalid cache index entries?\n\nDo you want to delete them?", nEntries) == IDYES) )
+		if ( (nEntries > 0) && (App.QueryMsg(TXT("Found %d invalid cache index entries?\n\nDo you want to delete them?"), nEntries) == IDYES) )
 		{
 			// Delete the invalid entries...
-			for (int i = 0; i < astrInvalid.Size(); ++i)
-				oIdxFile.DeleteEntry("Cache", astrInvalid[i]);
+			for (size_t i = 0; i < astrInvalid.Size(); ++i)
+				oIdxFile.DeleteEntry(TXT("Cache"), astrInvalid[i]);
 		}
 	}
 
@@ -432,13 +432,13 @@ void CAppCmds::OnCacheRestore()
 	CCache oRestore(App.m_oMDB);
 
 	// Get logfile path.
-	CPath   strLogFile(CPath::ApplicationDir(), "UTCacheMgr.log");
+	CPath   strLogFile(CPath::ApplicationDir(), TXT("UTCacheMgr.log"));
 	CFile   fLogFile;
 
 	// Logfile not created yet?
 	if (!strLogFile.Exists())
 	{
-		App.NotifyMsg("There are no files that can be restored.");
+		App.NotifyMsg(TXT("There are no files that can be restored."));
 		return;
 	}
 
@@ -446,7 +446,7 @@ void CAppCmds::OnCacheRestore()
 	CProgressDlg Dlg;
 
 	Dlg.RunModeless(App.m_AppWnd);
-	Dlg.Title("Loading Restore Log");
+	Dlg.Title(TXT("Loading Restore Log"));
 	Dlg.InitMeter(CFile::Size(strLogFile));
 	App.m_AppWnd.Enable(false);
 
@@ -457,10 +457,10 @@ void CAppCmds::OnCacheRestore()
 		// For all lines.
 		while (!fLogFile.IsEOF())
 		{
-			CString strLine = fLogFile.ReadLine();
+			CString strLine = fLogFile.ReadLine(ANSI_TEXT);
 
 			// Ignore blank and commented lines.
-			if ( (strLine.Empty()) || (strLine[0] == '#') )
+			if ( (strLine.Empty()) || (strLine[0U] == '#') )
 				continue;
 
 			CStrArray astrFields;
@@ -472,9 +472,9 @@ void CAppCmds::OnCacheRestore()
 
 			CPath strRealName  = astrFields[0];
 			CPath strCacheName = astrFields[1];
-			int   nFileSize    = atoi(astrFields[2]);
+			int   nFileSize    = CStrCvt::ParseInt(astrFields[2]);
 
-			Dlg.UpdateLabelAndMeter("Checking file: " + (CString)strRealName, fLogFile.Seek(0, FILE_CURRENT));
+			Dlg.UpdateLabelAndMeter(TXT("Checking file: ") + (CString)strRealName, fLogFile.Seek(0, FILE_CURRENT));
 
 			// Duplicate entry?
 			if (oRestore.Exists(CWhereCmp(CCache::REAL_FILENAME, CWhereCmp::EQUALS, strRealName)))
@@ -482,7 +482,7 @@ void CAppCmds::OnCacheRestore()
 
 			// Get file type from extension.
 			CString strExt = strRealName.FileExt().ToLower();
-			char    cType  = App.m_pProfile->GetFileType(strExt);
+			tchar   cType  = App.m_pProfile->GetFileType(strExt);
 
 			// Unknown file type?
 			if (cType == NULL)
@@ -521,7 +521,7 @@ void CAppCmds::OnCacheRestore()
 	catch (CStreamException& e)
 	{
 		// Report error.
-		App.AlertMsg(e.ErrorText());
+		App.AlertMsg(TXT("%s"), e.ErrorText());
 
 		// Remove progress dialog.
 		App.m_AppWnd.Enable(true);
@@ -537,14 +537,14 @@ void CAppCmds::OnCacheRestore()
 	// Nothing to restore?
 	if (oRestore.RowCount() == 0)
 	{
-		App.NotifyMsg("There are no files that can be restored.");
+		App.NotifyMsg(TXT("There are no files that can be restored."));
 		return;
 	}
 
 	CSelFilesDlg oSelFilesDlg;
 
 	oSelFilesDlg.m_pTable   = &oRestore;
-	oSelFilesDlg.m_strTitle = "Restore Files To Cache";
+	oSelFilesDlg.m_strTitle = TXT("Restore Files To Cache");
 	oSelFilesDlg.m_dwHelpID = IDH_RESTOREDLG;
 
 	// Get files to restore from user.
@@ -564,7 +564,7 @@ void CAppCmds::OnCacheRestore()
 
 	// Show the progress dialog.
 	Dlg.RunModeless(App.m_AppWnd);
-	Dlg.Title("Restoring Files");
+	Dlg.Title(TXT("Restoring Files"));
 	Dlg.InitMeter(nFiles);
 
 	// Create errors dialog.
@@ -577,7 +577,7 @@ void CAppCmds::OnCacheRestore()
 		CPath strRealName = oRow[CCache::REAL_FILENAME];
 		CPath strDstDir   = strCacheDir;
 
-		Dlg.UpdateLabelAndMeter("Restoring file: " + (CString)strRealName, i);
+		Dlg.UpdateLabelAndMeter(TXT("Restoring file: ") + (CString)strRealName, i);
 
 		// Get the folder to move from.
 		CPath strSrcDir = App.m_pProfile->GetTypeDir(oRow[CCache::FILE_TYPE]);
@@ -595,7 +595,7 @@ void CAppCmds::OnCacheRestore()
 		}
 
 		// Add to index.
-		oIdxFile.WriteString("Cache", oRow[CCache::INDEX_KEY], strRealName);
+		oIdxFile.WriteString(TXT("Cache"), oRow[CCache::INDEX_KEY], strRealName);
 	}
 
 	// Remove progress dialog.
@@ -605,7 +605,7 @@ void CAppCmds::OnCacheRestore()
 	// Report any errors.
 	if (dlgErrors.m_astrFiles.Size() > 0)
 	{
-		dlgErrors.m_strTitle = "Restore Errors";
+		dlgErrors.m_strTitle = TXT("Restore Errors");
 		dlgErrors.RunModal(App.m_AppWnd);
 	}
 
@@ -631,7 +631,7 @@ void CAppCmds::OnCacheImport()
 	CPath strSrcDir = App.m_pProfile->m_strLastImport;
 
 	// Get the directory to import from.
-	if (!strSrcDir.SelectDir(App.m_AppWnd, "Select Folder To Import From", strSrcDir))
+	if (!strSrcDir.SelectDir(App.m_AppWnd, TXT("Select Folder To Import From"), strSrcDir))
 		return;
 
 	// If changed, update profiles' default folder.
@@ -649,7 +649,7 @@ void CAppCmds::OnCacheImport()
 	// Check the cache index file exists.
 	if (!strSrcCacheFile.Exists())
 	{
-		App.AlertMsg("Failed to access the cache index file:\n\n%s", strSrcCacheFile);
+		App.AlertMsg(TXT("Failed to access the cache index file:\n\n%s"), strSrcCacheFile);
 		return;
 	}
 
@@ -662,14 +662,14 @@ void CAppCmds::OnCacheImport()
 	CProgressDlg Dlg;
 
 	Dlg.RunModeless(App.m_AppWnd);
-	Dlg.Title("Scanning Cache");
-	Dlg.UpdateLabel("Searching cache for files...");
+	Dlg.Title(TXT("Scanning Cache"));
+	Dlg.UpdateLabel(TXT("Searching cache for files..."));
 	App.m_AppWnd.Enable(false);
 
 	CString	strFindMask;
 
 	// Create 'find files' mask.
-	strFindMask.Format("*.%s", App.m_strCacheExt);
+	strFindMask.Format(TXT("*.%s"), App.m_strCacheExt);
 
 	CFileFinder oFinder;
 	CFileTree	oFiles;
@@ -683,26 +683,26 @@ void CAppCmds::OnCacheImport()
 	Dlg.InitMeter(astrFiles.Size());
 
 	// For all files found...
-	for (int i = 0; i < astrFiles.Size(); ++i)
+	for (size_t i = 0; i < astrFiles.Size(); ++i)
 	{
 		// Get file name, index key and real name.
 		CPath   strCacheName = astrFiles[i];
 		CString strIndexName = strCacheName.FileTitle();
-		CPath   strRealName  = oSrcIdxFile.ReadString("Cache", strIndexName, "");
+		CPath   strRealName  = oSrcIdxFile.ReadString(TXT("Cache"), strIndexName, TXT(""));
 
 		// Workaround for UT2003 v2166/86 patch bug which appends a "-1"
 		// after the 32 char file name, but the index entry remains the same.
 		if ( (strRealName.Empty()) && (strIndexName.Length() > 32) )
 		{
 			strIndexName = strIndexName.Left(32);
-			strRealName  = oSrcIdxFile.ReadString("Cache", strIndexName, "");
+			strRealName  = oSrcIdxFile.ReadString(TXT("Cache"), strIndexName, TXT(""));
 		}
 
 		// File not in index?
 		if (strRealName.Empty())
 			continue;
 
-		Dlg.UpdateLabelAndMeter("Processing file: " + (CString)strRealName, i);
+		Dlg.UpdateLabelAndMeter(TXT("Processing file: ") + (CString)strRealName, i);
 
 		// File already in cache?
 		if (App.m_oCache.Exists(CWhereCmp(CCache::CACHE_FILENAME, CWhereCmp::EQUALS, strCacheName)))
@@ -710,7 +710,7 @@ void CAppCmds::OnCacheImport()
 
 		// Get file type from extension.
 		CString strExt = strRealName.FileExt().ToLower();
-		char    cType  = CProfile::GetFileType(strExt);
+		tchar   cType  = CProfile::GetFileType(strExt);
 
 		// Unknown file type?
 		if (cType == NULL)
@@ -731,7 +731,7 @@ void CAppCmds::OnCacheImport()
 		oRow[CCache::REAL_FILENAME]  = strRealName;
 		oRow[CCache::FILE_TYPE]      = cType;
 		oRow[CCache::FILE_DATE]      = oInfo.st_mtime;
-		oRow[CCache::FILE_SIZE]      = (int)oInfo.st_size;
+		oRow[CCache::FILE_SIZE]      = static_cast<int>(oInfo.st_size);
 		oRow[CCache::STATUS]         = NEW_FILE;
 
 		oImport.InsertRow(oRow);
@@ -744,14 +744,14 @@ void CAppCmds::OnCacheImport()
 	// Nothing to import?
 	if (oImport.RowCount() == 0)
 	{
-		App.NotifyMsg("There are no files that can be imported.");
+		App.NotifyMsg(TXT("There are no files that can be imported."));
 		return;
 	}
 
 	CSelFilesDlg oSelFilesDlg;
 
 	oSelFilesDlg.m_pTable   = &oImport;
-	oSelFilesDlg.m_strTitle = "Import Files Into Cache";
+	oSelFilesDlg.m_strTitle = TXT("Import Files Into Cache");
 	oSelFilesDlg.m_dwHelpID = IDH_IMPORTDLG;
 
 	// Get files to import from user.
@@ -771,7 +771,7 @@ void CAppCmds::OnCacheImport()
 
 	// Show the progress dialog.
 	Dlg.RunModeless(App.m_AppWnd);
-	Dlg.Title("Importing Files");
+	Dlg.Title(TXT("Importing Files"));
 	Dlg.InitMeter(nFiles);
 
 	// Create errors dialog.
@@ -784,7 +784,7 @@ void CAppCmds::OnCacheImport()
 		CPath strRealName  = oRow[CCache::REAL_FILENAME];
 		CPath strCacheName = oRow[CCache::CACHE_FILENAME];
 
-		Dlg.UpdateLabelAndMeter("Importing file: " + (CString)strRealName, i);
+		Dlg.UpdateLabelAndMeter(TXT("Importing file: ") + (CString)strRealName, i);
 
 		// Create the src and dst full paths.
 		CString	strSrcFile = strSrcCacheDir / strCacheName;
@@ -799,7 +799,7 @@ void CAppCmds::OnCacheImport()
 		}
 
 		// Add to index.
-		oDstIdxFile.WriteString("Cache", oRow[CCache::INDEX_KEY], strRealName);
+		oDstIdxFile.WriteString(TXT("Cache"), oRow[CCache::INDEX_KEY], strRealName);
 	}
 
 	// Remove progress dialog.
@@ -809,7 +809,7 @@ void CAppCmds::OnCacheImport()
 	// Report any errors.
 	if (dlgErrors.m_astrFiles.Size() > 0)
 	{
-		dlgErrors.m_strTitle = "Import Errors";
+		dlgErrors.m_strTitle = TXT("Import Errors");
 		dlgErrors.RunModal(App.m_AppWnd);
 	}
 
@@ -837,7 +837,7 @@ void CAppCmds::OnCacheUTConfig()
 	// Check config file exists.
 	if (!App.m_pProfile->m_strConfigFile.Exists())
 	{
-		App.AlertMsg("The config file is missing:\n\n%s", App.m_pProfile->m_strConfigFile);
+		App.AlertMsg(TXT("The config file is missing:\n\n%s"), App.m_pProfile->m_strConfigFile);
 		return;
 	}
 
@@ -933,9 +933,9 @@ void CAppCmds::OnEditPin()
 	// For all selected rows...
 	for (int i = 0; i < nFiles; ++i)
 	{
-		CRow&       oRow    = oRS[i];
-		char        cStatus = oRow[CCache::STATUS];
-		const char* pszName = oRow[CCache::REAL_FILENAME];
+		CRow&        oRow    = oRS[i];
+		tchar        cStatus = oRow[CCache::STATUS];
+		const tchar* pszName = oRow[CCache::REAL_FILENAME];
 
 		// Add to pinned list?
 		if (cStatus == NEW_FILE)
@@ -953,12 +953,12 @@ void CAppCmds::OnEditPin()
 	}
 
 	// For all cache table rows...
-	for (int i = 0; i < App.m_oCache.RowCount(); ++i)
+	for (size_t i = 0; i < App.m_oCache.RowCount(); ++i)
 	{
-		CRow&       oRow     = App.m_oCache[i];
-		char        cStatus  = oRow[CCache::STATUS];
-		const char* pszName  = oRow[CCache::REAL_FILENAME];
-		int         nListIdx = App.m_astrPinned.Find(pszName, true);
+		CRow&        oRow     = App.m_oCache[i];
+		tchar        cStatus  = oRow[CCache::STATUS];
+		const tchar* pszName  = oRow[CCache::REAL_FILENAME];
+		int          nListIdx = App.m_astrPinned.Find(pszName, true);
 
 		// Pin, if in pinned list AND not already pinned.
 		if ( (nListIdx != -1) && (cStatus != PIN_FILE) )
@@ -1018,7 +1018,7 @@ void CAppCmds::OnEditMove()
 	CProgressDlg Dlg;
 
 	Dlg.RunModeless(App.m_AppWnd);
-	Dlg.Title("Moving Files");
+	Dlg.Title(TXT("Moving Files"));
 	Dlg.InitMeter(nFiles);
 	App.m_AppWnd.Enable(false);
 
@@ -1032,7 +1032,7 @@ void CAppCmds::OnEditMove()
 		CPath	strSrcDir   = App.m_pProfile->m_strCacheDir;
 		CPath   strRealName = oRow[CCache::REAL_FILENAME];
 
-		Dlg.UpdateLabelAndMeter("Moving file: " + (CString)strRealName, i);
+		Dlg.UpdateLabelAndMeter(TXT("Moving file: ") + (CString)strRealName, i);
 
 		// Shouldn't move?
 		if (oRow[CCache::STATUS] != NEW_FILE)
@@ -1054,7 +1054,7 @@ void CAppCmds::OnEditMove()
 		}
 
 		// Delete from index.
-		oIdxFile.DeleteEntry("Cache", oRow[CCache::INDEX_KEY]);
+		oIdxFile.DeleteEntry(TXT("Cache"), oRow[CCache::INDEX_KEY]);
 
 		// Add to list of edits.
 		oEditsRS.Add(oRow);
@@ -1074,7 +1074,7 @@ void CAppCmds::OnEditMove()
 	// Report any errors.
 	if (dlgErrors.m_astrFiles.Size() > 0)
 	{
-		dlgErrors.m_strTitle = "Move Errors";
+		dlgErrors.m_strTitle = TXT("Move Errors");
 		dlgErrors.RunModal(App.m_AppWnd);
 	}
 
@@ -1121,7 +1121,7 @@ void CAppCmds::OnEditCopy()
 	CProgressDlg Dlg;
 
 	Dlg.RunModeless(App.m_AppWnd);
-	Dlg.Title("Copying Files");
+	Dlg.Title(TXT("Copying Files"));
 	Dlg.InitMeter(nFiles);
 	App.m_AppWnd.Enable(false);
 
@@ -1135,7 +1135,7 @@ void CAppCmds::OnEditCopy()
 		CPath	strSrcDir   = App.m_pProfile->m_strCacheDir;
 		CPath   strRealName = oRow[CCache::REAL_FILENAME];
 
-		Dlg.UpdateLabelAndMeter("Copying file: " + (CString)strRealName, i);
+		Dlg.UpdateLabelAndMeter(TXT("Copying file: ") + (CString)strRealName, i);
 
 		// Shouldn't copy?
 		if (oRow[CCache::STATUS] != NEW_FILE)
@@ -1174,7 +1174,7 @@ void CAppCmds::OnEditCopy()
 	// Report any errors.
 	if (dlgErrors.m_astrFiles.Size() > 0)
 	{
-		dlgErrors.m_strTitle = "Copy Errors";
+		dlgErrors.m_strTitle = TXT("Copy Errors");
 		dlgErrors.RunModal(App.m_AppWnd);
 	}
 
@@ -1236,7 +1236,7 @@ void CAppCmds::OnEditDelete()
 		}
 
 		// Delete from index.
-		oIdxFile.DeleteEntry("Cache", oRow[CCache::INDEX_KEY]);
+		oIdxFile.DeleteEntry(TXT("Cache"), oRow[CCache::INDEX_KEY]);
 
 		// Add to list of edits.
 		oEditsRS.Add(oRow);
@@ -1248,7 +1248,7 @@ void CAppCmds::OnEditDelete()
 	// Report any errors.
 	if (dlgErrors.m_astrFiles.Size() > 0)
 	{
-		dlgErrors.m_strTitle = "Delete Errors";
+		dlgErrors.m_strTitle = TXT("Delete Errors");
 		dlgErrors.RunModal(App.m_AppWnd);
 	}
 
@@ -1288,7 +1288,7 @@ void CAppCmds::OnEditCopyTo()
 	CPath strDstDir = App.m_pProfile->m_strLastCopyTo;
 
 	// Get the directory to copy to.
-	if (!strDstDir.SelectDir(App.m_AppWnd, "Select Folder To Copy To", strDstDir))
+	if (!strDstDir.SelectDir(App.m_AppWnd, TXT("Select Folder To Copy To"), strDstDir))
 		return;
 
 	// If changed, update profiles' default folder.
@@ -1308,7 +1308,7 @@ void CAppCmds::OnEditCopyTo()
 	CProgressDlg Dlg;
 
 	Dlg.RunModeless(App.m_AppWnd);
-	Dlg.Title("Copying Files");
+	Dlg.Title(TXT("Copying Files"));
 	Dlg.InitMeter(nFiles);
 	App.m_AppWnd.Enable(false);
 
@@ -1322,7 +1322,7 @@ void CAppCmds::OnEditCopyTo()
 		CPath	strSrcDir   = App.m_pProfile->m_strCacheDir;
 		CPath   strRealName = oRow[CCache::REAL_FILENAME];
 
-		Dlg.UpdateLabelAndMeter("Copying file: " + (CString)strRealName, i);
+		Dlg.UpdateLabelAndMeter(TXT("Copying file: ") + (CString)strRealName, i);
 
 		// Create the src and dst full paths.
 		CPath strSrcFile = strSrcDir / oRow[CCache::CACHE_FILENAME];
@@ -1348,7 +1348,7 @@ void CAppCmds::OnEditCopyTo()
 	// Report any errors.
 	if (dlgErrors.m_astrFiles.Size() > 0)
 	{
-		dlgErrors.m_strTitle = "Copy Errors";
+		dlgErrors.m_strTitle = TXT("Copy Errors");
 		dlgErrors.RunModal(App.m_AppWnd);
 	}
 
@@ -1500,7 +1500,7 @@ void CAppCmds::OnToolsInstall()
 	CPath strSrcDir = App.m_pProfile->m_strLastInstall;
 
 	// Get the directory to install from.
-	if (!strSrcDir.SelectDir(App.m_AppWnd, "Select Folder To Install From", strSrcDir))
+	if (!strSrcDir.SelectDir(App.m_AppWnd, TXT("Select Folder To Install From"), strSrcDir))
 		return;
 
 	// If changed, update profiles' default folder.
@@ -1517,15 +1517,15 @@ void CAppCmds::OnToolsInstall()
 	CProgressDlg Dlg;
 
 	Dlg.RunModeless(App.m_AppWnd);
-	Dlg.Title("Scanning Folder");
-	Dlg.UpdateLabel("Searching folder for files...");
+	Dlg.Title(TXT("Scanning Folder"));
+	Dlg.UpdateLabel(TXT("Searching folder for files..."));
 	App.m_AppWnd.Enable(false);
 
 	CFileFinder oFinder;
 	CFileTree   oFiles;
 
 	// Search folder for files.
-	oFinder.Find(strSrcDir, "*.*", true, oFiles);
+	oFinder.Find(strSrcDir, TXT("*.*"), true, oFiles);
 
 	CFileTreeIter  oCntIter(oFiles);
 	CFileTreeNode* pNode  = NULL;
@@ -1542,14 +1542,14 @@ void CAppCmds::OnToolsInstall()
 		App.m_AppWnd.Enable(true);
 		Dlg.Destroy();
 
-		App.NotifyMsg("There are no files to install.");
+		App.NotifyMsg(TXT("There are no files to install."));
 		return;
 	}
 
 	// Create errors dialog.
 	CErrorsDlg dlgErrors;
 
-	Dlg.Title("Installing Files");
+	Dlg.Title(TXT("Installing Files"));
 	Dlg.InitMeter(nFiles);
 
 	CFileTreeIter oInsIter(oFiles);
@@ -1562,7 +1562,7 @@ void CAppCmds::OnToolsInstall()
 	while (((pNode = oInsIter.Next()) != NULL) && (!bAborted))
 	{
 		// For all files in the folder...
-		for (int i = 0; ((i < pNode->m_oData.m_astrFiles.Size()) && (!bAborted)); ++i, ++nFile)
+		for (size_t i = 0; ((i < pNode->m_oData.m_astrFiles.Size()) && (!bAborted)); ++i, ++nFile)
 		{
 			CPath   strSrcDir   = pNode->m_oData.m_strPath;
 			CPath   strFileName = pNode->m_oData.m_astrFiles[i];
@@ -1573,15 +1573,15 @@ void CAppCmds::OnToolsInstall()
 			// Not a UT file?
 			if (!CProfile::IsValidType(strFileExt))
 			{
-				Dlg.UpdateLabelAndMeter("Skipping file: " + (CString)strFileName, nFile);
-				dlgErrors.m_astrErrors.Add("Ignored.");
+				Dlg.UpdateLabelAndMeter(TXT("Skipping file: ") + (CString)strFileName, nFile);
+				dlgErrors.m_astrErrors.Add(TXT("Ignored."));
 				continue;
 			}
 
-			Dlg.UpdateLabelAndMeter("Installing file: " + (CString)strFileName, nFile);
+			Dlg.UpdateLabelAndMeter(TXT("Installing file: ") + (CString)strFileName, nFile);
 
 			// Get the folder to copy to.
-			char  cType     = App.m_pProfile->GetFileType(strFileExt);
+			tchar cType     = App.m_pProfile->GetFileType(strFileExt);
 			CPath strDstDir = App.m_pProfile->GetTypeDir(cType);
 
 			// Create the src and dst full paths.
@@ -1597,7 +1597,7 @@ void CAppCmds::OnToolsInstall()
 				if ( (!CFile::QueryInfo(strSrcFile, oSrcInfo))
 				  || (!CFile::QueryInfo(strDstFile, oDstInfo)) )
 				{
-					dlgErrors.m_astrErrors.Add("Size query failed.");
+					dlgErrors.m_astrErrors.Add(TXT("Size query failed."));
 					continue;
 				}
 
@@ -1605,14 +1605,14 @@ void CAppCmds::OnToolsInstall()
 				if (  (oSrcInfo.st_size  == oDstInfo.st_size )
 				  && ((oSrcInfo.st_mtime == oDstInfo.st_mtime) || (App.m_bIgnoreDates)) )
 				{
-					dlgErrors.m_astrErrors.Add("Already installed.");
+					dlgErrors.m_astrErrors.Add(TXT("Already installed."));
 					continue;
 				}
 
 				// Default is don't overwrite?
 				if (bDefNoAll)
 				{
-					dlgErrors.m_astrErrors.Add("Not installed.");
+					dlgErrors.m_astrErrors.Add(TXT("Not installed."));
 					continue;
 				}
 
@@ -1621,10 +1621,10 @@ void CAppCmds::OnToolsInstall()
 				{
 					CConflictDlg oQueryDlg;
 
-					oQueryDlg.m_strFileName1.Format("%s", strDstFile);
-					oQueryDlg.m_strFileInfo1.Format("%s - %u Bytes", CStrCvt::FormatDateTime(oDstInfo.st_mtime), oDstInfo.st_size);
-					oQueryDlg.m_strFileName2.Format("%s", strSrcFile);
-					oQueryDlg.m_strFileInfo2.Format("%s - %u Bytes", CStrCvt::FormatDateTime(oSrcInfo.st_mtime), oSrcInfo.st_size);
+					oQueryDlg.m_strFileName1.Format(TXT("%s"), strDstFile);
+					oQueryDlg.m_strFileInfo1.Format(TXT("%s - %u Bytes"), CStrCvt::FormatDateTime(oDstInfo.st_mtime), oDstInfo.st_size);
+					oQueryDlg.m_strFileName2.Format(TXT("%s"), strSrcFile);
+					oQueryDlg.m_strFileInfo2.Format(TXT("%s - %u Bytes"), CStrCvt::FormatDateTime(oSrcInfo.st_mtime), oSrcInfo.st_size);
 
 					// Query user for action.
 					int nResult = oQueryDlg.RunModal(App.m_AppWnd);
@@ -1636,14 +1636,14 @@ void CAppCmds::OnToolsInstall()
 					// Ignore file?
 					if ((nResult == IDNO) || (nResult == IDNOALL))
 					{
-						dlgErrors.m_astrErrors.Add("Not installed.");
+						dlgErrors.m_astrErrors.Add(TXT("Not installed."));
 						continue;
 					}
 
 					// Abort install?
 					if (nResult == IDCANCEL)
 					{
-						dlgErrors.m_astrErrors.Add("Installed aborted.");
+						dlgErrors.m_astrErrors.Add(TXT("Installed aborted."));
 						bAborted = true;
 						continue;
 					}
@@ -1657,7 +1657,7 @@ void CAppCmds::OnToolsInstall()
 				continue;
 			}
 
-			dlgErrors.m_astrErrors.Add("Installed.");
+			dlgErrors.m_astrErrors.Add(TXT("Installed."));
 		}
 	}
 
@@ -1668,7 +1668,7 @@ void CAppCmds::OnToolsInstall()
 	// Report any errors.
 	if (dlgErrors.m_astrFiles.Size() > 0)
 	{
-		dlgErrors.m_strTitle = "Install Results";
+		dlgErrors.m_strTitle = TXT("Install Results");
 		dlgErrors.RunModal(App.m_AppWnd);
 	}
 }
@@ -1974,7 +1974,7 @@ void CAppCmds::LogEdits(CResultSet& oRS)
 	ASSERT(App.m_bLogEdits);
 
 	// Get logfile path.
-	CPath strLogFile(CPath::ApplicationDir(), "UTCacheMgr.log");
+	CPath strLogFile(CPath::ApplicationDir(), TXT("UTCacheMgr.log"));
 	CFile fLogFile;
 
 	try
@@ -1990,11 +1990,11 @@ void CAppCmds::LogEdits(CResultSet& oRS)
 		{
 			// Create new file and add column header.
 			fLogFile.Create(strLogFile);
-			fLogFile.WriteLine("# RealFileName, CacheFileName, Size");
+			fLogFile.WriteLine(TXT("# RealFileName, CacheFileName, Size"), ANSI_TEXT);
 		}
 
 		// For all edited rows...
-		for (int i = 0; i < oRS.Count(); ++i)
+		for (size_t i = 0; i < oRS.Count(); ++i)
 		{
 			CRow& oRow = oRS[i];
 
@@ -2008,12 +2008,12 @@ void CAppCmds::LogEdits(CResultSet& oRS)
 			strLogEntry += oRow[CCache::FILE_SIZE].Format();
 
 			// Add to logfile.
-			fLogFile.WriteLine(strLogEntry);
+			fLogFile.WriteLine(strLogEntry, ANSI_TEXT);
 		}
 	}
 	catch (CStreamException& e)
 	{
 		// Report error.
-		App.AlertMsg(e.ErrorText());
+		App.AlertMsg(TXT("%s"), e.ErrorText());
 	}
 }

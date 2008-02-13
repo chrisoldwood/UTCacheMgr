@@ -26,19 +26,19 @@
 */
 
 // File types.
-const char SYSTEM_FILE  = 'U';
-const char MAP_FILE     = 'P';
-const char TEXTURE_FILE = 'T';
-const char SOUND_FILE   = 'A';
-const char MUSIC_FILE   = 'M';
-const char MESH_FILE    = 'S';
-const char ANIM_FILE    = 'K';
-const char KARMA_FILE   = 'D';
+const tchar SYSTEM_FILE  = 'U';
+const tchar MAP_FILE     = 'P';
+const tchar TEXTURE_FILE = 'T';
+const tchar SOUND_FILE   = 'A';
+const tchar MUSIC_FILE   = 'M';
+const tchar MESH_FILE    = 'S';
+const tchar ANIM_FILE    = 'K';
+const tchar KARMA_FILE   = 'D';
 
 // File status.
-const char NEW_FILE = 'N';
-const char OLD_FILE = 'O';
-const char PIN_FILE = 'P';
+const tchar NEW_FILE = 'N';
+const tchar OLD_FILE = 'O';
+const tchar PIN_FILE = 'P';
 
 /******************************************************************************
 ** 

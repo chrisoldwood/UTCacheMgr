@@ -24,17 +24,17 @@
 */
 
 CCache::CCache(CMDB& oDB)
-	: CTable(oDB, "Cache")
+	: CTable(oDB, TXT("Cache"))
 {
 	// Create the table schema.
-	AddColumn("ID",            MDCT_IDENTITY, 0,                  CColumn::IDENTITY);
-	AddColumn("CacheFileName", MDCT_FXDSTR,   CACHE_FILENAME_LEN, CColumn::DEFAULTS);
-	AddColumn("IndexKey",      MDCT_FXDSTR,   INDEX_KEY_LEN,      CColumn::DEFAULTS);
-	AddColumn("RealFileName",  MDCT_FXDSTR,   REAL_FILENAME_LEN,  CColumn::DEFAULTS);
-	AddColumn("FileType",      MDCT_CHAR,     0,                  CColumn::DEFAULTS);
-	AddColumn("FileDate",      MDCT_DATETIME, 0,                  CColumn::DEFAULTS);
-	AddColumn("FileSize",      MDCT_INT,      0,                  CColumn::DEFAULTS);
-	AddColumn("Status",        MDCT_CHAR,     0,                  CColumn::DEFAULTS);
+	AddColumn(TXT("ID"),            MDCT_IDENTITY, 0,                  CColumn::IDENTITY);
+	AddColumn(TXT("CacheFileName"), MDCT_FXDSTR,   CACHE_FILENAME_LEN, CColumn::DEFAULTS);
+	AddColumn(TXT("IndexKey"),      MDCT_FXDSTR,   INDEX_KEY_LEN,      CColumn::DEFAULTS);
+	AddColumn(TXT("RealFileName"),  MDCT_FXDSTR,   REAL_FILENAME_LEN,  CColumn::DEFAULTS);
+	AddColumn(TXT("FileType"),      MDCT_CHAR,     0,                  CColumn::DEFAULTS);
+	AddColumn(TXT("FileDate"),      MDCT_DATETIME, 0,                  CColumn::DEFAULTS);
+	AddColumn(TXT("FileSize"),      MDCT_INT,      0,                  CColumn::DEFAULTS);
+	AddColumn(TXT("Status"),        MDCT_CHAR,     0,                  CColumn::DEFAULTS);
 }
 
 /******************************************************************************

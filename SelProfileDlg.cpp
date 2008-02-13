@@ -82,7 +82,7 @@ void CSelProfileDlg::OnInitDialog()
 		m_cbFormat.Add(CProfile::s_pszFormats[i]);
 
 	// Select the default.
-	m_cbProfiles.CurSel(m_cbProfiles.FindExact(m_pChoice->m_strName, -1));
+	m_cbProfiles.CurSel(m_cbProfiles.FindExact(m_pChoice->m_strName));
 	OnSelectProfile();
 }
 
@@ -102,7 +102,7 @@ bool CSelProfileDlg::OnOk()
 {
 	// Get the selection.
 	int       nSel     = m_cbProfiles.CurSel();
-	CProfile* pProfile = (CProfile*) m_cbProfiles.ItemPtr(nSel);
+	CProfile* pProfile = static_cast<CProfile*>(m_cbProfiles.ItemPtr(nSel));
 
 	ASSERT((nSel != CB_ERR) && (pProfile != NULL));
 
@@ -128,7 +128,7 @@ void CSelProfileDlg::OnSelectProfile()
 {
 	// Get the selected profile.
 	int       nSel     = m_cbProfiles.CurSel();
-	CProfile* pProfile = (CProfile*) m_cbProfiles.ItemPtr(nSel);
+	CProfile* pProfile = static_cast<CProfile*>(m_cbProfiles.ItemPtr(nSel));
 
 	ASSERT((nSel != CB_ERR) && (pProfile != NULL));
 

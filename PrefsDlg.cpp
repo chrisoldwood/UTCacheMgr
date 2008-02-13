@@ -64,7 +64,7 @@ void CPrefsDlg::OnInitDialog()
 	}
 
 	// Select the current default.
-	int nDefProfile = m_cbProfiles.FindExact(App.m_strDefProfile, -1);
+	int nDefProfile = m_cbProfiles.FindExact(App.m_strDefProfile);
 
 	ASSERT(nDefProfile != CB_ERR);
 
@@ -96,7 +96,7 @@ bool CPrefsDlg::OnOk()
 {
 	// Get the default profile.
 	int       nSel     = m_cbProfiles.CurSel();
-	CProfile* pProfile = (CProfile*) m_cbProfiles.ItemPtr(nSel);
+	CProfile* pProfile = static_cast<CProfile*>(m_cbProfiles.ItemPtr(nSel));
 
 	ASSERT((nSel != CB_ERR) && (pProfile != NULL));
 

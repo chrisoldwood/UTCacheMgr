@@ -20,9 +20,9 @@
 *******************************************************************************
 */
 
-static const char* CFG_SECTION      = "Core.System";
-static const char* FOLDER_CFG_ENTRY = "CachePath";
-static const char* EXPIRY_CFG_ENTRY = "PurgeCacheDays";
+static const tchar* CFG_SECTION      = TXT("Core.System");
+static const tchar* FOLDER_CFG_ENTRY = TXT("CachePath");
+static const tchar* EXPIRY_CFG_ENTRY = TXT("PurgeCacheDays");
 
 /******************************************************************************
 ** Method:		Default constructor.
@@ -61,8 +61,8 @@ CUTConfigDlg::CUTConfigDlg()
 void CUTConfigDlg::OnInitDialog()
 {
 	// Load the current config.
-	m_ebFolder.Text(m_oIniFile.ReadString(CFG_SECTION, FOLDER_CFG_ENTRY, ""));
-	m_ebExpiry.Text(m_oIniFile.ReadString(CFG_SECTION, EXPIRY_CFG_ENTRY, ""));
+	m_ebFolder.Text(m_oIniFile.ReadString(CFG_SECTION, FOLDER_CFG_ENTRY, TXT("")));
+	m_ebExpiry.Text(m_oIniFile.ReadString(CFG_SECTION, EXPIRY_CFG_ENTRY, TXT("")));
 
 	// Initialise control string lengths.
 	m_ebFolder.TextLimit(MAX_PATH);

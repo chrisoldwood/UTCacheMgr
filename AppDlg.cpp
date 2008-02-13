@@ -71,20 +71,20 @@ void CAppDlg::OnInitDialog()
 	int anColWidths[NUM_COLUMNS];
 
 	// Load the columns widths config.
-	anColWidths[FILE_COLUMN]   = App.m_oIniFile.ReadInt("UI", "Column0", 200);
-	anColWidths[TYPE_COLUMN]   = App.m_oIniFile.ReadInt("UI", "Column1",  50);
-	anColWidths[DATE_COLUMN]   = App.m_oIniFile.ReadInt("UI", "Column2", 125);
-	anColWidths[SIZE_COLUMN]   = App.m_oIniFile.ReadInt("UI", "Column3",  70);
-	anColWidths[STATUS_COLUMN] = App.m_oIniFile.ReadInt("UI", "Column4",  55);
-	anColWidths[CACHE_COLUMN]  = App.m_oIniFile.ReadInt("UI", "Column5", 275);
+	anColWidths[FILE_COLUMN]   = App.m_oIniFile.ReadInt(TXT("UI"), TXT("Column0"), 200);
+	anColWidths[TYPE_COLUMN]   = App.m_oIniFile.ReadInt(TXT("UI"), TXT("Column1"),  50);
+	anColWidths[DATE_COLUMN]   = App.m_oIniFile.ReadInt(TXT("UI"), TXT("Column2"), 125);
+	anColWidths[SIZE_COLUMN]   = App.m_oIniFile.ReadInt(TXT("UI"), TXT("Column3"),  70);
+	anColWidths[STATUS_COLUMN] = App.m_oIniFile.ReadInt(TXT("UI"), TXT("Column4"),  55);
+	anColWidths[CACHE_COLUMN]  = App.m_oIniFile.ReadInt(TXT("UI"), TXT("Column5"), 275);
 
 	// Create grid columns.
-	m_lvGrid.InsertColumn(FILE_COLUMN,   "File",       anColWidths[FILE_COLUMN],   LVCFMT_LEFT  );
-	m_lvGrid.InsertColumn(TYPE_COLUMN,   "Type",       anColWidths[TYPE_COLUMN],   LVCFMT_LEFT  );
-	m_lvGrid.InsertColumn(DATE_COLUMN,   "Date",       anColWidths[DATE_COLUMN],   LVCFMT_LEFT  );
-	m_lvGrid.InsertColumn(SIZE_COLUMN,   "Size",       anColWidths[SIZE_COLUMN],   LVCFMT_RIGHT );
-	m_lvGrid.InsertColumn(STATUS_COLUMN, "Status",     anColWidths[STATUS_COLUMN], LVCFMT_CENTER);
-	m_lvGrid.InsertColumn(CACHE_COLUMN,  "Cache Name", anColWidths[CACHE_COLUMN],  LVCFMT_LEFT  );
+	m_lvGrid.InsertColumn(FILE_COLUMN,   TXT("File"),       anColWidths[FILE_COLUMN],   LVCFMT_LEFT  );
+	m_lvGrid.InsertColumn(TYPE_COLUMN,   TXT("Type"),       anColWidths[TYPE_COLUMN],   LVCFMT_LEFT  );
+	m_lvGrid.InsertColumn(DATE_COLUMN,   TXT("Date"),       anColWidths[DATE_COLUMN],   LVCFMT_LEFT  );
+	m_lvGrid.InsertColumn(SIZE_COLUMN,   TXT("Size"),       anColWidths[SIZE_COLUMN],   LVCFMT_RIGHT );
+	m_lvGrid.InsertColumn(STATUS_COLUMN, TXT("Status"),     anColWidths[STATUS_COLUMN], LVCFMT_CENTER);
+	m_lvGrid.InsertColumn(CACHE_COLUMN,  TXT("Cache Name"), anColWidths[CACHE_COLUMN],  LVCFMT_LEFT  );
 }
 
 /******************************************************************************
@@ -101,12 +101,12 @@ void CAppDlg::OnInitDialog()
 
 void CAppDlg::OnDestroy()
 {
-	App.m_oIniFile.WriteInt("UI", "Column0", m_lvGrid.ColumnWidth(FILE_COLUMN));
-	App.m_oIniFile.WriteInt("UI", "Column1", m_lvGrid.ColumnWidth(TYPE_COLUMN));
-	App.m_oIniFile.WriteInt("UI", "Column2", m_lvGrid.ColumnWidth(DATE_COLUMN));
-	App.m_oIniFile.WriteInt("UI", "Column3", m_lvGrid.ColumnWidth(SIZE_COLUMN));
-	App.m_oIniFile.WriteInt("UI", "Column4", m_lvGrid.ColumnWidth(STATUS_COLUMN));
-	App.m_oIniFile.WriteInt("UI", "Column5", m_lvGrid.ColumnWidth(CACHE_COLUMN));
+	App.m_oIniFile.WriteInt(TXT("UI"), TXT("Column0"), m_lvGrid.ColumnWidth(FILE_COLUMN));
+	App.m_oIniFile.WriteInt(TXT("UI"), TXT("Column1"), m_lvGrid.ColumnWidth(TYPE_COLUMN));
+	App.m_oIniFile.WriteInt(TXT("UI"), TXT("Column2"), m_lvGrid.ColumnWidth(DATE_COLUMN));
+	App.m_oIniFile.WriteInt(TXT("UI"), TXT("Column3"), m_lvGrid.ColumnWidth(SIZE_COLUMN));
+	App.m_oIniFile.WriteInt(TXT("UI"), TXT("Column4"), m_lvGrid.ColumnWidth(STATUS_COLUMN));
+	App.m_oIniFile.WriteInt(TXT("UI"), TXT("Column5"), m_lvGrid.ColumnWidth(CACHE_COLUMN));
 }
 
 /******************************************************************************
@@ -132,7 +132,7 @@ void CAppDlg::RefreshView()
 	oRS.OrderBy(CSortColumns(m_nSortColumn, m_eSortOrder));
 
 	// For all rows.
-	for (int i = 0; i < oRS.Count(); ++i)
+	for (size_t i = 0; i < oRS.Count(); ++i)
 	{
 		CRow& oRow = oRS[i];
 

@@ -37,9 +37,9 @@ public:
 	// Members.
 	//
 	void InitMeter(uint nSteps);
-	void UpdateLabel(const char* pszLabel);
+	void UpdateLabel(const tchar* pszLabel);
 	void UpdateMeter(uint nSteps);
-	void UpdateLabelAndMeter(const char* pszLabel, uint nSteps);
+	void UpdateLabelAndMeter(const tchar* pszLabel, uint nSteps);
 
 protected:
 	//

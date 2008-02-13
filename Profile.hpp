@@ -37,10 +37,10 @@ public:
 	//
 	// Methods.
 	//
-	CPath GetTypeDir(char cType);
+	CPath GetTypeDir(tchar cType);
 
 	static bool IsValidType(const CString& strExt);
-	static char GetFileType(const CString& strExt);
+	static tchar GetFileType(const CString& strExt);
 
 	//
 	// Helper methods.
@@ -81,42 +81,42 @@ public:
 	//
 
 	// Default profiles.
-	static const char* DEF_UT_PROFILE_NAME;
-	static const char* DEF_UT2003_PROFILE_NAME;
-	static const char* DEF_UT2004_PROFILE_NAME;
-	static const char* DEF_TO_PROFILE_NAME;
+	static const tchar* DEF_UT_PROFILE_NAME;
+	static const tchar* DEF_UT2003_PROFILE_NAME;
+	static const tchar* DEF_UT2004_PROFILE_NAME;
+	static const tchar* DEF_TO_PROFILE_NAME;
 
-	static const char* DEF_ROOT_DIR;
+	static const tchar* DEF_ROOT_DIR;
 
 	// Cache folder settings.
-	static const char* DEF_CACHE_DIR;
+	static const tchar* DEF_CACHE_DIR;
 
-	static const char* DEF_CACHE_IDX_FILE;
-	static const char* DEF_CACHE_FILE_EXT;
+	static const tchar* DEF_CACHE_IDX_FILE;
+	static const tchar* DEF_CACHE_FILE_EXT;
 
-	static const char* DEF_CACHE_TMP_DIR;
-	static const char* DEF_CACHE_TMP_MASK;
+	static const tchar* DEF_CACHE_TMP_DIR;
+	static const tchar* DEF_CACHE_TMP_MASK;
 
 	// Main folder settings.
-	static const char* DEF_SYSTEM_DIR;
-	static const char* DEF_MAPS_DIR;
-	static const char* DEF_TEXTURES_DIR;
-	static const char* DEF_SOUNDS_DIR;
-	static const char* DEF_MUSIC_DIR;
+	static const tchar* DEF_SYSTEM_DIR;
+	static const tchar* DEF_MAPS_DIR;
+	static const tchar* DEF_TEXTURES_DIR;
+	static const tchar* DEF_SOUNDS_DIR;
+	static const tchar* DEF_MUSIC_DIR;
 
-	static const char* DEF_CONFIG_FILE;
+	static const tchar* DEF_CONFIG_FILE;
 
 	// UT2003 specific settings.
-	static const char* DEF_MESH_DIR;
-	static const char* DEF_ANIM_DIR;
-	static const char* DEF_KARMA_DIR;
-	static const char* DEF_2003_CONFIG_FILE;
+	static const tchar* DEF_MESH_DIR;
+	static const tchar* DEF_ANIM_DIR;
+	static const tchar* DEF_KARMA_DIR;
+	static const tchar* DEF_2003_CONFIG_FILE;
 
 	// UT2004 specific settings.
-	static const char* DEF_2004_CONFIG_FILE;
+	static const tchar* DEF_2004_CONFIG_FILE;
 
 	// Tactical Ops specific settings.
-	static const char* DEF_TO_CONFIG_FILE;
+	static const tchar* DEF_TO_CONFIG_FILE;
 
 	// Cache formats.
 	enum Format
@@ -128,7 +128,7 @@ public:
 		NUM_FORMATS	  = 3,
 	};
 
-	static const char* s_pszFormats[3];
+	static const tchar* s_pszFormats[3];
 };
 
 // Template shorthands.

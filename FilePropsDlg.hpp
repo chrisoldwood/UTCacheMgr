@@ -36,7 +36,7 @@ public:
 	//
 	// Members.
 	//
-	char	m_cType;
+	tchar	m_cType;
 	CString	m_strRealName;
 	CString m_strCacheName;
 	CString m_strDate;
@@ -63,7 +63,7 @@ protected:
 	//
 	// Internal methods.
 	//
-	uint FileIcon(char cType);
+	uint FileIcon(tchar cType);
 };
 
 /******************************************************************************

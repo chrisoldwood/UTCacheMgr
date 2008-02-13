@@ -82,7 +82,7 @@ void CProgressDlg::InitMeter(uint nSteps)
 *******************************************************************************
 */
 
-void CProgressDlg::UpdateLabel(const char* pszLabel)
+void CProgressDlg::UpdateLabel(const tchar* pszLabel)
 {
 	ASSERT(pszLabel != NULL);
 
@@ -98,7 +98,7 @@ void CProgressDlg::UpdateMeter(uint nSteps)
 	App.m_MainThread.ProcessMsgQueue();
 }
 
-void CProgressDlg::UpdateLabelAndMeter(const char* pszLabel, uint nSteps)
+void CProgressDlg::UpdateLabelAndMeter(const tchar* pszLabel, uint nSteps)
 {
 	ASSERT(pszLabel != NULL);
 

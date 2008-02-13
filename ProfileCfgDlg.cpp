@@ -70,7 +70,7 @@ void CProfileCfgDlg::OnInitDialog()
 	}
 
 	// Select the first by default.
-	m_lbProfiles.CurSel(0);
+	m_lbProfiles.CurSel(0U);
 }
 
 /******************************************************************************
@@ -129,7 +129,7 @@ void CProfileCfgDlg::OnEdit()
 		return;
 
 	CEditProfileDlg Dlg;
-	CProfile*       pProfile = (CProfile*) m_lbProfiles.ItemPtr(nSel);
+	CProfile*       pProfile = static_cast<CProfile*>(m_lbProfiles.ItemPtr(nSel));
 
 	// Get selected profile details.
 	Dlg.m_oProfile = *pProfile;
@@ -163,26 +163,26 @@ void CProfileCfgDlg::OnEdit()
 
 void CProfileCfgDlg::OnRemove()
 {
-	int nSel = m_lbProfiles.CurSel();
+	size_t nSel = m_lbProfiles.CurSel();
 
 	// No selection?
 	if (nSel == CB_ERR)
 		return;
 
 	// Get selected profile details.
-	CProfile* pProfile = (CProfile*) m_lbProfiles.ItemPtr(nSel);
+	CProfile* pProfile = static_cast<CProfile*>(m_lbProfiles.ItemPtr(nSel));
 
 	// Check we're not deleting the active profile.
 	if (pProfile == App.m_pProfile)
 	{
-		AlertMsg("You cannot delete the active profile.");
+		AlertMsg(TXT("You cannot delete the active profile."));
 		return;
 	}
 
 	// Check we're not deleting the default.
 	if (pProfile->m_strName == App.m_strDefProfile)
 	{
-		AlertMsg("You cannot delete the default profile.");
+		AlertMsg(TXT("You cannot delete the default profile."));
 		return;
 	}
 
@@ -272,7 +272,7 @@ void CProfileCfgDlg::OnDetect()
 	// Nothing new detected?
 	if (aoProfiles.empty())
 	{
-		NotifyMsg("No new installations were detected.");
+		NotifyMsg(TXT("No new installations were detected."));
 		return;
 	}
 

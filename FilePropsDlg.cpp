@@ -76,7 +76,7 @@ void CFilePropsDlg::OnInitDialog()
 *******************************************************************************
 */
 
-uint CFilePropsDlg::FileIcon(char cType)
+uint CFilePropsDlg::FileIcon(tchar cType)
 {
 	switch (cType)
 	{

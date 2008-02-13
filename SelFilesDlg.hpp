@@ -76,7 +76,7 @@ protected:
 	// Internal methods.
 	//
 	void  RefreshView();
-	CRow& GetRow(int nRow);
+	CRow& GetRow(size_t nRow);
 };
 
 /******************************************************************************
@@ -86,11 +86,11 @@ protected:
 *******************************************************************************
 */
 
-inline CRow& CSelFilesDlg::GetRow(int nRow)
+inline CRow& CSelFilesDlg::GetRow(size_t nRow)
 {
-	ASSERT((nRow >= 0) && (nRow < m_lvGrid.ItemCount()));
+	ASSERT(nRow < m_lvGrid.ItemCount());
 
-	return *((CRow*) m_lvGrid.ItemPtr(nRow));
+	return *(static_cast<CRow*>(m_lvGrid.ItemPtr(nRow)));
 }
 
 #endif //SELFILESDLG_HPP

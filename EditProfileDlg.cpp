@@ -20,8 +20,8 @@
 *******************************************************************************
 */
 
-static const char* SEL_FOLDER_MSG = "Select The UT/UT2003/UT2004/Mod Base Folder\n"
-									"e.g. C:\\UnrealTournament";
+static const tchar* SEL_FOLDER_MSG = TXT("Select The UT/UT2003/UT2004/Mod Base Folder\n")
+									 TXT("e.g. C:\\UnrealTournament");
 
 /******************************************************************************
 ** Method:		Default constructor.
@@ -118,7 +118,7 @@ void CEditProfileDlg::OnInitDialog()
 	m_ebConfigFile.TextLimit(MAX_PATH);
 
 	// Cannot edit profile name.
-	if (m_oProfile.m_strName != "")
+	if (m_oProfile.m_strName != TXT(""))
 		m_ebName.Enable(false);
 
 	OnSelectFormat();
@@ -155,51 +155,51 @@ bool CEditProfileDlg::OnOk()
 	// Validate profile name.
 	if (strName.Length() == 0)
 	{
-		AlertMsg("Please supply a name for the profile.");
+		AlertMsg(TXT("Please supply a name for the profile."));
 		m_ebName.Focus();
 		return false;
 	}
 
-	if ( (m_oProfile.m_strName == "") && (App.FindProfile(strName) != NULL) )
+	if ( (m_oProfile.m_strName == TXT("")) && (App.FindProfile(strName) != NULL) )
 	{
-		AlertMsg("The profile name should be unique.");
+		AlertMsg(TXT("The profile name should be unique."));
 		m_ebName.Focus();
 		return false;
 	}
 
 	// Validate common paths.
-	if (!ValidatePath(strCacheDir, m_ebCacheDir, "cache folder"))
+	if (!ValidatePath(strCacheDir, m_ebCacheDir, TXT("cache folder")))
 		return false;
 
-	if (!ValidatePath(strSystemDir, m_ebSystemDir, "system folder"))
+	if (!ValidatePath(strSystemDir, m_ebSystemDir, TXT("system folder")))
 		return false;
 
-	if (!ValidatePath(strMapDir, m_ebMapDir, "maps folder"))
+	if (!ValidatePath(strMapDir, m_ebMapDir, TXT("maps folder")))
 		return false;
 
-	if (!ValidatePath(strTextureDir, m_ebTextureDir, "textures folder"))
+	if (!ValidatePath(strTextureDir, m_ebTextureDir, TXT("textures folder")))
 		return false;
 
-	if (!ValidatePath(strSoundDir, m_ebSoundDir, "sounds folder"))
+	if (!ValidatePath(strSoundDir, m_ebSoundDir, TXT("sounds folder")))
 		return false;
 
-	if (!ValidatePath(strMusicDir, m_ebMusicDir, "music folder"))
+	if (!ValidatePath(strMusicDir, m_ebMusicDir, TXT("music folder")))
 		return false;
 
 	// Validate UT2003/4 specific paths.
 	if ((nFormat == CProfile::UT2003_FORMAT) || (nFormat == CProfile::UT2004_FORMAT))
 	{
-		if (!ValidatePath(strMeshDir, m_ebMeshDir, "static meshes folder"))
+		if (!ValidatePath(strMeshDir, m_ebMeshDir, TXT("static meshes folder")))
 			return false;
 
-		if (!ValidatePath(strAnimDir, m_ebAnimDir, "animations folder"))
+		if (!ValidatePath(strAnimDir, m_ebAnimDir, TXT("animations folder")))
 			return false;
 
-		if (!ValidatePath(strKarmaDir, m_ebKarmaDir, "karma data folder"))
+		if (!ValidatePath(strKarmaDir, m_ebKarmaDir, TXT("karma data folder")))
 			return false;
 	}
 
-	if (!ValidatePath(strConfigFile, m_ebConfigFile, "config file"))
+	if (!ValidatePath(strConfigFile, m_ebConfigFile, TXT("config file")))
 		return false;
 
 	// Update profile.
@@ -244,9 +244,9 @@ void CEditProfileDlg::OnSelectFormat()
 	// Clear non UT controls.
 	if (nFormat == CProfile::UT_FORMAT)
 	{
-		m_ebMeshDir.Text("");
-		m_ebAnimDir.Text("");
-		m_ebKarmaDir.Text("");
+		m_ebMeshDir.Text(TXT(""));
+		m_ebAnimDir.Text(TXT(""));
+		m_ebKarmaDir.Text(TXT(""));
 	}
 }
 
@@ -312,11 +312,11 @@ void CEditProfileDlg::OnBrowseDir(CEditBox& ebPath)
 	CPath strDir = ebPath.Text();
 
 	// If empty start from last path.
-	if (strDir == "")
+	if (strDir == TXT(""))
 		strDir = m_strLastPath;
 
 	// Show Select Directory common dialog.
-	if (strDir.SelectDir(*this, "Select Folder", strDir))
+	if (strDir.SelectDir(*this, TXT("Select Folder"), strDir))
 	{
 		// Display path.
 		ebPath.Text(strDir);
@@ -329,20 +329,20 @@ void CEditProfileDlg::OnBrowseDir(CEditBox& ebPath)
 void CEditProfileDlg::OnBrowseCfgFile()
 {
 	// File extensions.
-	static char szExts[] = {	"INI Files (*.ini)\0*.ini\0"
-								"All Files (*.*)\0*.*\0"
-								"\0\0"							};
+	static tchar szExts[] = {	TXT("INI Files (*.ini)\0*.ini\0")
+								TXT("All Files (*.*)\0*.*\0")
+								TXT("\0\0")							};
 
 	CPath strDir = m_ebConfigFile.Text();
 
 	// If empty start from last path.
-	if (strDir == "")
+	if (strDir == TXT(""))
 		strDir = m_strLastPath;
 
 	CPath strFile;
 
 	// Show Select File common dialog.
-	if (strFile.Select(*this, CPath::SelectFile, szExts, "ini", strDir))
+	if (strFile.Select(*this, CPath::SelectFile, szExts, TXT("ini"), strDir))
 	{
 		// Display path.
 		m_ebConfigFile.Text(strFile);
@@ -444,7 +444,7 @@ void CEditProfileDlg::OnHelp(HELPINFO& /*oInfo*/)
 *******************************************************************************
 */
 
-bool CEditProfileDlg::ValidatePath(const CPath& strPath, CEditBox& ebControl, const char* pszName)
+bool CEditProfileDlg::ValidatePath(const CPath& strPath, CEditBox& ebControl, const tchar* pszName)
 {
 	ASSERT(pszName != NULL);
 
@@ -453,7 +453,7 @@ bool CEditProfileDlg::ValidatePath(const CPath& strPath, CEditBox& ebControl, co
 		return true;
 
 	// User allowing path anyway?
-	if (QueryMsg("The %s is invalid.\n\nDo you want to allow it?", pszName) == IDYES)
+	if (QueryMsg(TXT("The %s is invalid.\n\nDo you want to allow it?"), pszName) == IDYES)
 		return true;
 		
 	ebControl.Focus();
