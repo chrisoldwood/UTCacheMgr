@@ -1,0 +1,80 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UTCacheMgr", "UTCacheMgr\UTCacheMgr.vcproj", "{628E489B-3F3C-4522-889E-3200AB1837ED}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Core", "Lib\Core\Core.vcproj", "{790BC113-52FB-4565-8968-79B8B011C520}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Wcl", "Lib\WCL\Wcl.vcproj", "{9B0335B6-93BE-4604-8497-27431874D758}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MDBL", "Lib\MDBL\MDBL.vcproj", "{9E405156-9B1D-483A-9BBD-B86240FA86BE}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Legacy", "Lib\Legacy\Legacy.vcproj", "{AED77F84-49CF-4B84-B319-2D07025ECA06}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
+		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
+	EndGlobalSection
+	GlobalSection(SourceCodeControl) = preSolution
+		SccNumberOfProjects = 5
+		SccLocalPath0 = .
+		CanCheckoutShared = true
+		SolutionUniqueID = {8853E44C-42EB-4007-979D-907CC911FF0E}
+		SccProjectUniqueName1 = UTCacheMgr\\UTCacheMgr.vcproj
+		SccProjectName1 = \u0022$/Win32/UTCacheMgr\u0022,\u0020QICAAAAA
+		SccLocalPath1 = UTCacheMgr
+		CanCheckoutShared = true
+		SccProjectUniqueName2 = Lib\\Core\\Core.vcproj
+		SccProjectName2 = \u0022$/Win32/Lib/Core\u0022,\u0020QWDAAAAA
+		SccLocalPath2 = Lib\\Core
+		CanCheckoutShared = true
+		SccProjectUniqueName3 = Lib\\WCL\\Wcl.vcproj
+		SccProjectName3 = \u0022$/Win32/Lib/WCL\u0022,\u0020HPAAAAAA
+		SccLocalPath3 = Lib\\WCL
+		CanCheckoutShared = true
+		SccProjectUniqueName4 = Lib\\MDBL\\MDBL.vcproj
+		SccProjectName4 = \u0022$/Win32/Lib/MDBL\u0022,\u0020BPAAAAAA
+		SccLocalPath4 = Lib\\MDBL
+		CanCheckoutShared = true
+	EndGlobalSection
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{628E489B-3F3C-4522-889E-3200AB1837ED}.Debug.ActiveCfg = Debug|Win32
+		{628E489B-3F3C-4522-889E-3200AB1837ED}.Debug.Build.0 = Debug|Win32
+		{628E489B-3F3C-4522-889E-3200AB1837ED}.Release.ActiveCfg = Release|Win32
+		{628E489B-3F3C-4522-889E-3200AB1837ED}.Release.Build.0 = Release|Win32
+		{790BC113-52FB-4565-8968-79B8B011C520}.Debug.ActiveCfg = Debug|Win32
+		{790BC113-52FB-4565-8968-79B8B011C520}.Debug.Build.0 = Debug|Win32
+		{790BC113-52FB-4565-8968-79B8B011C520}.Release.ActiveCfg = Release|Win32
+		{790BC113-52FB-4565-8968-79B8B011C520}.Release.Build.0 = Release|Win32
+		{9B0335B6-93BE-4604-8497-27431874D758}.Debug.ActiveCfg = Debug|Win32
+		{9B0335B6-93BE-4604-8497-27431874D758}.Debug.Build.0 = Debug|Win32
+		{9B0335B6-93BE-4604-8497-27431874D758}.Release.ActiveCfg = Release|Win32
+		{9B0335B6-93BE-4604-8497-27431874D758}.Release.Build.0 = Release|Win32
+		{9E405156-9B1D-483A-9BBD-B86240FA86BE}.Debug.ActiveCfg = Debug|Win32
+		{9E405156-9B1D-483A-9BBD-B86240FA86BE}.Debug.Build.0 = Debug|Win32
+		{9E405156-9B1D-483A-9BBD-B86240FA86BE}.Release.ActiveCfg = Release|Win32
+		{9E405156-9B1D-483A-9BBD-B86240FA86BE}.Release.Build.0 = Release|Win32
+		{AED77F84-49CF-4B84-B319-2D07025ECA06}.Debug.ActiveCfg = Debug|Win32
+		{AED77F84-49CF-4B84-B319-2D07025ECA06}.Debug.Build.0 = Debug|Win32
+		{AED77F84-49CF-4B84-B319-2D07025ECA06}.Release.ActiveCfg = Release|Win32
+		{AED77F84-49CF-4B84-B319-2D07025ECA06}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
