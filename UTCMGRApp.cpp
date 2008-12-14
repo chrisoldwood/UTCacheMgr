@@ -555,7 +555,7 @@ CString CUTCMGRApp::FormatSize(int nSize) const
 	CString str;
 
 	// Ensure we report at least 1K.
-	nSize = max(1024, nSize);
+	nSize = std::max(1024, nSize);
 
 	str.Format(TXT("%d K"), nSize/1024);
 
