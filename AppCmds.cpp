@@ -474,7 +474,7 @@ void CAppCmds::OnCacheRestore()
 			CPath strCacheName = astrFields[1];
 			int   nFileSize    = CStrCvt::ParseInt(astrFields[2]);
 
-			Dlg.UpdateLabelAndMeter(TXT("Checking file: ") + (CString)strRealName, fLogFile.Seek(0, FILE_CURRENT));
+			Dlg.UpdateLabelAndMeter(TXT("Checking file: ") + (CString)strRealName, static_cast<uint>(fLogFile.Seek(0, WCL::IStreamBase::CURRENT)));
 
 			// Duplicate entry?
 			if (oRestore.Exists(CWhereCmp(CCache::REAL_FILENAME, CWhereCmp::EQUALS, strRealName)))
@@ -1984,7 +1984,7 @@ void CAppCmds::LogEdits(CResultSet& oRS)
 		{
 			// Open existing file and seek to end.
 			fLogFile.Open(strLogFile, GENERIC_WRITE);
-			fLogFile.Seek(0, FILE_END);
+			fLogFile.Seek(0, WCL::IStreamBase::END);
 		}
 		else
 		{
