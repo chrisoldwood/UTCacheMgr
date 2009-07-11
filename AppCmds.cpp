@@ -521,7 +521,7 @@ void CAppCmds::OnCacheRestore()
 	catch (CStreamException& e)
 	{
 		// Report error.
-		App.AlertMsg(TXT("%s"), e.What());
+		App.AlertMsg(TXT("%s"), e.twhat());
 
 		// Remove progress dialog.
 		App.m_AppWnd.Enable(true);
@@ -2014,6 +2014,6 @@ void CAppCmds::LogEdits(CResultSet& oRS)
 	catch (CStreamException& e)
 	{
 		// Report error.
-		App.AlertMsg(TXT("%s"), e.What());
+		App.AlertMsg(TXT("%s"), e.twhat());
 	}
 }
