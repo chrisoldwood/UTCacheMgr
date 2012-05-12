@@ -140,7 +140,7 @@ bool CEditProfileDlg::OnOk()
 {
 	// Get settings.
 	CString strName       = m_ebName.Text();
-	int     nFormat       = m_cbFormat.CurSel();
+	size_t  nFormat       = m_cbFormat.CurSel();
 	CPath   strCacheDir   = m_ebCacheDir.Text();
 	CPath   strSystemDir  = m_ebSystemDir.Text();
 	CPath   strMapDir     = m_ebMapDir.Text();
@@ -204,7 +204,7 @@ bool CEditProfileDlg::OnOk()
 
 	// Update profile.
 	m_oProfile.m_strName       = strName;
-	m_oProfile.m_nFormat       = nFormat;
+	m_oProfile.m_nFormat       = static_cast<int>(nFormat);
 	m_oProfile.m_strCacheDir   = strCacheDir;
 	m_oProfile.m_bReadOnly     = m_ckReadOnly.IsChecked();
 	m_oProfile.m_strSystemDir  = strSystemDir;
@@ -234,7 +234,7 @@ bool CEditProfileDlg::OnOk()
 
 void CEditProfileDlg::OnSelectFormat()
 {
-	int nFormat = m_cbFormat.CurSel();
+	size_t nFormat = m_cbFormat.CurSel();
 
 	// Enable/Disable depending on UT/UT2003.
 	m_ebMeshDir.ReadOnly(nFormat == CProfile::UT_FORMAT);

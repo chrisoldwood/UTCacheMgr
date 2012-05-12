@@ -125,10 +125,10 @@ void CSelFilesDlg::OnDestroy()
 
 bool CSelFilesDlg::OnOk()
 {
-	int nFiles = m_lvGrid.ItemCount();
+	size_t nFiles = m_lvGrid.ItemCount();
 
 	// For all rows...
-	for (int i = 0; i < nFiles; ++i)
+	for (size_t i = 0; i < nFiles; ++i)
 	{
 		// Remove unselected rows from table.
 		if (!m_lvGrid.IsSelected(i))
@@ -165,7 +165,7 @@ void CSelFilesDlg::RefreshView()
 	{
 		CRow& oRow = oRS[i];
 
-		int n = m_lvGrid.ItemCount();
+		size_t n = m_lvGrid.ItemCount();
 
 		// Add to the grid.
 		m_lvGrid.InsertItem(n,                oRow[CCache::REAL_FILENAME], App.IconIndex(oRow[CCache::FILE_TYPE]));
@@ -282,9 +282,9 @@ LRESULT CSelFilesDlg::OnGridClickColumn(NMHDR& oHdr)
 
 void CSelFilesDlg::OnSelectAll()
 {
-	int nItems = m_lvGrid.ItemCount();
+	size_t nItems = m_lvGrid.ItemCount();
 
 	// For all all items...
-	for (int i = 0; i < nItems; ++i)
+	for (size_t i = 0; i < nItems; ++i)
 		m_lvGrid.Select(i);
 }

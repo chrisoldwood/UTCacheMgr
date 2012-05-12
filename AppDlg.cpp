@@ -101,12 +101,12 @@ void CAppDlg::OnInitDialog()
 
 void CAppDlg::OnDestroy()
 {
-	App.m_oIniFile.WriteInt(TXT("UI"), TXT("Column0"), m_lvGrid.ColumnWidth(FILE_COLUMN));
-	App.m_oIniFile.WriteInt(TXT("UI"), TXT("Column1"), m_lvGrid.ColumnWidth(TYPE_COLUMN));
-	App.m_oIniFile.WriteInt(TXT("UI"), TXT("Column2"), m_lvGrid.ColumnWidth(DATE_COLUMN));
-	App.m_oIniFile.WriteInt(TXT("UI"), TXT("Column3"), m_lvGrid.ColumnWidth(SIZE_COLUMN));
-	App.m_oIniFile.WriteInt(TXT("UI"), TXT("Column4"), m_lvGrid.ColumnWidth(STATUS_COLUMN));
-	App.m_oIniFile.WriteInt(TXT("UI"), TXT("Column5"), m_lvGrid.ColumnWidth(CACHE_COLUMN));
+	App.m_oIniFile.WriteInt(TXT("UI"), TXT("Column0"), static_cast<int>(m_lvGrid.ColumnWidth(FILE_COLUMN)));
+	App.m_oIniFile.WriteInt(TXT("UI"), TXT("Column1"), static_cast<int>(m_lvGrid.ColumnWidth(TYPE_COLUMN)));
+	App.m_oIniFile.WriteInt(TXT("UI"), TXT("Column2"), static_cast<int>(m_lvGrid.ColumnWidth(DATE_COLUMN)));
+	App.m_oIniFile.WriteInt(TXT("UI"), TXT("Column3"), static_cast<int>(m_lvGrid.ColumnWidth(SIZE_COLUMN)));
+	App.m_oIniFile.WriteInt(TXT("UI"), TXT("Column4"), static_cast<int>(m_lvGrid.ColumnWidth(STATUS_COLUMN)));
+	App.m_oIniFile.WriteInt(TXT("UI"), TXT("Column5"), static_cast<int>(m_lvGrid.ColumnWidth(CACHE_COLUMN)));
 }
 
 /******************************************************************************
@@ -139,7 +139,7 @@ void CAppDlg::RefreshView()
 		// Check filter.
 		if ( (m_bShowAllFiles) || (oRow[CCache::STATUS] == NEW_FILE) )
 		{
-			int n = m_lvGrid.ItemCount();
+			size_t n = m_lvGrid.ItemCount();
 
 			// Add to the grid.
 			m_lvGrid.InsertItem(n,                oRow[CCache::REAL_FILENAME], App.IconIndex(oRow[CCache::FILE_TYPE]));
@@ -167,9 +167,9 @@ void CAppDlg::RefreshView()
 
 void CAppDlg::SelectNew()
 {
-	int nFiles = m_lvGrid.ItemCount();
+	size_t nFiles = m_lvGrid.ItemCount();
 
-	for (int i = 0; i < nFiles; ++i)
+	for (size_t i = 0; i < nFiles; ++i)
 		m_lvGrid.Select(i, (GetRow(i)[CCache::STATUS] == NEW_FILE));
 }
 
@@ -187,9 +187,9 @@ void CAppDlg::SelectNew()
 
 void CAppDlg::SelectAll()
 {
-	int nFiles = m_lvGrid.ItemCount();
+	size_t nFiles = m_lvGrid.ItemCount();
 
-	for (int i = 0; i < nFiles; ++i)
+	for (size_t i = 0; i < nFiles; ++i)
 		m_lvGrid.Select(i);
 }
 
@@ -207,10 +207,10 @@ void CAppDlg::SelectAll()
 
 void CAppDlg::GetSelectedFiles(CResultSet& oRS)
 {
-	int nFiles = m_lvGrid.ItemCount();
+	size_t nFiles = m_lvGrid.ItemCount();
 
 	// For all rows.
-	for (int i = 0; i < nFiles; ++i)
+	for (size_t i = 0; i < nFiles; ++i)
 	{
 		if (m_lvGrid.IsSelected(i))
 			oRS.Add(GetRow(i));

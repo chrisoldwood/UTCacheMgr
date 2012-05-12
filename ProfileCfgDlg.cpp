@@ -60,17 +60,19 @@ CProfileCfgDlg::CProfileCfgDlg()
 
 void CProfileCfgDlg::OnInitDialog()
 {
+	const size_t first = 0;
+
 	// Load the profiles listbox.
 	for (uint i = 0; i < App.m_aoProfiles.size(); ++i)
 	{
 		CProfile* pProfile = App.m_aoProfiles[i];
 
-		int n = m_lbProfiles.Add(pProfile->m_strName);
+		size_t n = m_lbProfiles.Add(pProfile->m_strName);
 		m_lbProfiles.ItemPtr(n, pProfile);
 	}
 
 	// Select the first by default.
-	m_lbProfiles.CurSel(0U);
+	m_lbProfiles.CurSel(first);
 }
 
 /******************************************************************************
@@ -98,7 +100,7 @@ void CProfileCfgDlg::OnAdd()
 		App.m_aoProfiles.push_back(pProfile);
 
 		// Add to view.
-		int n = m_lbProfiles.Add(pProfile->m_strName);
+		size_t n = m_lbProfiles.Add(pProfile->m_strName);
 		m_lbProfiles.ItemPtr(n, pProfile);
 
 		m_lbProfiles.CurSel(n);
@@ -122,7 +124,7 @@ void CProfileCfgDlg::OnAdd()
 
 void CProfileCfgDlg::OnEdit()
 {
-	int nSel = m_lbProfiles.CurSel();
+	size_t nSel = m_lbProfiles.CurSel();
 
 	// No selection?
 	if (nSel == CB_ERR)
@@ -299,7 +301,7 @@ void CProfileCfgDlg::OnDetect()
 			App.m_aoProfiles.push_back(pProfile);
 
 			// Add to view.
-			int n = m_lbProfiles.Add(pProfile->m_strName);
+			size_t n = m_lbProfiles.Add(pProfile->m_strName);
 			m_lbProfiles.ItemPtr(n, pProfile);
 
 			m_lbProfiles.CurSel(n);

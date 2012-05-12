@@ -350,7 +350,7 @@ void CUTCMGRApp::SaveConfig()
 	if (m_nModified & PROFILES)
 	{
 		// Write the profiles.
-		m_oIniFile.WriteInt(TXT("Profiles"), TXT("Count"), m_aoProfiles.size());
+		m_oIniFile.WriteInt(TXT("Profiles"), TXT("Count"), static_cast<int>(m_aoProfiles.size()));
 
 		for (uint i = 0; i < m_aoProfiles.size(); ++i)
 		{
@@ -385,7 +385,7 @@ void CUTCMGRApp::SaveConfig()
 	{
 		// Write the list of pinned files.
 		m_oIniFile.DeleteSection(TXT("Pinned"));
-		m_oIniFile.WriteInt (TXT("Pinned"), TXT("Count"), m_astrPinned.Size());
+		m_oIniFile.WriteInt (TXT("Pinned"), TXT("Count"), static_cast<int>(m_astrPinned.Size()));
 
 		for (size_t i = 0; i < m_astrPinned.Size(); ++i)
 		{
@@ -633,11 +633,11 @@ int CUTCMGRApp::IconIndex(tchar cType) const
 
 void CUTCMGRApp::UpdateCacheStatus()
 {
-	int    nFiles = m_oCache.RowCount();
+	size_t nFiles = m_oCache.RowCount();
 	double dSize  = 0.0;
 
 	// Sum file sizes...
-	for (int i = 0; i < nFiles; ++i)
+	for (size_t i = 0; i < nFiles; ++i)
 		dSize += m_oCache[i][CCache::FILE_SIZE].GetInt();
 
 	// Format and display it.

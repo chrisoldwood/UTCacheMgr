@@ -73,7 +73,7 @@ void CSelProfileDlg::OnInitDialog()
 	{
 		CProfile* pProfile = m_pProfiles->at(i);
 
-		int n = m_cbProfiles.Add(pProfile->m_strName);
+		size_t n = m_cbProfiles.Add(pProfile->m_strName);
 		m_cbProfiles.ItemPtr(n, pProfile);
 	}
 
@@ -101,7 +101,7 @@ void CSelProfileDlg::OnInitDialog()
 bool CSelProfileDlg::OnOk()
 {
 	// Get the selection.
-	int       nSel     = m_cbProfiles.CurSel();
+	size_t    nSel     = m_cbProfiles.CurSel();
 	CProfile* pProfile = static_cast<CProfile*>(m_cbProfiles.ItemPtr(nSel));
 
 	ASSERT((nSel != CB_ERR) && (pProfile != NULL));
@@ -127,7 +127,7 @@ bool CSelProfileDlg::OnOk()
 void CSelProfileDlg::OnSelectProfile()
 {
 	// Get the selected profile.
-	int       nSel     = m_cbProfiles.CurSel();
+	size_t    nSel     = m_cbProfiles.CurSel();
 	CProfile* pProfile = static_cast<CProfile*>(m_cbProfiles.ItemPtr(nSel));
 
 	ASSERT((nSel != CB_ERR) && (pProfile != NULL));

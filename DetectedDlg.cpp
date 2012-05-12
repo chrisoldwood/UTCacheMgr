@@ -60,7 +60,7 @@ void CDetectedDlg::OnInitDialog()
 	// Add profiles to grid.
 	for (size_t i = 0; i < m_astrNames.Size(); ++i)
 	{
-		int n = m_lvProfiles.ItemCount();
+		size_t n = m_lvProfiles.ItemCount();
 
 		m_lvProfiles.InsertItem(n,    m_astrNames[i]  );
 		m_lvProfiles.ItemText  (n, 1, m_astrFolders[i]);

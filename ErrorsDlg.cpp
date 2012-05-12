@@ -73,7 +73,7 @@ void CErrorsDlg::OnInitDialog()
 	// Add errors to grid.
 	for (size_t i = 0; i < m_astrFiles.Size(); ++i)
 	{
-		int n = m_lvGrid.ItemCount();
+		size_t n = m_lvGrid.ItemCount();
 
 		m_lvGrid.InsertItem(n,    m_astrFiles[i] );
 		m_lvGrid.ItemText  (n, 1, m_astrErrors[i]);

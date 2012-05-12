@@ -252,7 +252,7 @@ void CAppCmds::OnCacheRescan()
 	CStrArray& astrFiles = oFiles.Root()->m_oData.m_astrFiles;
 	CIniFile   oIdxFile(strCacheFile);
 
-	Dlg.InitMeter(astrFiles.Size());
+	Dlg.InitMeter(static_cast<uint>(astrFiles.Size()));
 
 	// For all files found...
 	for (size_t i = 0; i < astrFiles.Size(); ++i)
@@ -278,7 +278,7 @@ void CAppCmds::OnCacheRescan()
 			continue;
 		}
 
-		Dlg.UpdateLabelAndMeter(TXT("Processing file: ") + (CString)strRealName, i);
+		Dlg.UpdateLabelAndMeter(TXT("Processing file: ") + (CString)strRealName, static_cast<uint>(i));
 
 		// Get file type from extension.
 		CString strExt = strRealName.FileExt().ToLower();
@@ -349,7 +349,7 @@ void CAppCmds::OnCacheRescan()
 		// Do search...
 		oFinder.Find(strTmpDir, strMask, false, oTmpFiles);
 
-		int nTmpFiles = oTmpFiles.Root()->m_oData.m_astrFiles.Size();
+		int nTmpFiles = static_cast<int>(oTmpFiles.Root()->m_oData.m_astrFiles.Size());
 
 		// Found any AND user wants to delete them?
 		if ( (nTmpFiles > 0) && (App.QueryMsg(TXT("Found %d .tmp cache file(s)?\n\nDo you want to delete them?"), nTmpFiles) == IDYES) )
@@ -394,7 +394,7 @@ void CAppCmds::OnCacheRescan()
 				astrInvalid.Add(astrKeys[i]);
 		}
 
-		int nEntries = astrInvalid.Size();
+		int nEntries = static_cast<int>(astrInvalid.Size());
 
 		// Found any AND user wants to delete them?
 		if ( (nEntries > 0) && (App.QueryMsg(TXT("Found %d invalid cache index entries?\n\nDo you want to delete them?"), nEntries) == IDYES) )
@@ -551,7 +551,7 @@ void CAppCmds::OnCacheRestore()
 	if (oSelFilesDlg.RunModal(App.m_AppWnd) != IDOK)
 		return;
 
-	int nFiles = oRestore.RowCount();
+	int nFiles = static_cast<int>(oRestore.RowCount());
 
 	// No files selected?
 	if (nFiles == 0)
@@ -680,7 +680,7 @@ void CAppCmds::OnCacheImport()
 	CStrArray& astrFiles = oFiles.Root()->m_oData.m_astrFiles;
 	CIniFile   oSrcIdxFile(strSrcCacheFile);
 
-	Dlg.InitMeter(astrFiles.Size());
+	Dlg.InitMeter(static_cast<uint>(astrFiles.Size()));
 
 	// For all files found...
 	for (size_t i = 0; i < astrFiles.Size(); ++i)
@@ -702,7 +702,7 @@ void CAppCmds::OnCacheImport()
 		if (strRealName.Empty())
 			continue;
 
-		Dlg.UpdateLabelAndMeter(TXT("Processing file: ") + (CString)strRealName, i);
+		Dlg.UpdateLabelAndMeter(TXT("Processing file: ") + (CString)strRealName, static_cast<uint>(i));
 
 		// File already in cache?
 		if (App.m_oCache.Exists(CWhereCmp(CCache::CACHE_FILENAME, CWhereCmp::EQUALS, strCacheName)))
@@ -758,7 +758,7 @@ void CAppCmds::OnCacheImport()
 	if (oSelFilesDlg.RunModal(App.m_AppWnd) != IDOK)
 		return;
 
-	int nFiles = oImport.RowCount();
+	int nFiles = static_cast<int>(oImport.RowCount());
 
 	// No files selected?
 	if (nFiles == 0)
@@ -924,7 +924,7 @@ void CAppCmds::OnEditPin()
 	// Get the current selection.
 	App.m_AppWnd.m_AppDlg.GetSelectedFiles(oRS);
 
-	int nFiles = oRS.Count();
+	int nFiles = static_cast<int>(oRS.Count());
 
 	// Ignore if nothing to do.
 	if (nFiles == 0)
@@ -958,7 +958,7 @@ void CAppCmds::OnEditPin()
 		CRow&        oRow     = App.m_oCache[i];
 		tchar        cStatus  = oRow[CCache::STATUS];
 		const tchar* pszName  = oRow[CCache::REAL_FILENAME];
-		int          nListIdx = App.m_astrPinned.Find(pszName, true);
+		size_t       nListIdx = App.m_astrPinned.Find(pszName, true);
 
 		// Pin, if in pinned list AND not already pinned.
 		if ( (nListIdx != -1) && (cStatus != PIN_FILE) )
@@ -1003,7 +1003,7 @@ void CAppCmds::OnEditMove()
 	// Get the current selection.
 	App.m_AppWnd.m_AppDlg.GetSelectedFiles(oRS);
 
-	int nFiles = oRS.Count();
+	int nFiles = static_cast<int>(oRS.Count());
 
 	// Ignore if nothing to move.
 	if (nFiles == 0)
@@ -1106,7 +1106,7 @@ void CAppCmds::OnEditCopy()
 	// Get the current selection.
 	App.m_AppWnd.m_AppDlg.GetSelectedFiles(oRS);
 
-	int nFiles = oRS.Count();
+	int nFiles = static_cast<int>(oRS.Count());
 
 	// Ignore if nothing to copy.
 	if (nFiles == 0)
@@ -1206,7 +1206,7 @@ void CAppCmds::OnEditDelete()
 	// Get the current selection.
 	App.m_AppWnd.m_AppDlg.GetSelectedFiles(oRS);
 
-	int nFiles = oRS.Count();
+	int nFiles = static_cast<int>(oRS.Count());
 
 	// Ignore if nothing to copy.
 	if (nFiles == 0)
@@ -1279,7 +1279,7 @@ void CAppCmds::OnEditCopyTo()
 	// Get the current selection.
 	App.m_AppWnd.m_AppDlg.GetSelectedFiles(oRS);
 
-	int nFiles = oRS.Count();
+	int nFiles = static_cast<int>(oRS.Count());
 
 	// Ignore if nothing to copy.
 	if (nFiles == 0)
@@ -1529,7 +1529,7 @@ void CAppCmds::OnToolsInstall()
 
 	CFileTreeIter  oCntIter(oFiles);
 	CFileTreeNode* pNode  = NULL;
-	int            nFiles = 0;
+	size_t         nFiles = 0;
 
 	// Count all files found...
 	while ((pNode = oCntIter.Next()) != NULL)
@@ -1550,7 +1550,7 @@ void CAppCmds::OnToolsInstall()
 	CErrorsDlg dlgErrors;
 
 	Dlg.Title(TXT("Installing Files"));
-	Dlg.InitMeter(nFiles);
+	Dlg.InitMeter(static_cast<uint>(nFiles));
 
 	CFileTreeIter oInsIter(oFiles);
 	int           nFile      = 0;
