@@ -24,8 +24,9 @@
 *******************************************************************************
 */
 
-CAppWnd::CAppWnd()
+CAppWnd::CAppWnd(WCL::IMsgThread& thread, WCL::ICmdController& controller)
 	: CDlgFrame(IDR_APPICON, m_AppDlg, false)
+	, m_ToolBar(thread, controller)
 {
 }
 

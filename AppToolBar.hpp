@@ -32,7 +32,7 @@ public:
 	//
 	// Constructors/Destructor.
 	//
-	CAppToolBar();
+	CAppToolBar(WCL::IMsgThread& thread, WCL::ICmdController& controller);
 	~CAppToolBar();
 	
 	//

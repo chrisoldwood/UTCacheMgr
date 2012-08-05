@@ -52,6 +52,8 @@ const tchar* CUTCMGRApp::INI_FILE_VER_25 = TXT("2.5");
 
 CUTCMGRApp::CUTCMGRApp()
 	: CApp(m_AppWnd, m_AppCmds)
+	, m_AppWnd(m_MainThread, m_AppCmds)
+	, m_AppCmds()
 	, m_oHelpFile(m_AppWnd)
 	, m_nModified(NONE)
 	, m_oCache(m_oMDB)
@@ -108,9 +110,6 @@ bool CUTCMGRApp::OnOpen()
 	// Load settings.
 	LoadConfig();
 	
-	// Load the toolbar bitmap.
-	m_rCmdControl.CmdBitmap().LoadRsc(IDR_APPTOOLBAR);
-
 	// Create the main window.
 	if (!m_AppWnd.Create())
 		return false;
@@ -123,7 +122,7 @@ bool CUTCMGRApp::OnOpen()
 
 	// Initialise UI.
 	BuildProfileMenu();
-	m_AppCmds.UpdateUI();
+	m_AppCmds.InitialiseUI();
 
 	// Scan on startup?
 	if (m_bScanOnStart)
