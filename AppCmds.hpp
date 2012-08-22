@@ -20,6 +20,9 @@
 #include <MDBL/FwdDecls.hpp>
 #include <MDBL/SortColumns.hpp>
 
+// Forward declarations.
+class CAppWnd;
+
 /******************************************************************************
 ** 
 ** Application command controller.
@@ -33,7 +36,7 @@ public:
 	//
 	// Constructors/Destructor.
 	//
-	CAppCmds();
+	CAppCmds(CAppWnd& appWnd);
 	~CAppCmds();
 
 	//

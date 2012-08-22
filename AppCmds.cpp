@@ -45,8 +45,8 @@
 *******************************************************************************
 */
 
-CAppCmds::CAppCmds()
-	: CCmdControl(IDR_APPTOOLBAR)
+CAppCmds::CAppCmds(CAppWnd& appWnd)
+	: CCmdControl(appWnd, IDR_APPTOOLBAR)
 {
 	// Define the command table.
 	DEFINE_CMD_TABLE

@@ -53,7 +53,7 @@ const tchar* CUTCMGRApp::INI_FILE_VER_25 = TXT("2.5");
 CUTCMGRApp::CUTCMGRApp()
 	: CApp(m_AppWnd, m_AppCmds)
 	, m_AppWnd(m_MainThread, m_AppCmds)
-	, m_AppCmds()
+	, m_AppCmds(m_AppWnd)
 	, m_oHelpFile(m_AppWnd)
 	, m_nModified(NONE)
 	, m_oCache(m_oMDB)
@@ -115,7 +115,7 @@ bool CUTCMGRApp::OnOpen()
 		return false;
 
 	// Show it.
-	if (ShowNormal() && !m_rcLastWndPos.Empty())
+	if (!m_rcLastWndPos.Empty())
 		m_AppWnd.Move(m_rcLastWndPos);
 
 	m_AppWnd.Show(m_iCmdShow);
