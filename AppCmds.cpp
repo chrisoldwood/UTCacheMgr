@@ -430,7 +430,7 @@ void CAppCmds::OnCacheRestore()
 	CBusyCursor oCursor;
 
 	// Tmp table to store files we can restore.
-	CCache oRestore(App.m_oMDB);
+	CCache oRestore;
 
 	// Get logfile path.
 	CPath   strLogFile(CPath::ApplicationDir(), TXT("UTCacheMgr.log"));
@@ -657,7 +657,7 @@ void CAppCmds::OnCacheImport()
 	CBusyCursor oCursor;
 
 	// Tmp table to store files we can import.
-	CCache oImport(App.m_oMDB);
+	CCache oImport;
 
 	// Show the progress dialog.
 	CProgressDlg Dlg;

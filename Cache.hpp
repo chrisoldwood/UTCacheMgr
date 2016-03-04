@@ -53,7 +53,7 @@ public:
 	//
 	// Constructors/Destructor.
 	//
-	CCache(CMDB& oDB);
+	CCache();
 	~CCache();
 	
 	//

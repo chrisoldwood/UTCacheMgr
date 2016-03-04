@@ -22,7 +22,6 @@
 #include "Profile.hpp"
 #include <WCL/HelpFile.hpp>
 #include <WCL/IniFile.hpp>
-#include <MDBL/MDB.hpp>
 #include "Cache.hpp"
 #include <WCL/StrArray.hpp>
 
@@ -51,7 +50,6 @@ public:
 	CIniFile	m_oIniFile;			// Config File.
 	uint		m_nModified;		// Config modified flags.
 
-	CMDB		m_oMDB;				// Memory database.
 	CCache		m_oCache;			// MDB Cache table.
 
 	CProfiles	m_aoProfiles;		// The list of profiles.

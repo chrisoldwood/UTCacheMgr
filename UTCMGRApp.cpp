@@ -56,7 +56,7 @@ CUTCMGRApp::CUTCMGRApp()
 	, m_AppCmds(m_AppWnd)
 	, m_oHelpFile(m_AppWnd)
 	, m_nModified(NONE)
-	, m_oCache(m_oMDB)
+	, m_oCache()
 	, m_pProfile(NULL)
 	, m_bScanOnStart(true)
 	, m_bScanOnSwitch(true)
@@ -66,9 +66,6 @@ CUTCMGRApp::CUTCMGRApp()
 	, m_bLogEdits(true)
 	, m_bIgnoreDates(true)
 {
-	// Create the MDB.
-	m_oMDB.AddTable(m_oCache);
-
 	// Set the help file path.
 	m_oHelpFile.m_HelpFile  = CPath(CPath::ApplicationDir(), TXT("UTCacheMgr.hlp"));
 }

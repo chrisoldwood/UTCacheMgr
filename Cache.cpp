@@ -23,8 +23,8 @@
 *******************************************************************************
 */
 
-CCache::CCache(CMDB& oDB)
-	: CTable(oDB, TXT("Cache"))
+CCache::CCache()
+	: CTable(TXT("Cache"))
 {
 	// Create the table schema.
 	AddColumn(TXT("ID"),            MDCT_IDENTITY, 0,                  CColumn::IDENTITY);
