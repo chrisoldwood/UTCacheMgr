@@ -24,7 +24,7 @@
 #include "FilePropsDlg.hpp"
 #include "ConflictDlg.hpp"
 #include "HelpTopics.h"
-#include <Legacy/FileFinder.hpp>
+#include <WCL/FolderIterator.hpp>
 #include <WCL/BusyCursor.hpp>
 #include <WCL/File.hpp>
 #include <WCL/StrTok.hpp>
@@ -32,6 +32,7 @@
 #include <WCL/StreamException.hpp>
 #include <WCL/StrCvt.hpp>
 #include <MDBL/ResultSet.hpp>
+#include <Core/StringUtils.hpp>
 
 /******************************************************************************
 ** Method:		Constructor.
@@ -203,6 +204,8 @@ void CAppCmds::OnCacheProfileDlg()
 
 void CAppCmds::OnCacheRescan()
 {
+	typedef WCL::FileNames::const_iterator FileNameCIter;
+
 	ASSERT(App.m_pProfile != NULL);
 
 	CBusyCursor oCursor;
@@ -239,27 +242,20 @@ void CAppCmds::OnCacheRescan()
 	// Create errors dialog.
 	CErrorsDlg dlgErrors;
 
-	CString	strFindMask;
-
-	// Create 'find files' mask.
-	strFindMask.Format(TXT("*.%s"), App.m_strCacheExt);
-
-	CFileFinder oFinder;
-	CFileTree	oFiles;
-
 	// Search cache for files.
-	oFinder.Find(strCacheDir, strFindMask, false, oFiles);
+	const tstring        mask = Core::fmt(TXT("*.%s"), App.m_strCacheExt.c_str());
+	const WCL::FileNames files = WCL::FindFilesInFolder(strCacheDir.c_str(), mask); 
 
-	CStrArray& astrFiles = oFiles.Root()->m_oData.m_astrFiles;
-	CIniFile   oIdxFile(strCacheFile);
+	CIniFile oIdxFile(strCacheFile);
 
-	Dlg.InitMeter(static_cast<uint>(astrFiles.Size()));
+	uint progress = 0;
+	Dlg.InitMeter(files.size());
 
 	// For all files found...
-	for (size_t i = 0; i < astrFiles.Size(); ++i)
+	for (FileNameCIter it = files.begin(); it != files.end(); ++it, ++progress)
 	{
 		// Get file name, index key and real name.
-		CPath   strCacheName = astrFiles[i];
+		CPath   strCacheName = *it;
 		CString strIndexName = strCacheName.FileTitle();
 		CPath   strRealName  = oIdxFile.ReadString(TXT("Cache"), strIndexName, TXT(""));
 
@@ -279,7 +275,7 @@ void CAppCmds::OnCacheRescan()
 			continue;
 		}
 
-		Dlg.UpdateLabelAndMeter(TXT("Processing file: ") + (CString)strRealName, static_cast<uint>(i));
+		Dlg.UpdateLabelAndMeter(TXT("Processing file: ") + (CString)strRealName, progress);
 
 		// Get file type from extension.
 		CString strExt = strRealName.FileExt().ToLower();
@@ -345,23 +341,20 @@ void CAppCmds::OnCacheRescan()
 	{
 		CPath     strTmpDir = strCacheDir / CProfile::DEF_CACHE_TMP_DIR;
 		CString   strMask   = strCacheDir.FileTitle() + CProfile::DEF_CACHE_TMP_MASK;
-		CFileTree oTmpFiles;
 
-		// Do search...
-		oFinder.Find(strTmpDir, strMask, false, oTmpFiles);
+		const WCL::FileNames tmpFiles = WCL::FindFilesInFolder(strTmpDir.c_str(), strMask.c_str());
 
-		int nTmpFiles = static_cast<int>(oTmpFiles.Root()->m_oData.m_astrFiles.Size());
+		size_t nTmpFiles = tmpFiles.size();
 
 		// Found any AND user wants to delete them?
 		if ( (nTmpFiles > 0) && (App.QueryMsg(TXT("Found %d .tmp cache file(s)?\n\nDo you want to delete them?"), nTmpFiles) == IDYES) )
 		{
-			CStrArray& astrFiles = oTmpFiles.Root()->m_oData.m_astrFiles;
-			int        nErrors   = 0;
+			int nErrors = 0;
 
 			// Delete all files found...
-			for (size_t i = 0; i < astrFiles.Size(); ++i)
+			for (FileNameCIter it = tmpFiles.begin(); it != tmpFiles.end(); ++it, ++progress)
 			{
-				CPath strTmpFile = strTmpDir / astrFiles[i];
+				CPath strTmpFile = strTmpDir / *it;
 
 				if (!CFile::Delete(strTmpFile))
 					nErrors++;
@@ -629,6 +622,8 @@ void CAppCmds::OnCacheRestore()
 
 void CAppCmds::OnCacheImport()
 {
+	typedef WCL::FileNames::const_iterator FileNameCIter;
+
 	CPath strSrcDir = App.m_pProfile->m_strLastImport;
 
 	// Get the directory to import from.
@@ -667,27 +662,20 @@ void CAppCmds::OnCacheImport()
 	Dlg.UpdateLabel(TXT("Searching cache for files..."));
 	App.m_AppWnd.Enable(false);
 
-	CString	strFindMask;
-
-	// Create 'find files' mask.
-	strFindMask.Format(TXT("*.%s"), App.m_strCacheExt);
-
-	CFileFinder oFinder;
-	CFileTree	oFiles;
-
 	// Search cache for files.
-	oFinder.Find(strSrcCacheDir, strFindMask, false, oFiles);
+	const tstring        mask = Core::fmt(TXT("*.%s"), App.m_strCacheExt.c_str());
+	const WCL::FileNames files = WCL::FindFilesInFolder(strSrcCacheDir.c_str(), mask); 
 
-	CStrArray& astrFiles = oFiles.Root()->m_oData.m_astrFiles;
-	CIniFile   oSrcIdxFile(strSrcCacheFile);
+	CIniFile oSrcIdxFile(strSrcCacheFile);
 
-	Dlg.InitMeter(static_cast<uint>(astrFiles.Size()));
+	uint progress = 0;
+	Dlg.InitMeter(files.size());
 
 	// For all files found...
-	for (size_t i = 0; i < astrFiles.Size(); ++i)
+	for (FileNameCIter it = files.begin(); it != files.end(); ++it, ++progress)
 	{
 		// Get file name, index key and real name.
-		CPath   strCacheName = astrFiles[i];
+		CPath   strCacheName = *it;
 		CString strIndexName = strCacheName.FileTitle();
 		CPath   strRealName  = oSrcIdxFile.ReadString(TXT("Cache"), strIndexName, TXT(""));
 
@@ -703,7 +691,7 @@ void CAppCmds::OnCacheImport()
 		if (strRealName.Empty())
 			continue;
 
-		Dlg.UpdateLabelAndMeter(TXT("Processing file: ") + (CString)strRealName, static_cast<uint>(i));
+		Dlg.UpdateLabelAndMeter(TXT("Processing file: ") + (CString)strRealName, progress);
 
 		// File already in cache?
 		if (App.m_oCache.Exists(CWhereCmp(CCache::CACHE_FILENAME, CWhereCmp::EQUALS, strCacheName)))
@@ -1498,6 +1486,8 @@ void CAppCmds::OnViewShowAll()
 
 void CAppCmds::OnToolsInstall()
 {
+	typedef WCL::PathNames::const_iterator PathNameCIter;
+
 	CPath strSrcDir = App.m_pProfile->m_strLastInstall;
 
 	// Get the directory to install from.
@@ -1522,22 +1512,11 @@ void CAppCmds::OnToolsInstall()
 	Dlg.UpdateLabel(TXT("Searching folder for files..."));
 	App.m_AppWnd.Enable(false);
 
-	CFileFinder oFinder;
-	CFileTree   oFiles;
-
 	// Search folder for files.
-	oFinder.Find(strSrcDir, TXT("*.*"), true, oFiles);
-
-	CFileTreeIter  oCntIter(oFiles);
-	CFileTreeNode* pNode  = NULL;
-	size_t         nFiles = 0;
-
-	// Count all files found...
-	while ((pNode = oCntIter.Next()) != NULL)
-		nFiles += pNode->m_oData.m_astrFiles.Size();
+	const WCL::PathNames files = WCL::FindFilesInFolderRecursively(strSrcDir.c_str(), TXT("*.*")); 
 
 	// Nothing to install?
-	if (nFiles == 0)
+	if (files.empty())
 	{
 		// Remove progress dialog.
 		App.m_AppWnd.Enable(true);
@@ -1551,115 +1530,111 @@ void CAppCmds::OnToolsInstall()
 	CErrorsDlg dlgErrors;
 
 	Dlg.Title(TXT("Installing Files"));
-	Dlg.InitMeter(static_cast<uint>(nFiles));
+	Dlg.InitMeter(static_cast<uint>(files.size()));
 
-	CFileTreeIter oInsIter(oFiles);
-	int           nFile      = 0;
-	bool          bAborted   = false;
-	bool          bDefYesAll = false;
-	bool          bDefNoAll  = false;
+	int  nFile      = 0;
+	bool bAborted   = false;
+	bool bDefYesAll = false;
+	bool bDefNoAll  = false;
 
-	// For all folders...
-	while (((pNode = oInsIter.Next()) != NULL) && (!bAborted))
+	// For all files...
+	for (PathNameCIter it = files.begin(); (it != files.end()) && (!bAborted); ++it, ++nFile)
 	{
-		// For all files in the folder...
-		for (size_t i = 0; ((i < pNode->m_oData.m_astrFiles.Size()) && (!bAborted)); ++i, ++nFile)
+		CPath   fullPath    = *it;
+		CPath   strSrcDir   = fullPath.Directory();
+		CPath   strFileName = fullPath.FileName();
+		CString strFileExt  = strFileName.FileExt().ToLower();
+
+		dlgErrors.m_astrFiles.Add(strFileName);
+
+		// Not a UT file?
+		if (!CProfile::IsValidType(strFileExt))
 		{
-			CPath   strSrcDir   = pNode->m_oData.m_strPath;
-			CPath   strFileName = pNode->m_oData.m_astrFiles[i];
-			CString strFileExt  = strFileName.FileExt().ToLower();
+			Dlg.UpdateLabelAndMeter(TXT("Skipping file: ") + (CString)strFileName, nFile);
+			dlgErrors.m_astrErrors.Add(TXT("Ignored."));
+			continue;
+		}
 
-			dlgErrors.m_astrFiles.Add(strFileName);
+		Dlg.UpdateLabelAndMeter(TXT("Installing file: ") + (CString)strFileName, nFile);
 
-			// Not a UT file?
-			if (!CProfile::IsValidType(strFileExt))
+		// Get the folder to copy to.
+		tchar cType     = App.m_pProfile->GetFileType(strFileExt);
+		CPath strDstDir = App.m_pProfile->GetTypeDir(cType);
+
+		// Create the src and dst full paths.
+		CPath   strSrcFile = strSrcDir / strFileName;
+		CPath   strDstFile = strDstDir / strFileName;
+
+		// File already installed?
+		if (strDstFile.Exists())
+		{
+			struct _stat oSrcInfo, oDstInfo;
+
+			// Query both files details.
+			if ( (!CFile::QueryInfo(strSrcFile, oSrcInfo))
+			  || (!CFile::QueryInfo(strDstFile, oDstInfo)) )
 			{
-				Dlg.UpdateLabelAndMeter(TXT("Skipping file: ") + (CString)strFileName, nFile);
-				dlgErrors.m_astrErrors.Add(TXT("Ignored."));
+				dlgErrors.m_astrErrors.Add(TXT("Size query failed."));
 				continue;
 			}
 
-			Dlg.UpdateLabelAndMeter(TXT("Installing file: ") + (CString)strFileName, nFile);
-
-			// Get the folder to copy to.
-			tchar cType     = App.m_pProfile->GetFileType(strFileExt);
-			CPath strDstDir = App.m_pProfile->GetTypeDir(cType);
-
-			// Create the src and dst full paths.
-			CPath   strSrcFile = strSrcDir / strFileName;
-			CPath   strDstFile = strDstDir / strFileName;
-
-			// File already installed?
-			if (strDstFile.Exists())
+			// The same file?
+			if (  (oSrcInfo.st_size  == oDstInfo.st_size )
+			  && ((oSrcInfo.st_mtime == oDstInfo.st_mtime) || (App.m_bIgnoreDates)) )
 			{
-				struct _stat oSrcInfo, oDstInfo;
+				dlgErrors.m_astrErrors.Add(TXT("Already installed."));
+				continue;
+			}
 
-				// Query both files details.
-				if ( (!CFile::QueryInfo(strSrcFile, oSrcInfo))
-				  || (!CFile::QueryInfo(strDstFile, oDstInfo)) )
-				{
-					dlgErrors.m_astrErrors.Add(TXT("Size query failed."));
-					continue;
-				}
+			// Default is don't overwrite?
+			if (bDefNoAll)
+			{
+				dlgErrors.m_astrErrors.Add(TXT("Not installed."));
+				continue;
+			}
 
-				// The same file?
-				if (  (oSrcInfo.st_size  == oDstInfo.st_size )
-				  && ((oSrcInfo.st_mtime == oDstInfo.st_mtime) || (App.m_bIgnoreDates)) )
-				{
-					dlgErrors.m_astrErrors.Add(TXT("Already installed."));
-					continue;
-				}
+			// Default is to query overwrites?
+			if (!bDefYesAll)
+			{
+				CConflictDlg oQueryDlg;
 
-				// Default is don't overwrite?
-				if (bDefNoAll)
+				oQueryDlg.m_strFileName1.Format(TXT("%s"), strDstFile);
+				oQueryDlg.m_strFileInfo1.Format(TXT("%s - %u Bytes"), CStrCvt::FormatDateTime(oDstInfo.st_mtime), oDstInfo.st_size);
+				oQueryDlg.m_strFileName2.Format(TXT("%s"), strSrcFile);
+				oQueryDlg.m_strFileInfo2.Format(TXT("%s - %u Bytes"), CStrCvt::FormatDateTime(oSrcInfo.st_mtime), oSrcInfo.st_size);
+
+				// Query user for action.
+				int nResult = oQueryDlg.RunModal(App.m_AppWnd);
+
+				// Default answer returned?
+				if (nResult == IDYESALL)	bDefYesAll = true;
+				if (nResult == IDNOALL)		bDefNoAll  = true;
+
+				// Ignore file?
+				if ((nResult == IDNO) || (nResult == IDNOALL))
 				{
 					dlgErrors.m_astrErrors.Add(TXT("Not installed."));
 					continue;
 				}
 
-				// Default is to query overwrites?
-				if (!bDefYesAll)
+				// Abort install?
+				if (nResult == IDCANCEL)
 				{
-					CConflictDlg oQueryDlg;
-
-					oQueryDlg.m_strFileName1.Format(TXT("%s"), strDstFile);
-					oQueryDlg.m_strFileInfo1.Format(TXT("%s - %u Bytes"), CStrCvt::FormatDateTime(oDstInfo.st_mtime), oDstInfo.st_size);
-					oQueryDlg.m_strFileName2.Format(TXT("%s"), strSrcFile);
-					oQueryDlg.m_strFileInfo2.Format(TXT("%s - %u Bytes"), CStrCvt::FormatDateTime(oSrcInfo.st_mtime), oSrcInfo.st_size);
-
-					// Query user for action.
-					int nResult = oQueryDlg.RunModal(App.m_AppWnd);
-
-					// Default answer returned?
-					if (nResult == IDYESALL)	bDefYesAll = true;
-					if (nResult == IDNOALL)		bDefNoAll  = true;
-
-					// Ignore file?
-					if ((nResult == IDNO) || (nResult == IDNOALL))
-					{
-						dlgErrors.m_astrErrors.Add(TXT("Not installed."));
-						continue;
-					}
-
-					// Abort install?
-					if (nResult == IDCANCEL)
-					{
-						dlgErrors.m_astrErrors.Add(TXT("Installed aborted."));
-						bAborted = true;
-						continue;
-					}
+					dlgErrors.m_astrErrors.Add(TXT("Installed aborted."));
+					bAborted = true;
+					continue;
 				}
 			}
-
-			// Install it.
-			if (CFile::Copy(strSrcFile, strDstFile, true) == 0)
-			{
-				dlgErrors.m_astrErrors.Add(CStrCvt::FormatError());
-				continue;
-			}
-
-			dlgErrors.m_astrErrors.Add(TXT("Installed."));
 		}
+
+		// Install it.
+		if (CFile::Copy(strSrcFile, strDstFile, true) == 0)
+		{
+			dlgErrors.m_astrErrors.Add(CStrCvt::FormatError());
+			continue;
+		}
+
+		dlgErrors.m_astrErrors.Add(TXT("Installed."));
 	}
 
 	// Remove progress dialog.

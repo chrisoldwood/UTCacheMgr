@@ -13,7 +13,7 @@
 #include "EditProfileDlg.hpp"
 #include "HelpTopics.h"
 #include "DetectedDlg.hpp"
-#include <Legacy/STLUtils.hpp>
+#include <Core/Algorithm.hpp>
 #include "UTCMGRApp.hpp"
 #include <WCL/BusyCursor.hpp>
 
@@ -189,7 +189,7 @@ void CProfileCfgDlg::OnRemove()
 	}
 
 	// Remove from collection.
-	Delete(App.m_aoProfiles, FindIndexOf(App.m_aoProfiles, pProfile));
+	Core::deleteValue(App.m_aoProfiles, pProfile);
 
 	// Remove from view.
 	m_lbProfiles.Delete(nSel);
@@ -315,7 +315,7 @@ void CProfileCfgDlg::OnDetect()
 	}
 
 	// Cleanup.
-	DeleteAll(aoProfiles);
+	Core::deleteAll(aoProfiles);
 }
 
 /******************************************************************************

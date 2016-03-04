@@ -10,7 +10,7 @@
 
 #include "Common.hpp"
 #include "UTCMGRApp.hpp"
-#include <Legacy/STLUtils.hpp>
+#include <Core/Algorithm.hpp>
 
 /******************************************************************************
 **
@@ -84,7 +84,7 @@ CUTCMGRApp::CUTCMGRApp()
 
 CUTCMGRApp::~CUTCMGRApp()
 {
-	DeleteAll(m_aoProfiles);
+	Core::deleteAll(m_aoProfiles);
 }
 
 /******************************************************************************

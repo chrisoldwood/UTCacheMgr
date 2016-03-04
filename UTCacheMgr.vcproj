@@ -189,10 +189,6 @@
 			RelativePathToProject="..\Lib\Core\Core.vcproj"
 		/>
 		<ProjectReference
-			ReferencedProjectIdentifier="{AED77F84-49CF-4B84-B319-2D07025ECA06}"
-			RelativePathToProject="..\Lib\Legacy\Legacy.vcproj"
-		/>
-		<ProjectReference
 			ReferencedProjectIdentifier="{9E405156-9B1D-483A-9BBD-B86240FA86BE}"
 			RelativePathToProject="..\Lib\MDBL\MDBL.vcproj"
 		/>
