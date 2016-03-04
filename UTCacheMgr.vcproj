@@ -1,431 +1,589 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="9.00"
 	Name="UTCacheMgr"
 	ProjectGUID="{628E489B-3F3C-4522-889E-3200AB1837ED}"
-	SccProjectName="SAK"
-	SccAuxPath="SAK"
-	SccLocalPath="SAK"
-	SccProvider="SAK">
+	RootNamespace="UTCacheMgr"
+	TargetFrameworkVersion="131072"
+	>
 	<Platforms>
 		<Platform
-			Name="Win32"/>
+			Name="Win32"
+		/>
 	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="Debug"
 			IntermediateDirectory="Debug"
 			ConfigurationType="1"
-			CharacterSet="1">
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/EHa"
 				Optimization="0"
 				AdditionalIncludeDirectories="../Lib;HelpFile"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
-				MinimalRebuild="TRUE"
-				ExceptionHandling="FALSE"
+				MinimalRebuild="true"
+				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
-				SmallerTypeCheck="TRUE"
+				SmallerTypeCheck="true"
 				RuntimeLibrary="1"
-				TreatWChar_tAsBuiltInType="TRUE"
-				ForceConformanceInForLoopScope="TRUE"
-				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="3"
+				TreatWChar_tAsBuiltInType="true"
+				ForceConformanceInForLoopScope="true"
+				RuntimeTypeInfo="true"
+				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="Common.hpp"
 				WarningLevel="4"
-				WarnAsError="TRUE"
-				DebugInformationFormat="3"/>
+				WarnAsError="true"
+				DebugInformationFormat="3"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
-			<Tool
-				Name="VCLinkerTool"
-				GenerateDebugInformation="TRUE"
-				SubSystem="2"
-				TargetMachine="1"/>
-			<Tool
-				Name="VCMIDLTool"/>
-			<Tool
-				Name="VCPostBuildEventTool"/>
-			<Tool
-				Name="VCPreBuildEventTool"/>
-			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
 			<Tool
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="_DEBUG"
-				AdditionalIncludeDirectories="../Lib"/>
+				AdditionalIncludeDirectories="../Lib"
+			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
+				Name="VCLinkerTool"
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
+				TargetMachine="1"
+			/>
 			<Tool
-				Name="VCWebDeploymentTool"/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
+				Name="VCManifestTool"
+			/>
 			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="Release"
 			IntermediateDirectory="Release"
 			ConfigurationType="1"
-			CharacterSet="1">
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/EHa"
 				AdditionalIncludeDirectories="../Lib;HelpFile"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
-				StringPooling="TRUE"
-				ExceptionHandling="FALSE"
+				StringPooling="true"
+				ExceptionHandling="0"
 				RuntimeLibrary="0"
-				TreatWChar_tAsBuiltInType="TRUE"
-				ForceConformanceInForLoopScope="TRUE"
-				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="3"
+				TreatWChar_tAsBuiltInType="true"
+				ForceConformanceInForLoopScope="true"
+				RuntimeTypeInfo="true"
+				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="Common.hpp"
 				WarningLevel="4"
-				WarnAsError="TRUE"
-				DebugInformationFormat="3"/>
+				WarnAsError="true"
+				DebugInformationFormat="3"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
-			<Tool
-				Name="VCLinkerTool"
-				GenerateDebugInformation="TRUE"
-				SubSystem="2"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
-				TargetMachine="1"/>
-			<Tool
-				Name="VCMIDLTool"/>
-			<Tool
-				Name="VCPostBuildEventTool"/>
-			<Tool
-				Name="VCPreBuildEventTool"/>
-			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
 			<Tool
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="NDEBUG"
-				AdditionalIncludeDirectories="../Lib"/>
+				AdditionalIncludeDirectories="../Lib"
+			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
+				Name="VCLinkerTool"
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
+				TargetMachine="1"
+			/>
 			<Tool
-				Name="VCWebDeploymentTool"/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
+				Name="VCManifestTool"
+			/>
 			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 	</Configurations>
 	<References>
 		<ProjectReference
 			ReferencedProjectIdentifier="{790BC113-52FB-4565-8968-79B8B011C520}"
-			Name="Core"/>
+			RelativePathToProject="..\Lib\Core\Core.vcproj"
+		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{AED77F84-49CF-4B84-B319-2D07025ECA06}"
-			Name="Legacy"/>
+			RelativePathToProject="..\Lib\Legacy\Legacy.vcproj"
+		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{9E405156-9B1D-483A-9BBD-B86240FA86BE}"
-			Name="MDBL"/>
+			RelativePathToProject="..\Lib\MDBL\MDBL.vcproj"
+		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{9B0335B6-93BE-4604-8497-27431874D758}"
-			Name="Wcl"/>
+			RelativePathToProject="..\Lib\WCL\Wcl.vcproj"
+		/>
 	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
-			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
+			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
+			>
 			<File
-				RelativePath="AboutDlg.cpp">
+				RelativePath="AboutDlg.cpp"
+				>
 			</File>
 			<File
-				RelativePath="AppCmds.cpp">
+				RelativePath="AppCmds.cpp"
+				>
 			</File>
 			<File
-				RelativePath="AppDlg.cpp">
+				RelativePath="AppDlg.cpp"
+				>
 			</File>
 			<File
-				RelativePath="AppToolBar.cpp">
+				RelativePath="AppToolBar.cpp"
+				>
 			</File>
 			<File
-				RelativePath="AppWnd.cpp">
+				RelativePath="AppWnd.cpp"
+				>
 			</File>
 			<File
-				RelativePath="Cache.cpp">
+				RelativePath="Cache.cpp"
+				>
 			</File>
 			<File
-				RelativePath="ConflictDlg.cpp">
+				RelativePath="ConflictDlg.cpp"
+				>
 			</File>
 			<File
-				RelativePath="DetectedDlg.cpp">
+				RelativePath="DetectedDlg.cpp"
+				>
 			</File>
 			<File
-				RelativePath="EditProfileDlg.cpp">
+				RelativePath="EditProfileDlg.cpp"
+				>
 			</File>
 			<File
-				RelativePath="ErrorsDlg.cpp">
+				RelativePath="ErrorsDlg.cpp"
+				>
 			</File>
 			<File
-				RelativePath="FilePropsDlg.cpp">
+				RelativePath="FilePropsDlg.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\pch.cpp">
+				RelativePath=".\pch.cpp"
+				>
 				<FileConfiguration
-					Name="Debug|Win32">
+					Name="Debug|Win32"
+					>
 					<Tool
 						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"/>
+						UsePrecompiledHeader="1"
+					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32">
+					Name="Release|Win32"
+					>
 					<Tool
 						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"/>
+						UsePrecompiledHeader="1"
+					/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="PrefsDlg.cpp">
+				RelativePath="PrefsDlg.cpp"
+				>
 			</File>
 			<File
-				RelativePath="Profile.cpp">
+				RelativePath="Profile.cpp"
+				>
 			</File>
 			<File
-				RelativePath="ProfileCfgDlg.cpp">
+				RelativePath="ProfileCfgDlg.cpp"
+				>
 			</File>
 			<File
-				RelativePath="ProgressDlg.cpp">
+				RelativePath="ProgressDlg.cpp"
+				>
 			</File>
 			<File
-				RelativePath="SelFilesDlg.cpp">
+				RelativePath="SelFilesDlg.cpp"
+				>
 			</File>
 			<File
-				RelativePath="SelProfileDlg.cpp">
+				RelativePath="SelProfileDlg.cpp"
+				>
 			</File>
 			<File
-				RelativePath="UTCMGRApp.cpp">
+				RelativePath="UTCMGRApp.cpp"
+				>
 			</File>
 			<File
-				RelativePath="UTConfigDlg.cpp">
+				RelativePath="UTConfigDlg.cpp"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl">
+			Filter="h;hpp;hxx;hm;inl"
+			>
 			<File
-				RelativePath="AboutDlg.hpp">
+				RelativePath="AboutDlg.hpp"
+				>
 			</File>
 			<File
-				RelativePath="AppCmds.hpp">
+				RelativePath="AppCmds.hpp"
+				>
 			</File>
 			<File
-				RelativePath="AppDlg.hpp">
+				RelativePath="AppDlg.hpp"
+				>
 			</File>
 			<File
-				RelativePath="AppToolBar.hpp">
+				RelativePath="AppToolBar.hpp"
+				>
 			</File>
 			<File
-				RelativePath="AppWnd.hpp">
+				RelativePath="AppWnd.hpp"
+				>
 			</File>
 			<File
-				RelativePath="Cache.hpp">
+				RelativePath="Cache.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Common.hpp">
+				RelativePath=".\Common.hpp"
+				>
 			</File>
 			<File
-				RelativePath="ConflictDlg.hpp">
+				RelativePath="ConflictDlg.hpp"
+				>
 			</File>
 			<File
-				RelativePath="DetectedDlg.hpp">
+				RelativePath="DetectedDlg.hpp"
+				>
 			</File>
 			<File
-				RelativePath="EditProfileDlg.hpp">
+				RelativePath="EditProfileDlg.hpp"
+				>
 			</File>
 			<File
-				RelativePath="ErrorsDlg.hpp">
+				RelativePath="ErrorsDlg.hpp"
+				>
 			</File>
 			<File
-				RelativePath="FilePropsDlg.hpp">
+				RelativePath="FilePropsDlg.hpp"
+				>
 			</File>
 			<File
-				RelativePath="PrefsDlg.hpp">
+				RelativePath="PrefsDlg.hpp"
+				>
 			</File>
 			<File
-				RelativePath="Profile.hpp">
+				RelativePath="Profile.hpp"
+				>
 			</File>
 			<File
-				RelativePath="ProfileCfgDlg.hpp">
+				RelativePath="ProfileCfgDlg.hpp"
+				>
 			</File>
 			<File
-				RelativePath="ProgressDlg.hpp">
+				RelativePath="ProgressDlg.hpp"
+				>
 			</File>
 			<File
-				RelativePath="SelFilesDlg.hpp">
+				RelativePath="SelFilesDlg.hpp"
+				>
 			</File>
 			<File
-				RelativePath="SelProfileDlg.hpp">
+				RelativePath="SelProfileDlg.hpp"
+				>
 			</File>
 			<File
-				RelativePath="UTCMGRApp.hpp">
+				RelativePath="UTCMGRApp.hpp"
+				>
 			</File>
 			<File
-				RelativePath="UTConfigDlg.hpp">
+				RelativePath="UTConfigDlg.hpp"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
-			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
+			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
+			>
 			<File
-				RelativePath="Anim.ico">
+				RelativePath="Anim.ico"
+				>
 			</File>
 			<File
-				RelativePath="App.ico">
+				RelativePath="App.ico"
+				>
 			</File>
 			<File
-				RelativePath="App.rcv">
+				RelativePath="App.rcv"
+				>
 			</File>
 			<File
-				RelativePath="karma.ico">
+				RelativePath="karma.ico"
+				>
 			</File>
 			<File
-				RelativePath="ListIcons.bmp">
+				RelativePath="ListIcons.bmp"
+				>
 			</File>
 			<File
-				RelativePath="Map.ico">
+				RelativePath="Map.ico"
+				>
 			</File>
 			<File
-				RelativePath="Mesh.ico">
+				RelativePath="Mesh.ico"
+				>
 			</File>
 			<File
-				RelativePath="Music.ico">
+				RelativePath="Music.ico"
+				>
 			</File>
 			<File
-				RelativePath="Resource.h">
+				RelativePath="Resource.h"
+				>
 			</File>
 			<File
-				RelativePath="Setup.ico">
+				RelativePath="Setup.ico"
+				>
 			</File>
 			<File
-				RelativePath="Sound.ico">
+				RelativePath="Sound.ico"
+				>
 			</File>
 			<File
-				RelativePath="System.ico">
+				RelativePath="System.ico"
+				>
 			</File>
 			<File
-				RelativePath="Texture.ico">
+				RelativePath="Texture.ico"
+				>
 			</File>
 			<File
-				RelativePath="Toolbar.bmp">
+				RelativePath="Toolbar.bmp"
+				>
 			</File>
 			<File
-				RelativePath="UTCMGR.rc">
+				RelativePath="UTCMGR.rc"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="HelpFile"
-			Filter="">
+			>
 			<File
-				RelativePath="HelpFile\AboutDlg.bmp">
+				RelativePath="HelpFile\AboutDlg.bmp"
+				>
 			</File>
 			<File
-				RelativePath="HelpFile\CacheMenu.bmp">
+				RelativePath="HelpFile\CacheMenu.bmp"
+				>
 			</File>
 			<File
-				RelativePath="HelpFile\ConflictDlg.bmp">
+				RelativePath="HelpFile\ConflictDlg.bmp"
+				>
 			</File>
 			<File
-				RelativePath="HelpFile\ContextMenu.bmp">
+				RelativePath="HelpFile\ContextMenu.bmp"
+				>
 			</File>
 			<File
-				RelativePath="HelpFile\DetectDlg.bmp">
+				RelativePath="HelpFile\DetectDlg.bmp"
+				>
 			</File>
 			<File
-				RelativePath="HelpFile\DetectMsg.bmp">
+				RelativePath="HelpFile\DetectMsg.bmp"
+				>
 			</File>
 			<File
-				RelativePath="HelpFile\EditMenu.bmp">
+				RelativePath="HelpFile\EditMenu.bmp"
+				>
 			</File>
 			<File
-				RelativePath="HelpFile\EditProfDlg.bmp">
+				RelativePath="HelpFile\EditProfDlg.bmp"
+				>
 			</File>
 			<File
-				RelativePath="HelpFile\ErrorsDlg.bmp">
+				RelativePath="HelpFile\ErrorsDlg.bmp"
+				>
 			</File>
 			<File
-				RelativePath="HelpFile\FailedMsg.bmp">
+				RelativePath="HelpFile\FailedMsg.bmp"
+				>
 			</File>
 			<File
-				RelativePath="HelpFile\HelpMenu.bmp">
+				RelativePath="HelpFile\HelpMenu.bmp"
+				>
 			</File>
 			<File
-				RelativePath="HelpFile\HelpTopics.h">
+				RelativePath="HelpFile\HelpTopics.h"
+				>
 			</File>
 			<File
-				RelativePath="HelpFile\ImportDlg.bmp">
+				RelativePath="HelpFile\ImportDlg.bmp"
+				>
 			</File>
 			<File
-				RelativePath="HelpFile\InstallDlg.bmp">
+				RelativePath="HelpFile\InstallDlg.bmp"
+				>
 			</File>
 			<File
-				RelativePath="HelpFile\MainView.bmp">
+				RelativePath="HelpFile\MainView.bmp"
+				>
 			</File>
 			<File
-				RelativePath="HelpFile\OptionsMenu.bmp">
+				RelativePath="HelpFile\OptionsMenu.bmp"
+				>
 			</File>
 			<File
-				RelativePath="HelpFile\PrefsDlg.bmp">
+				RelativePath="HelpFile\PrefsDlg.bmp"
+				>
 			</File>
 			<File
-				RelativePath="HelpFile\ProfDlg.bmp">
+				RelativePath="HelpFile\ProfDlg.bmp"
+				>
 			</File>
 			<File
-				RelativePath="HelpFile\ProfsMenu.bmp">
+				RelativePath="HelpFile\ProfsMenu.bmp"
+				>
 			</File>
 			<File
-				RelativePath="HelpFile\PropsDlg.bmp">
+				RelativePath="HelpFile\PropsDlg.bmp"
+				>
 			</File>
 			<File
-				RelativePath="HelpFile\RestoreDlg.bmp">
+				RelativePath="HelpFile\RestoreDlg.bmp"
+				>
 			</File>
 			<File
-				RelativePath="HelpFile\SelFolder.bmp">
+				RelativePath="HelpFile\SelFolder.bmp"
+				>
 			</File>
 			<File
-				RelativePath="HelpFile\SelProfDlg.bmp">
+				RelativePath="HelpFile\SelProfDlg.bmp"
+				>
 			</File>
 			<File
-				RelativePath="HelpFile\ToolsMenu.bmp">
+				RelativePath="HelpFile\ToolsMenu.bmp"
+				>
 			</File>
 			<File
-				RelativePath="HelpFile\UTCacheMgr.hpj">
+				RelativePath="HelpFile\UTCacheMgr.hpj"
+				>
 			</File>
 			<File
-				RelativePath="HelpFile\UTCacheMgr.rtf">
+				RelativePath="HelpFile\UTCacheMgr.rtf"
+				>
 			</File>
 			<File
-				RelativePath="HelpFile\UTCfgDlg.bmp">
+				RelativePath="HelpFile\UTCfgDlg.bmp"
+				>
 			</File>
 			<File
-				RelativePath="HelpFile\ViewMenu.bmp">
+				RelativePath="HelpFile\ViewMenu.bmp"
+				>
 			</File>
 		</Filter>
 		<File
-			RelativePath="ReadMe.txt">
+			RelativePath="ReadMe.txt"
+			>
 		</File>
 		<File
-			RelativePath="RelNotes.txt">
+			RelativePath="RelNotes.txt"
+			>
 		</File>
 		<File
-			RelativePath="Setup.ini">
+			RelativePath="Setup.ini"
+			>
 		</File>
 		<File
-			RelativePath="TODO.Txt">
+			RelativePath="TODO.Txt"
+			>
 		</File>
 	</Files>
 	<Globals>
