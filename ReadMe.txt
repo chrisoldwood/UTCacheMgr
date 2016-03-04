@@ -1,27 +1,40 @@
 UT Cache Manager v2.5
 =====================
 
-1) Installation.
+Introduction
+------------
+
+This is a cache manager for the original Unreal Tournament and its various mods.
+
+Releases
+--------
+
+Stable releases are formally packaged and made available from my Win32 tools page:
+http://www.chrisoldwood.com/win32.htm
+
+The latest code is available from my GitHub repo:
+https://github.com/chrisoldwood/UTCacheMgr
+
+Installation
+------------
 
 Run setup.exe.
 
-
-2) Uninstallation.
+Uninstallation
+--------------
 
 Delete the files UTCacheMgr.*.
 
-
-3) Manual/Help etc.
+Documentation
+-------------
 
 Its all in the HelpFile - UTCacheMgr.hlp.
 
+Contact Details
+---------------
 
-4) Contact Details.
-
-EMail: gort@cix.co.uk
-Web:   http://www.cix.co.uk/~gort
-
+Email: gort@cix.co.uk
+Web:   http://www.chrisoldwood.com
 
 Chris Oldwood 
-
 31st March 2004
