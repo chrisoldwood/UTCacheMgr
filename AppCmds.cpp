@@ -512,7 +512,7 @@ void CAppCmds::OnCacheRestore()
 
 		fLogFile.Close();
 	}
-	catch (CStreamException& e)
+	catch (const CStreamException& e)
 	{
 		// Report error.
 		App.AlertMsg(TXT("%s"), e.twhat());
@@ -1987,7 +1987,7 @@ void CAppCmds::LogEdits(CResultSet& oRS)
 			fLogFile.WriteLine(strLogEntry, ANSI_TEXT);
 		}
 	}
-	catch (CStreamException& e)
+	catch (const CStreamException& e)
 	{
 		// Report error.
 		App.AlertMsg(TXT("%s"), e.twhat());
