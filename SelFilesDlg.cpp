@@ -27,8 +27,8 @@
 
 CSelFilesDlg::CSelFilesDlg()
 	: CDialog(IDD_SELFILES)
-	, m_pTable(NULL)
-	, m_dwHelpID(NULL)
+	, m_pTable(nullptr)
+	, m_dwHelpID(0)
 	, m_nSortColumn(CCache::REAL_FILENAME)
 	, m_eSortOrder(CSortColumns::ASC)
 {
@@ -63,9 +63,9 @@ CSelFilesDlg::CSelFilesDlg()
 
 void CSelFilesDlg::OnInitDialog()
 {
-	ASSERT(m_pTable   != NULL);
+	ASSERT(m_pTable   != nullptr);
 	ASSERT(m_strTitle != TXT(""));
-	ASSERT(m_dwHelpID != NULL);
+	ASSERT(m_dwHelpID != 0);
 
 	// Restore dialog size to last time.
 	if (!App.m_rcLastDlgPos.Empty())

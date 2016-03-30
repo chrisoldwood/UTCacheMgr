@@ -160,7 +160,7 @@ bool CEditProfileDlg::OnOk()
 		return false;
 	}
 
-	if ( (m_oProfile.m_strName == TXT("")) && (App.FindProfile(strName) != NULL) )
+	if ( (m_oProfile.m_strName == TXT("")) && (App.FindProfile(strName) != nullptr) )
 	{
 		AlertMsg(TXT("The profile name should be unique."));
 		m_ebName.Focus();
@@ -446,7 +446,7 @@ void CEditProfileDlg::OnHelp(HELPINFO& /*oInfo*/)
 
 bool CEditProfileDlg::ValidatePath(const CPath& strPath, CEditBox& ebControl, const tchar* pszName)
 {
-	ASSERT(pszName != NULL);
+	ASSERT(pszName != nullptr);
 
 	// Path valid?
 	if (strPath.Exists())

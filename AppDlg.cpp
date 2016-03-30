@@ -272,7 +272,7 @@ LRESULT CAppDlg::OnGridRightClick(NMHDR& /*oHdr*/)
 		uint nCmdID = oMenu.TrackMenu(m_lvGrid, CPoint(oCurrMsg.pt.x, oCurrMsg.pt.y));
 
 		// Dispatch command.
-		if (nCmdID != NULL)
+		if (nCmdID != 0)
 			App.m_AppWnd.PostCommand(nCmdID);
 	}
 

@@ -236,23 +236,23 @@ void CProfileCfgDlg::OnDetect()
 {
 	CBusyCursor oBusyCursor;
 
-	CProfile* pProfile = NULL;
+	CProfile* pProfile = nullptr;
 	CProfiles aoProfiles;
 
 	// Look for a UT installation.
-	if ((pProfile = CProfile::DetectUT()) != NULL)
+	if ((pProfile = CProfile::DetectUT()) != nullptr)
 		aoProfiles.push_back(pProfile);
 
 	// Look for a UT2003 installation.
-	if ((pProfile = CProfile::DetectUT2003()) != NULL)
+	if ((pProfile = CProfile::DetectUT2003()) != nullptr)
 		aoProfiles.push_back(pProfile);
 
 	// Look for a UT2004 installation.
-	if ((pProfile = CProfile::DetectUT2004()) != NULL)
+	if ((pProfile = CProfile::DetectUT2004()) != nullptr)
 		aoProfiles.push_back(pProfile);
 
 	// Look for a Tactical Ops installation.
-	if ((pProfile = CProfile::DetectTacOps()) != NULL)
+	if ((pProfile = CProfile::DetectTacOps()) != nullptr)
 		aoProfiles.push_back(pProfile);
 
 	// Remove any duplicates.
@@ -261,8 +261,8 @@ void CProfileCfgDlg::OnDetect()
 		CProfile* pProfile = *oIter;
 
 		// Profile name already used OR already configured?
-		if ( (App.FindProfile(pProfile->m_strName) != NULL)
-		  || (App.FindProfileByCfgFile(pProfile->m_strConfigFile) != NULL) )
+		if ( (App.FindProfile(pProfile->m_strName) != nullptr)
+		  || (App.FindProfileByCfgFile(pProfile->m_strConfigFile) != nullptr) )
 		{
 			CProfiles::iterator oPos = (oIter+1).base();
 

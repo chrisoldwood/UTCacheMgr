@@ -167,7 +167,7 @@ bool CAppWnd::ProcessMsg(MSG& rMsg)
 
 void CAppWnd::UpdateTitle()
 {
-	ASSERT(App.m_pProfile != NULL);
+	ASSERT(App.m_pProfile != nullptr);
 
 	// Start with app name.
 	CString strTitle = App.m_strTitle;

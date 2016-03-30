@@ -84,7 +84,7 @@ void CProgressDlg::InitMeter(uint nSteps)
 
 void CProgressDlg::UpdateLabel(const tchar* pszLabel)
 {
-	ASSERT(pszLabel != NULL);
+	ASSERT(pszLabel != nullptr);
 
 	m_txtLabel.Text(pszLabel);
 
@@ -100,7 +100,7 @@ void CProgressDlg::UpdateMeter(uint nSteps)
 
 void CProgressDlg::UpdateLabelAndMeter(const tchar* pszLabel, uint nSteps)
 {
-	ASSERT(pszLabel != NULL);
+	ASSERT(pszLabel != nullptr);
 
 	m_txtLabel.Text(pszLabel);
 	m_barMeter.Pos(nSteps);

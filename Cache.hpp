@@ -26,6 +26,7 @@
 */
 
 // File types.
+const tchar UNKNOWN_FILE = 0;
 const tchar SYSTEM_FILE  = 'U';
 const tchar MAP_FILE     = 'P';
 const tchar TEXTURE_FILE = 'T';

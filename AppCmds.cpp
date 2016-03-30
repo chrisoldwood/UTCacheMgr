@@ -54,13 +54,13 @@ CAppCmds::CAppCmds(CAppWnd& appWnd)
 		// File menu.
 		CMD_RANGE(ID_CACHE_FIRST_PROFILE, ID_CACHE_LAST_PROFILE,
 										&CAppCmds::OnCacheProfile,		&CAppCmds::OnUICacheProfile,		-1)
-		CMD_ENTRY(ID_CACHE_PROFILE,		&CAppCmds::OnCacheProfileDlg,	NULL,								 3)
-		CMD_ENTRY(ID_CACHE_RESCAN,		&CAppCmds::OnCacheRescan,		NULL,								 0)
+		CMD_ENTRY(ID_CACHE_PROFILE,		&CAppCmds::OnCacheProfileDlg,	nullptr,							 3)
+		CMD_ENTRY(ID_CACHE_RESCAN,		&CAppCmds::OnCacheRescan,		nullptr,							 0)
 		CMD_ENTRY(ID_CACHE_RESTORE,		&CAppCmds::OnCacheRestore,		&CAppCmds::OnUICacheRestore,		-1)
-		CMD_ENTRY(ID_CACHE_IMPORT,		&CAppCmds::OnCacheImport,		NULL,								-1)
-		CMD_ENTRY(ID_CACHE_UT_CONFIG,	&CAppCmds::OnCacheUTConfig,		NULL,								-1)
+		CMD_ENTRY(ID_CACHE_IMPORT,		&CAppCmds::OnCacheImport,		nullptr,							-1)
+		CMD_ENTRY(ID_CACHE_UT_CONFIG,	&CAppCmds::OnCacheUTConfig,		nullptr,							-1)
 		CMD_ENTRY(ID_CACHE_PROPERTIES,	&CAppCmds::OnCacheProperties,	&CAppCmds::OnUICacheProperties,		-1)
-		CMD_ENTRY(ID_CACHE_EXIT,		&CAppCmds::OnCacheExit,			NULL,								-1)
+		CMD_ENTRY(ID_CACHE_EXIT,		&CAppCmds::OnCacheExit,			nullptr,							-1)
 		// Edit menu.
 		CMD_ENTRY(ID_EDIT_PIN,			&CAppCmds::OnEditPin,			&CAppCmds::OnUIEditPin,				-1)
 		CMD_ENTRY(ID_EDIT_MOVE,			&CAppCmds::OnEditMove,			&CAppCmds::OnUIEditMove,			 5)
@@ -68,8 +68,8 @@ CAppCmds::CAppCmds(CAppWnd& appWnd)
 		CMD_ENTRY(ID_EDIT_DELETE,		&CAppCmds::OnEditDelete,		&CAppCmds::OnUIEditDelete,			 7)
 		CMD_ENTRY(ID_EDIT_COPY_TO,		&CAppCmds::OnEditCopyTo,		&CAppCmds::OnUIEditCopyTo,			 9)
 		// View menu.
-		CMD_ENTRY(ID_VIEW_SELECT_NEW,	&CAppCmds::OnViewSelectNew,		NULL,								-1)
-		CMD_ENTRY(ID_VIEW_SELECT_ALL,	&CAppCmds::OnViewSelectAll,		NULL,								-1)
+		CMD_ENTRY(ID_VIEW_SELECT_NEW,	&CAppCmds::OnViewSelectNew,		nullptr,							-1)
+		CMD_ENTRY(ID_VIEW_SELECT_ALL,	&CAppCmds::OnViewSelectAll,		nullptr,							-1)
 		CMD_ENTRY(ID_VIEW_SORT_NAME,	&CAppCmds::OnViewSortByName,	&CAppCmds::OnUIViewSortByName,		-1)
 		CMD_ENTRY(ID_VIEW_SORT_TYPE,	&CAppCmds::OnViewSortByType,	&CAppCmds::OnUIViewSortByType,		-1)
 		CMD_ENTRY(ID_VIEW_SORT_DATE,	&CAppCmds::OnViewSortByDate,	&CAppCmds::OnUIViewSortByDate,		-1)
@@ -78,13 +78,13 @@ CAppCmds::CAppCmds(CAppWnd& appWnd)
 		CMD_ENTRY(ID_VIEW_SORT_CACHE,	&CAppCmds::OnViewSortByCache,	&CAppCmds::OnUIViewSortByCache,		-1)
 		CMD_ENTRY(ID_VIEW_SHOW_ALL,		&CAppCmds::OnViewShowAll,		&CAppCmds::OnUIViewShowAll,			-1)
 		// Tools menu.
-		CMD_ENTRY(ID_TOOLS_INSTALL,		&CAppCmds::OnToolsInstall,		NULL,								-1)
+		CMD_ENTRY(ID_TOOLS_INSTALL,		&CAppCmds::OnToolsInstall,		nullptr,							-1)
 		// Options menu.
-		CMD_ENTRY(ID_OPTIONS_PROFILES,	&CAppCmds::OnOptionsProfiles,	NULL,								-1)
-		CMD_ENTRY(ID_OPTIONS_PREFS,		&CAppCmds::OnOptionsPrefs,		NULL,								-1)
+		CMD_ENTRY(ID_OPTIONS_PROFILES,	&CAppCmds::OnOptionsProfiles,	nullptr,							-1)
+		CMD_ENTRY(ID_OPTIONS_PREFS,		&CAppCmds::OnOptionsPrefs,		nullptr,							-1)
 		// Help menu.
-		CMD_ENTRY(ID_HELP_CONTENTS,		&CAppCmds::OnHelpContents,		NULL,								 1)
-		CMD_ENTRY(ID_HELP_ABOUT,		&CAppCmds::OnHelpAbout,			NULL,								-1)
+		CMD_ENTRY(ID_HELP_CONTENTS,		&CAppCmds::OnHelpContents,		nullptr,							 1)
+		CMD_ENTRY(ID_HELP_ABOUT,		&CAppCmds::OnHelpAbout,			nullptr,							-1)
 	END_CMD_TABLE
 }
 
@@ -118,7 +118,7 @@ CAppCmds::~CAppCmds()
 
 void CAppCmds::OnCacheProfile(uint nCmdID)
 {
-	ASSERT(App.m_pProfile != NULL);
+	ASSERT(App.m_pProfile != nullptr);
 
 	// Convert ID to profile index.
 	uint nProfile = nCmdID - ID_CACHE_FIRST_PROFILE;
@@ -158,7 +158,7 @@ void CAppCmds::OnCacheProfile(uint nCmdID)
 
 void CAppCmds::OnCacheProfileDlg()
 {
-	ASSERT(App.m_pProfile != NULL);
+	ASSERT(App.m_pProfile != nullptr);
 
 	CSelProfileDlg	Dlg;
 
@@ -206,7 +206,7 @@ void CAppCmds::OnCacheRescan()
 {
 	typedef WCL::FileNames::const_iterator FileNameCIter;
 
-	ASSERT(App.m_pProfile != NULL);
+	ASSERT(App.m_pProfile != nullptr);
 
 	CBusyCursor oCursor;
 
@@ -282,7 +282,7 @@ void CAppCmds::OnCacheRescan()
 		tchar   cType  = App.m_pProfile->GetFileType(strExt);
 
 		// Unknown file type?
-		if (cType == NULL)
+		if (cType == UNKNOWN_FILE)
 		{
 			dlgErrors.m_astrFiles.Add(strRealName);
 			dlgErrors.m_astrErrors.Add(TXT("Unknown file type."));
@@ -418,7 +418,7 @@ void CAppCmds::OnCacheRescan()
 
 void CAppCmds::OnCacheRestore()
 {
-	ASSERT(App.m_pProfile != NULL);
+	ASSERT(App.m_pProfile != nullptr);
 
 	CBusyCursor oCursor;
 
@@ -479,7 +479,7 @@ void CAppCmds::OnCacheRestore()
 			tchar   cType  = App.m_pProfile->GetFileType(strExt);
 
 			// Unknown file type?
-			if (cType == NULL)
+			if (cType == UNKNOWN_FILE)
 				continue;
 
 			CPath strUTDir  = App.m_pProfile->GetTypeDir(cType);
@@ -702,7 +702,7 @@ void CAppCmds::OnCacheImport()
 		tchar   cType  = CProfile::GetFileType(strExt);
 
 		// Unknown file type?
-		if (cType == NULL)
+		if (cType == UNKNOWN_FILE)
 			continue;
 
 		// Get other file details.
@@ -821,7 +821,7 @@ void CAppCmds::OnCacheImport()
 
 void CAppCmds::OnCacheUTConfig()
 {
-	ASSERT(App.m_pProfile != NULL);
+	ASSERT(App.m_pProfile != nullptr);
 
 	// Check config file exists.
 	if (!App.m_pProfile->m_strConfigFile.Exists())
@@ -849,7 +849,7 @@ void CAppCmds::OnCacheUTConfig()
 
 void CAppCmds::OnCacheProperties()
 {
-	ASSERT(App.m_pProfile != NULL);
+	ASSERT(App.m_pProfile != nullptr);
 
 	CResultSet oRS(App.m_oCache);
 
@@ -906,7 +906,7 @@ void CAppCmds::OnCacheExit()
 
 void CAppCmds::OnEditPin()
 {
-	ASSERT(App.m_pProfile != NULL);
+	ASSERT(App.m_pProfile != nullptr);
 
 	CResultSet oRS(App.m_oCache);
 
@@ -984,7 +984,7 @@ void CAppCmds::OnEditPin()
 
 void CAppCmds::OnEditMove()
 {
-	ASSERT(App.m_pProfile != NULL);
+	ASSERT(App.m_pProfile != nullptr);
 
 	CResultSet oRS(App.m_oCache);
 	CResultSet oEditsRS(App.m_oCache);
@@ -1087,7 +1087,7 @@ void CAppCmds::OnEditMove()
 
 void CAppCmds::OnEditCopy()
 {
-	ASSERT(App.m_pProfile != NULL);
+	ASSERT(App.m_pProfile != nullptr);
 
 	CResultSet oRS(App.m_oCache);
 	CResultSet oEditsRS(App.m_oCache);
@@ -1187,7 +1187,7 @@ void CAppCmds::OnEditCopy()
 
 void CAppCmds::OnEditDelete()
 {
-	ASSERT(App.m_pProfile != NULL);
+	ASSERT(App.m_pProfile != nullptr);
 
 	CResultSet oRS(App.m_oCache);
 	CResultSet oEditsRS(App.m_oCache);
@@ -1261,7 +1261,7 @@ void CAppCmds::OnEditDelete()
 
 void CAppCmds::OnEditCopyTo()
 {
-	ASSERT(App.m_pProfile != NULL);
+	ASSERT(App.m_pProfile != nullptr);
 
 	CResultSet oRS(App.m_oCache);
 
@@ -1744,7 +1744,7 @@ void CAppCmds::OnHelpAbout()
 
 void CAppCmds::OnUICacheProfile()
 {
-	ASSERT(App.m_pProfile != NULL);
+	ASSERT(App.m_pProfile != nullptr);
 
 	CMenu&       oMenu    = App.m_AppWnd.m_Menu;
 //	CAppToolBar& oToolBar = App.m_AppWnd.m_ToolBar;
@@ -1762,7 +1762,7 @@ void CAppCmds::OnUICacheProfile()
 
 void CAppCmds::OnUICacheRestore()
 {
-	ASSERT(App.m_pProfile != NULL);
+	ASSERT(App.m_pProfile != nullptr);
 
 	CMenu&       oMenu    = App.m_AppWnd.m_Menu;
 //	CAppToolBar& oToolBar = App.m_AppWnd.m_ToolBar;
@@ -1776,7 +1776,7 @@ void CAppCmds::OnUICacheRestore()
 
 void CAppCmds::OnUICacheProperties()
 {
-	ASSERT(App.m_pProfile != NULL);
+	ASSERT(App.m_pProfile != nullptr);
 
 	CMenu&       oMenu    = App.m_AppWnd.m_Menu;
 //	CAppToolBar& oToolBar = App.m_AppWnd.m_ToolBar;
@@ -1803,7 +1803,7 @@ void CAppCmds::OnUIEditPin()
 
 void CAppCmds::OnUIEditMove()
 {
-	ASSERT(App.m_pProfile != NULL);
+	ASSERT(App.m_pProfile != nullptr);
 
 	CMenu&       oMenu    = App.m_AppWnd.m_Menu;
 	CAppToolBar& oToolBar = App.m_AppWnd.m_ToolBar;
@@ -1830,7 +1830,7 @@ void CAppCmds::OnUIEditCopy()
 
 void CAppCmds::OnUIEditDelete()
 {
-	ASSERT(App.m_pProfile != NULL);
+	ASSERT(App.m_pProfile != nullptr);
 
 	CMenu&       oMenu    = App.m_AppWnd.m_Menu;
 	CAppToolBar& oToolBar = App.m_AppWnd.m_ToolBar;

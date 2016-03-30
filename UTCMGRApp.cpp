@@ -57,7 +57,7 @@ CUTCMGRApp::CUTCMGRApp()
 	, m_oHelpFile(m_AppWnd)
 	, m_nModified(NONE)
 	, m_oCache()
-	, m_pProfile(NULL)
+	, m_pProfile(nullptr)
 	, m_bScanOnStart(true)
 	, m_bScanOnSwitch(true)
 	, m_bScanForTmp(true)
@@ -223,24 +223,24 @@ void CUTCMGRApp::LoadConfig()
 		m_pProfile = FindProfile(m_strDefProfile);
 
 	// New installation?.
-	if (m_pProfile == NULL)
+	if (m_pProfile == nullptr)
 	{
-		CProfile* pProfile = NULL;
+		CProfile* pProfile = nullptr;
 
 		// Look for a UT installation.
-		if ((pProfile = CProfile::DetectUT()) != NULL)
+		if ((pProfile = CProfile::DetectUT()) != nullptr)
 			m_aoProfiles.push_back(pProfile);
 
 		// Look for a UT2003 installation.
-		if ((pProfile = CProfile::DetectUT2003()) != NULL)
+		if ((pProfile = CProfile::DetectUT2003()) != nullptr)
 			m_aoProfiles.push_back(pProfile);
 
 		// Look for a UT2004 installation.
-		if ((pProfile = CProfile::DetectUT2004()) != NULL)
+		if ((pProfile = CProfile::DetectUT2004()) != nullptr)
 			m_aoProfiles.push_back(pProfile);
 
 		// Look for a Tactical Ops installation.
-		if ((pProfile = CProfile::DetectTacOps()) != NULL)
+		if ((pProfile = CProfile::DetectTacOps()) != nullptr)
 			m_aoProfiles.push_back(pProfile);
 
 		// If nothing detected, create a default UT one.
@@ -275,7 +275,7 @@ void CUTCMGRApp::LoadConfig()
 		m_strDefProfile = m_pProfile->m_strName;
 	}
 
-	ASSERT(m_pProfile != NULL);
+	ASSERT(m_pProfile != nullptr);
 
 	// Read the number of pinned files.
 	uint nPinned = m_oIniFile.ReadInt(TXT("Pinned"), TXT("Count"), 0);
@@ -406,14 +406,14 @@ void CUTCMGRApp::SaveConfig()
 **
 ** Parameters:	None.
 **
-** Returns:		The profile or NULL.
+** Returns:		The profile or nullptr.
 **
 *******************************************************************************
 */
 
 CProfile* CUTCMGRApp::FindProfile(const tchar* pszName) const
 {
-	ASSERT(pszName != NULL);
+	ASSERT(pszName != nullptr);
 
 	// For all profiles...
 	for (uint i = 0; i < m_aoProfiles.size(); ++i)
@@ -422,7 +422,7 @@ CProfile* CUTCMGRApp::FindProfile(const tchar* pszName) const
 			return m_aoProfiles[i];
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 /******************************************************************************
@@ -432,7 +432,7 @@ CProfile* CUTCMGRApp::FindProfile(const tchar* pszName) const
 **
 ** Parameters:	strCfgFile.
 **
-** Returns:		The profile or NULL.
+** Returns:		The profile or nullptr.
 **
 *******************************************************************************
 */
@@ -446,7 +446,7 @@ CProfile* CUTCMGRApp::FindProfileByCfgFile(const CPath& strCfgFile) const
 			return m_aoProfiles[i];
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 /******************************************************************************
@@ -463,7 +463,7 @@ CProfile* CUTCMGRApp::FindProfileByCfgFile(const CPath& strCfgFile) const
 
 int CUTCMGRApp::GetProfileIndex(CProfile* pProfile) const
 {
-	ASSERT(pProfile != NULL);
+	ASSERT(pProfile != nullptr);
 
 	// For all profiles...
 	for (uint i = 0; i < m_aoProfiles.size(); ++i)

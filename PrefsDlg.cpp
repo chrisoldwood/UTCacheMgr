@@ -98,7 +98,7 @@ bool CPrefsDlg::OnOk()
 	size_t    nSel     = m_cbProfiles.CurSel();
 	CProfile* pProfile = static_cast<CProfile*>(m_cbProfiles.ItemPtr(nSel));
 
-	ASSERT((nSel != CB_ERR) && (pProfile != NULL));
+	ASSERT((nSel != CB_ERR) && (pProfile != nullptr));
 
 	App.m_strDefProfile = pProfile->m_strName;
 

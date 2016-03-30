@@ -27,8 +27,8 @@
 
 CSelProfileDlg::CSelProfileDlg()
 	: CDialog(IDD_SEL_PROFILE)
-	, m_pProfiles(NULL)
-	, m_pChoice(NULL)
+	, m_pProfiles(nullptr)
+	, m_pChoice(nullptr)
 {
 	DEFINE_CTRL_TABLE
 		CTRL(IDC_PROFILES,		&m_cbProfiles  )
@@ -65,8 +65,8 @@ CSelProfileDlg::CSelProfileDlg()
 
 void CSelProfileDlg::OnInitDialog()
 {
-	ASSERT(m_pProfiles != NULL);
-	ASSERT(m_pChoice   != NULL);
+	ASSERT(m_pProfiles != nullptr);
+	ASSERT(m_pChoice   != nullptr);
 
 	// Load the names combo.
 	for (uint i = 0; i < m_pProfiles->size(); ++i)
@@ -104,7 +104,7 @@ bool CSelProfileDlg::OnOk()
 	size_t    nSel     = m_cbProfiles.CurSel();
 	CProfile* pProfile = static_cast<CProfile*>(m_cbProfiles.ItemPtr(nSel));
 
-	ASSERT((nSel != CB_ERR) && (pProfile != NULL));
+	ASSERT((nSel != CB_ERR) && (pProfile != nullptr));
 
 	// Save selection.
 	m_pChoice = pProfile;
@@ -130,7 +130,7 @@ void CSelProfileDlg::OnSelectProfile()
 	size_t    nSel     = m_cbProfiles.CurSel();
 	CProfile* pProfile = static_cast<CProfile*>(m_cbProfiles.ItemPtr(nSel));
 
-	ASSERT((nSel != CB_ERR) && (pProfile != NULL));
+	ASSERT((nSel != CB_ERR) && (pProfile != nullptr));
 
 	// Load details into controls.
 	m_cbFormat.CurSel(pProfile->m_nFormat);

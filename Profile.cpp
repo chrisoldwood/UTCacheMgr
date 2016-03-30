@@ -112,7 +112,7 @@ bool CProfile::IsValidType(const CString& strExt)
 **
 ** Parameters:	strExt		The file extension.
 **
-** Returns:		The file type or NULL.
+** Returns:		The file type or UNKNOWN_FILE.
 **
 *******************************************************************************
 */
@@ -154,7 +154,7 @@ tchar CProfile::GetFileType(const CString& strExt)
 
 	ASSERT_FALSE();
 
-	return NULL;
+	return UNKNOWN_FILE;
 }
 
 /******************************************************************************
@@ -202,7 +202,7 @@ CPath CProfile::GetTypeDir(tchar cType)
 
 bool CProfile::Compare(const CProfile* pProfile1, const CProfile* pProfile2)
 {
-	ASSERT((pProfile1 != NULL) && (pProfile2 != NULL));
+	ASSERT((pProfile1 != nullptr) && (pProfile2 != nullptr));
 
 	return (tstrcmp((pProfile1)->m_strName, (pProfile2)->m_strName) < 0);
 }
@@ -214,7 +214,7 @@ bool CProfile::Compare(const CProfile* pProfile1, const CProfile* pProfile2)
 **
 ** Parameters:	None.
 **
-** Returns:		A profile or NULL, if none found.
+** Returns:		A profile or nullptr, if none found.
 **
 *******************************************************************************
 */
@@ -225,7 +225,7 @@ CProfile* CProfile::DetectUT()
 
 	// Try and find the regkey that contains the UT base path.
 	if (!WCL::RegKey::Exists(HKEY_LOCAL_MACHINE, TXT("SOFTWARE\\Unreal Technology\\Installed Apps\\UnrealTournament")))
-		return NULL;
+		return nullptr;
 
 	oKey.Open(HKEY_LOCAL_MACHINE, TXT("SOFTWARE\\Unreal Technology\\Installed Apps\\UnrealTournament"), KEY_READ);
 
@@ -233,7 +233,7 @@ CProfile* CProfile::DetectUT()
 	CPath strBaseDir = oKey.ReadStringValue(TXT("Folder"), TXT(""));
 
 	if (strBaseDir == TXT(""))
-		return NULL;
+		return nullptr;
 
 	CProfile* pProfile = new CProfile();
 
@@ -259,7 +259,7 @@ CProfile* CProfile::DetectUT()
 **
 ** Parameters:	None.
 **
-** Returns:		A profile or NULL, if none found.
+** Returns:		A profile or nullptr, if none found.
 **
 *******************************************************************************
 */
@@ -270,7 +270,7 @@ CProfile* CProfile::DetectUT2003()
 
 	// Try and find the regkey that contains the UT2003 base path.
 	if (!WCL::RegKey::Exists(HKEY_LOCAL_MACHINE, TXT("SOFTWARE\\Unreal Technology\\Installed Apps\\UT2003")))
-		return NULL;
+		return nullptr;
 
 	oKey.Open(HKEY_LOCAL_MACHINE, TXT("SOFTWARE\\Unreal Technology\\Installed Apps\\UT2003"), KEY_READ);
 
@@ -278,7 +278,7 @@ CProfile* CProfile::DetectUT2003()
 	CPath strBaseDir = oKey.ReadStringValue(TXT("Folder"), TXT(""));
 
 	if (strBaseDir == TXT(""))
-		return NULL;
+		return nullptr;
 
 	CProfile* pProfile = new CProfile();
 
@@ -307,7 +307,7 @@ CProfile* CProfile::DetectUT2003()
 **
 ** Parameters:	None.
 **
-** Returns:		A profile or NULL, if none found.
+** Returns:		A profile or nullptr, if none found.
 **
 *******************************************************************************
 */
@@ -318,7 +318,7 @@ CProfile* CProfile::DetectUT2004()
 
 	// Try and find the regkey that contains the UT2004 base path.
 	if (!WCL::RegKey::Exists(HKEY_LOCAL_MACHINE, TXT("SOFTWARE\\Unreal Technology\\Installed Apps\\UT2004")))
-		return NULL;
+		return nullptr;
 
 	oKey.Open(HKEY_LOCAL_MACHINE, TXT("SOFTWARE\\Unreal Technology\\Installed Apps\\UT2004"), KEY_READ);
 
@@ -326,7 +326,7 @@ CProfile* CProfile::DetectUT2004()
 	CPath strBaseDir = oKey.ReadStringValue(TXT("Folder"), TXT(""));
 
 	if (strBaseDir == TXT(""))
-		return NULL;
+		return nullptr;
 
 	CProfile* pProfile = new CProfile();
 
@@ -355,7 +355,7 @@ CProfile* CProfile::DetectUT2004()
 **
 ** Parameters:	None.
 **
-** Returns:		A profile or NULL, if none found.
+** Returns:		A profile or nullptr, if none found.
 **
 *******************************************************************************
 */
@@ -366,7 +366,7 @@ CProfile* CProfile::DetectTacOps()
 
 	// Try and find the regkey that contains the TO base path.
 	if (!WCL::RegKey::Exists(HKEY_LOCAL_MACHINE, TXT("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Tactical Ops")))
-		return NULL;
+		return nullptr;
 
 	oKey.Open(HKEY_LOCAL_MACHINE, TXT("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Tactical Ops"), KEY_READ);
 
@@ -374,7 +374,7 @@ CProfile* CProfile::DetectTacOps()
 	CPath strBaseDir = oKey.ReadStringValue(TXT("InstallLocation"), TXT(""));
 
 	if (strBaseDir == TXT(""))
-		return NULL;
+		return nullptr;
 
 	CProfile* pProfile = new CProfile();
 
