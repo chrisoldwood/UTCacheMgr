@@ -217,14 +217,14 @@ void CAppCmds::OnCacheRescan()
 	// Check the cache path exists.
 	if (!strCacheDir.Exists())
 	{
-		App.AlertMsg(TXT("Failed to access the cache folder:\n\n%s\n\nPlease check the profile setup in Options | Profiles."), strCacheDir);
+		App.AlertMsg(TXT("Failed to access the cache folder:\n\n%s\n\nPlease check the profile setup in Options | Profiles."), strCacheDir.c_str());
 		return;
 	}
 
 	// Check the cache index file exists.
 	if (!strCacheFile.Exists())
 	{
-		App.AlertMsg(TXT("Failed to access the cache index file:\n\n%s"), strCacheFile);
+		App.AlertMsg(TXT("Failed to access the cache index file:\n\n%s"), strCacheFile.c_str());
 		return;
 	}
 
@@ -645,7 +645,7 @@ void CAppCmds::OnCacheImport()
 	// Check the cache index file exists.
 	if (!strSrcCacheFile.Exists())
 	{
-		App.AlertMsg(TXT("Failed to access the cache index file:\n\n%s"), strSrcCacheFile);
+		App.AlertMsg(TXT("Failed to access the cache index file:\n\n%s"), strSrcCacheFile.c_str());
 		return;
 	}
 
@@ -826,7 +826,7 @@ void CAppCmds::OnCacheUTConfig()
 	// Check config file exists.
 	if (!App.m_pProfile->m_strConfigFile.Exists())
 	{
-		App.AlertMsg(TXT("The config file is missing:\n\n%s"), App.m_pProfile->m_strConfigFile);
+		App.AlertMsg(TXT("The config file is missing:\n\n%s"), App.m_pProfile->m_strConfigFile.c_str());
 		return;
 	}
 
@@ -1488,16 +1488,16 @@ void CAppCmds::OnToolsInstall()
 {
 	typedef WCL::PathNames::const_iterator PathNameCIter;
 
-	CPath strSrcDir = App.m_pProfile->m_strLastInstall;
+	CPath strInstallDir = App.m_pProfile->m_strLastInstall;
 
 	// Get the directory to install from.
-	if (!strSrcDir.SelectDir(App.m_AppWnd, TXT("Select Folder To Install From"), strSrcDir))
+	if (!strInstallDir.SelectDir(App.m_AppWnd, TXT("Select Folder To Install From"), strInstallDir))
 		return;
 
 	// If changed, update profiles' default folder.
-	if (strSrcDir != App.m_pProfile->m_strLastInstall)
+	if (strInstallDir != App.m_pProfile->m_strLastInstall)
 	{
-		App.m_pProfile->m_strLastInstall = strSrcDir;
+		App.m_pProfile->m_strLastInstall = strInstallDir;
 
 		App.m_nModified |= App.PROFILES;
 	}
@@ -1513,7 +1513,7 @@ void CAppCmds::OnToolsInstall()
 	App.m_AppWnd.Enable(false);
 
 	// Search folder for files.
-	const WCL::PathNames files = WCL::FindFilesInFolderRecursively(strSrcDir.c_str(), TXT("*.*")); 
+	const WCL::PathNames files = WCL::FindFilesInFolderRecursively(strInstallDir.c_str(), TXT("*.*")); 
 
 	// Nothing to install?
 	if (files.empty())
@@ -1598,10 +1598,10 @@ void CAppCmds::OnToolsInstall()
 			{
 				CConflictDlg oQueryDlg;
 
-				oQueryDlg.m_strFileName1.Format(TXT("%s"), strDstFile);
-				oQueryDlg.m_strFileInfo1.Format(TXT("%s - %u Bytes"), CStrCvt::FormatDateTime(oDstInfo.st_mtime), oDstInfo.st_size);
-				oQueryDlg.m_strFileName2.Format(TXT("%s"), strSrcFile);
-				oQueryDlg.m_strFileInfo2.Format(TXT("%s - %u Bytes"), CStrCvt::FormatDateTime(oSrcInfo.st_mtime), oSrcInfo.st_size);
+				oQueryDlg.m_strFileName1.Format(TXT("%s"), strDstFile.c_str());
+				oQueryDlg.m_strFileInfo1.Format(TXT("%s - %u Bytes"), CStrCvt::FormatDateTime(oDstInfo.st_mtime).c_str(), oDstInfo.st_size);
+				oQueryDlg.m_strFileName2.Format(TXT("%s"), strSrcFile.c_str());
+				oQueryDlg.m_strFileInfo2.Format(TXT("%s - %u Bytes"), CStrCvt::FormatDateTime(oSrcInfo.st_mtime).c_str(), oSrcInfo.st_size);
 
 				// Query user for action.
 				int nResult = oQueryDlg.RunModal(App.m_AppWnd);

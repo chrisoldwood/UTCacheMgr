@@ -236,24 +236,24 @@ void CProfileCfgDlg::OnDetect()
 {
 	CBusyCursor oBusyCursor;
 
-	CProfile* pProfile = nullptr;
+	CProfile* profile = nullptr;
 	CProfiles aoProfiles;
 
 	// Look for a UT installation.
-	if ((pProfile = CProfile::DetectUT()) != nullptr)
-		aoProfiles.push_back(pProfile);
+	if ((profile = CProfile::DetectUT()) != nullptr)
+		aoProfiles.push_back(profile);
 
 	// Look for a UT2003 installation.
-	if ((pProfile = CProfile::DetectUT2003()) != nullptr)
-		aoProfiles.push_back(pProfile);
+	if ((profile = CProfile::DetectUT2003()) != nullptr)
+		aoProfiles.push_back(profile);
 
 	// Look for a UT2004 installation.
-	if ((pProfile = CProfile::DetectUT2004()) != nullptr)
-		aoProfiles.push_back(pProfile);
+	if ((profile = CProfile::DetectUT2004()) != nullptr)
+		aoProfiles.push_back(profile);
 
 	// Look for a Tactical Ops installation.
-	if ((pProfile = CProfile::DetectTacOps()) != nullptr)
-		aoProfiles.push_back(pProfile);
+	if ((profile = CProfile::DetectTacOps()) != nullptr)
+		aoProfiles.push_back(profile);
 
 	// Remove any duplicates.
 	for (CProfiles::reverse_iterator oIter = aoProfiles.rbegin(); oIter != aoProfiles.rend(); ++oIter)
